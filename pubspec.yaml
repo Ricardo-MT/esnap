@@ -8,20 +8,37 @@ environment:
 
 dependencies:
   bloc: ^8.1.2
+  equatable: ^2.0.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.0
+  wid_design_system: ^0.2.3
 
 dev_dependencies:
   bloc_test: ^9.1.2
   flutter_test:
     sdk: flutter
+  mockingjay: ^0.3.0
   mocktail: ^0.3.0
   very_good_analysis: ^5.0.0
 
 flutter:
   uses-material-design: true
   generate: true
+
+  fonts:
+    - family: Quicksand
+      fonts:
+        - asset: packages/wid_design_system/fonts/Quicksand-Bold.ttf
+          weight: 700
+        - asset: packages/wid_design_system/fonts/Quicksand-SemiBold.ttf
+          weight: 600
+        - asset: packages/wid_design_system/fonts/Quicksand-Medium.ttf
+          weight: 500
+        - asset: packages/wid_design_system/fonts/Quicksand-Regular.ttf
+          weight: 400
+        - asset: packages/wid_design_system/fonts/Quicksand-Light.ttf
+          weight: 300
