@@ -9,12 +9,18 @@ environment:
 dependencies:
   bloc: ^8.1.2
   equatable: ^2.0.5
+  esnap_api:
+    path: packages/esnap_api
+  esnap_repository:
+    path: packages/esnap_repository
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.0
+  local_storage_esnap_api:
+    path: packages/local_storage_esnap_api
   wid_design_system: ^0.2.3
 
 dev_dependencies:

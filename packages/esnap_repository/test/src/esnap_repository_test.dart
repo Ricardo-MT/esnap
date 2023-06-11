@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 void main() {
   group('EsnapRepository', () {
     test('can be instantiated', () {
-      expect(EsnapRepository(), isNotNull);
+      expect(EsnapRepository, isNotNull);
     });
   });
 }

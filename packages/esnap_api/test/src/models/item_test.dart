@@ -40,7 +40,7 @@ void main() {
             '1', // id
             'red', // color
             'jumper', // classification
-            [], // occasions
+            <String>[], // occasions
             oneFile
           ]),
         );
