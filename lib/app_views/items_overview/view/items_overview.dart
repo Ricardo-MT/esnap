@@ -1,3 +1,4 @@
+import 'package:esnap/app_views/edit_item/view/edit_item_page.dart';
 import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
 import 'package:esnap/app_views/items_overview/widgets/item_list_tile.dart';
 import 'package:esnap/app_views/items_overview/widgets/items_overview_filter_button.dart';
@@ -31,6 +32,11 @@ class ItemsOverviewView extends StatelessWidget {
         actions: const [
           ItemsOverviewFilterButton(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        key: const Key('homeView_addTodo_floatingActionButton'),
+        onPressed: () => Navigator.of(context).push(EditItemPage.route()),
+        child: const Icon(Icons.add),
       ),
       body: MultiBlocListener(
         listeners: [
@@ -70,13 +76,13 @@ class ItemsOverviewView extends StatelessWidget {
             return CupertinoScrollbar(
               child: ListView(
                 children: [
-                  for (final todo in state.filteredItems)
+                  for (final item in state.filteredItems)
                     ItemListTile(
-                      item: todo,
+                      item: item,
                       onTap: () {
-                        // Navigator.of(context).push(
-                        //   EditTodoPage.route(initialTodo: todo),
-                        // );
+                        Navigator.of(context).push(
+                          EditItemPage.route(initialItem: item),
+                        );
                       },
                     ),
                 ],

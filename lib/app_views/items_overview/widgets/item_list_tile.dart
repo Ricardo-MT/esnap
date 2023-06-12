@@ -24,7 +24,6 @@ class ItemListTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
           color: captionColor,
-          decoration: TextDecoration.lineThrough,
         ),
       ),
       subtitle: Text(

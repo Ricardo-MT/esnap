@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:esnap_api/esnap_api.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:local_storage_esnap_api/src/adapters/item.dart';
 import 'package:local_storage_esnap_api/src/esnap_boxes.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -16,12 +19,13 @@ class LocalStorageEsnapApi extends EsnapApi {
 
   Future<void> _init() async {
     await _initHive();
-    final box = await Hive.openBox<Item>(EsnapBoxes.item);
+    final box = await Hive.openBox<ItemSchema>(EsnapBoxes.item);
     final itemsRes = box.values;
-    _itemStreamController.add(itemsRes.toList());
+    _itemStreamController.add(itemsRes.map(toItem).toList());
   }
 
   Future<void> _initHive() async {
+    Hive.registerAdapter(ItemSchemaAdapter());
     await Hive.initFlutter();
   }
 
@@ -39,7 +43,7 @@ class LocalStorageEsnapApi extends EsnapApi {
     }
     _itemStreamController.add(items);
 
-    return Hive.box<Item>(EsnapBoxes.item).put(item.id, item);
+    return Hive.box<ItemSchema>(EsnapBoxes.item).put(item.id, fromItem(item));
   }
 
   @override
@@ -55,3 +59,19 @@ class LocalStorageEsnapApi extends EsnapApi {
     }
   }
 }
+
+/// Creates an instance from an Item
+ItemSchema fromItem(Item item) => ItemSchema()
+  ..id = item.id
+  ..color = item.color
+  ..classification = item.classification
+  ..occasions = item.occasions.toList();
+
+/// Returns an item based on this instance values
+Item toItem(ItemSchema itemSchema) => Item(
+      id: itemSchema.id,
+      color: itemSchema.color,
+      classification: itemSchema.classification,
+      occasions: itemSchema.occasions.toList(),
+      image: File(''),
+    );

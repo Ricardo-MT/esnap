@@ -32,14 +32,6 @@ class Item extends Equatable {
           id == null || id.isNotEmpty,
           'id can not be null and should be empty',
         ),
-        assert(
-          color != '',
-          'You must provide a valid color',
-        ),
-        assert(
-          classification != '',
-          'You must provide a valid classification',
-        ),
         id = id ?? const Uuid().v4();
 
   /// The unique identifier of the `item`.
