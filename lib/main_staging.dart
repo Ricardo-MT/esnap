@@ -8,9 +8,13 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final esnapApi = LocalStorageEsnapApi();
   final esnapRepository = EsnapRepository(esnapApi: esnapApi);
+
+  final colorApi = LocalStorageColorApi();
+  final colorRepository = ColorRepository(colorApi: colorApi);
   bootstrap(
     () => App(
       esnapRepository: esnapRepository,
+      colorRepository: colorRepository,
     ),
   );
 }

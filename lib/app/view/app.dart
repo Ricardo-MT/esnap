@@ -6,14 +6,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wid_design_system/wid_design_system.dart';
 
 class App extends StatelessWidget {
-  const App({required this.esnapRepository, super.key});
+  const App({
+    required this.esnapRepository,
+    required this.colorRepository,
+    super.key,
+  });
 
   final EsnapRepository esnapRepository;
+  final ColorRepository colorRepository;
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: esnapRepository,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<EsnapRepository>(
+          create: (context) => esnapRepository,
+        ),
+        RepositoryProvider<ColorRepository>(
+          create: (context) => colorRepository,
+        ),
+      ],
       child: const AppView(),
     );
   }

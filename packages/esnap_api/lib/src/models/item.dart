@@ -23,9 +23,9 @@ import 'package:uuid/uuid.dart';
 class Item extends Equatable {
   /// {@macro item}
   Item({
-    required this.color,
     required this.classification,
     required this.image,
+    this.color,
     String? id,
     this.occasions = const [],
   })  : assert(
@@ -40,19 +40,15 @@ class Item extends Equatable {
   final String id;
 
   /// The `item`'s color.
-  ///
-  /// Cannot be empty.
-  final String color;
+  final EsnapColor? color;
 
   /// The `item`'s classification.
-  ///
-  /// Cannot be empty.
-  final String classification;
+  final EsnapClassification? classification;
 
   /// A list of the `item`'s occasions.
   ///
   /// Defaults to an empty list.
-  final List<String> occasions;
+  final List<EsnapOccasion> occasions;
 
   /// The image of the `item`.
   ///
@@ -64,16 +60,17 @@ class Item extends Equatable {
   /// {@macro item}
   Item copyWith({
     String? id,
-    String? color,
-    String? classification,
-    List<String>? occasions,
+    EsnapColor? color,
+    EsnapClassification? classification,
+    List<EsnapOccasion>? occasions,
     File? image,
   }) {
     return Item(
       id: id ?? this.id,
-      color: color ?? this.color,
-      classification: classification ?? this.classification,
-      occasions: occasions?.toList() ?? this.occasions,
+      color: (color ?? this.color)?.copyWith(),
+      classification: (classification ?? this.classification)?.copyWith(),
+      occasions:
+          (occasions ?? this.occasions).map((o) => o.copyWith()).toList(),
       image: image ?? this.image,
     );
   }
@@ -85,5 +82,5 @@ class Item extends Equatable {
   // JsonMap toJson() => _$ItemToJson(this);
 
   @override
-  List<Object> get props => [id, color, classification, occasions, image];
+  List<Object?> get props => [id, color, classification, occasions, image];
 }

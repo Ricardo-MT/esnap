@@ -13,9 +13,9 @@ void main() {
     }) {
       return Item(
         id: id,
-        color: color,
-        classification: classification,
-        occasions: occasions,
+        color: EsnapColor(name: color),
+        classification: EsnapClassification(name: classification),
+        occasions: occasions.map((e) => EsnapOccasion(name: e)).toList(),
         image: oneFile,
       );
     }
@@ -65,9 +65,9 @@ void main() {
           expect(
             createSubject().copyWith(
               id: '2',
-              color: 'new title',
-              classification: 'new description',
-              occasions: ['casual'],
+              color: EsnapColor(name: 'new title'),
+              classification: EsnapClassification(name: 'new description'),
+              occasions: [EsnapOccasion(name: 'casual')],
             ),
             equals(
               createSubject(

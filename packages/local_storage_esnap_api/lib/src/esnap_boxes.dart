@@ -1,14 +1,17 @@
 /// Contains the names for the different boxes
 class EsnapBoxes {
-  /// The name of the box for storing items
+  /// Box name for managing DB sync with migrations
+  static String migrated = 'migratedBox';
+
+  /// Box name for storing items
   static String item = 'itemBox';
 
-  /// The name of the box for storing colors
+  /// Box name for storing colors
   static String color = 'colorBox';
 
-  /// The name of the box for storing classifications
+  /// Box name for storing classifications
   static String classification = 'classBox';
 
-  /// The name of the box for storing occasions
+  /// Box name for storing occasions
   static String occasion = 'occasionBox';
 }

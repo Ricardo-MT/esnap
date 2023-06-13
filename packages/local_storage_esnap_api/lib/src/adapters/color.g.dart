@@ -1,41 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'item.dart';
+part of 'color.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ItemSchemaAdapter extends TypeAdapter<ItemSchema> {
+class ColorSchemaAdapter extends TypeAdapter<ColorSchema> {
   @override
-  final int typeId = 1;
+  final int typeId = 2;
 
   @override
-  ItemSchema read(BinaryReader reader) {
+  ColorSchema read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ItemSchema(
+    return ColorSchema(
       id: fields[0] as String,
-      classification: (fields[2] as HiveList).castHiveList(),
-      occasions: (fields[3] as HiveList).castHiveList(),
-      color: (fields[1] as HiveList).castHiveList(),
+      name: fields[1] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, ItemSchema obj) {
+  void write(BinaryWriter writer, ColorSchema obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.color)
-      ..writeByte(2)
-      ..write(obj.classification)
-      ..writeByte(3)
-      ..write(obj.occasions);
+      ..write(obj.name);
   }
 
   @override
@@ -44,7 +38,7 @@ class ItemSchemaAdapter extends TypeAdapter<ItemSchema> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ItemSchemaAdapter &&
+      other is ColorSchemaAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
