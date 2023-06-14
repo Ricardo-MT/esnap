@@ -19,16 +19,16 @@ final class EditItemColorChanged extends EditItemEvent {
 final class EditItemClassificationChanged extends EditItemEvent {
   const EditItemClassificationChanged(this.classification);
 
-  final String classification;
+  final EsnapClassification? classification;
 
   @override
-  List<Object> get props => [classification];
+  List<Object?> get props => [classification];
 }
 
 final class EditItemOccasionsChanged extends EditItemEvent {
   const EditItemOccasionsChanged(this.occasions);
 
-  final List<String> occasions;
+  final List<EsnapOccasion> occasions;
 
   @override
   List<Object> get props => [occasions];

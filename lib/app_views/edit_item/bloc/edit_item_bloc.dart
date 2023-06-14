@@ -17,8 +17,8 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
           EditItemState(
             initialItem: initialItem,
             color: initialItem?.color,
-            classification: initialItem?.classification?.name ?? '',
-            occasions: initialItem?.occasions.map((e) => e.name).toList() ?? [],
+            classification: initialItem?.classification,
+            occasions: initialItem?.occasions.toList() ?? [],
           ),
         ) {
     on<EditItemColorChanged>(_onColorChanged);
@@ -61,7 +61,7 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
             ))
         .copyWith(
       color: state.color,
-      // classification: EsnapClassification(name: 'Jumper'),
+      classification: state.classification,
     );
     try {
       await _esnapRepository.saveItem(item);

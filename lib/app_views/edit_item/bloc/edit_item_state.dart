@@ -14,15 +14,15 @@ final class EditItemState extends Equatable {
     this.status = EditItemStatus.initial,
     this.initialItem,
     this.color,
-    this.classification = '',
+    this.classification,
     this.occasions = const [],
   });
 
   final EditItemStatus status;
   final Item? initialItem;
   final EsnapColor? color;
-  final String classification;
-  final List<String> occasions;
+  final EsnapClassification? classification;
+  final List<EsnapOccasion> occasions;
 
   bool get isNewItem => initialItem == null;
 
@@ -30,8 +30,8 @@ final class EditItemState extends Equatable {
     EditItemStatus? status,
     Item? initialItem,
     EsnapColor? color,
-    String? classification,
-    List<String>? occasions,
+    EsnapClassification? classification,
+    List<EsnapOccasion>? occasions,
   }) {
     return EditItemState(
       status: status ?? this.status,

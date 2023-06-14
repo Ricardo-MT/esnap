@@ -82,17 +82,17 @@ ItemSchema fromItem(Item item) {
     classificationBox,
   );
   if (item.classification != null) {
-    final oneClassification =
-        ClassificationSchema.fromClassificationSchema(item.classification!);
-    classificationList.add(oneClassification);
+    final oneClassification = classificationBox.get(item.classification!.id);
+    classificationList.add(oneClassification!);
   }
 
   /// Field occasions
   final occasionBox = Hive.box<OccasionSchema>(EsnapBoxes.occasion);
-
   final occasionList = HiveList(
     occasionBox,
   );
+  classificationList
+      .addAll(item.occasions.map((o) => occasionBox.get(o.id)!).toList());
 
   return ItemSchema(
     id: item.id,

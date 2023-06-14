@@ -1,9 +1,10 @@
-import 'package:esnap/app_views/colos_overview/bloc/colors_overview_bloc.dart';
+import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
+import 'package:esnap/app_views/colors_overview/bloc/colors_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
+import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wid_design_system/wid_design_system.dart';
 
@@ -32,7 +33,18 @@ class EditItemPage extends StatelessWidget {
             create: (context) => ColorsOverviewBloc(
               colorRepository: context.read<ColorRepository>(),
             )..add(const ColorsOverviewSubscriptionRequested()),
-          )
+          ),
+          BlocProvider(
+            create: (context) => ClassificationsOverviewBloc(
+              classificationRepository:
+                  context.read<ClassificationRepository>(),
+            )..add(const ClassificationsOverviewSubscriptionRequested()),
+          ),
+          BlocProvider(
+            create: (context) => OccasionsOverviewBloc(
+              occasionRepository: context.read<OccasionRepository>(),
+            )..add(const OccasionsOverviewSubscriptionRequested()),
+          ),
         ],
         child: const EditItemPage(),
       ),
@@ -105,12 +117,60 @@ class EditItemView extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Column(
-              children: [_ColorField(), _DescriptionField()],
+              children: [
+                _ClassificationField(),
+                _ColorField(),
+              ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class _ClassificationField extends StatelessWidget {
+  const _ClassificationField();
+
+  @override
+  Widget build(BuildContext context) {
+    final classifications =
+        context.watch<ClassificationsOverviewBloc>().state.classifications;
+    final state = context.watch<EditItemBloc>().state;
+    const hintText = 'Classification goes here';
+
+    return DropdownButtonFormField<EsnapClassification>(
+      hint: const Text(hintText),
+      value: state.classification,
+      items: classifications
+          .map(
+            (e) => DropdownMenuItem<EsnapClassification>(
+              value: e,
+              child: Text(e.name),
+            ),
+          )
+          .toList(),
+      onChanged: (value) {
+        context.read<EditItemBloc>().add(EditItemClassificationChanged(value));
+      },
+    );
+    // return TextFormField(
+    //   key: const Key('editItemView_description_textFormField'),
+    //   initialValue: state.classification,
+    //   decoration: InputDecoration(
+    //     enabled: !state.status.isLoadingOrSuccess,
+    //     labelText: 'Classification',
+    //     hintText: hintText,
+    //   ),
+    //   maxLength: 300,
+    //   maxLines: 7,
+    //   inputFormatters: [
+    //     LengthLimitingTextInputFormatter(300),
+    //   ],
+    //   onChanged: (value) {
+    //     context.read<EditItemBloc>().add(EditItemClassificationChanged(value));
+    //   },
+    // );
   }
 }
 
@@ -155,33 +215,5 @@ class _ColorField extends StatelessWidget {
     //     context.read<EditItemBloc>().add(EditItemColorChanged(value));
     //   },
     // );
-  }
-}
-
-class _DescriptionField extends StatelessWidget {
-  const _DescriptionField();
-
-  @override
-  Widget build(BuildContext context) {
-    final state = context.watch<EditItemBloc>().state;
-    const hintText = 'Classification goes here';
-
-    return TextFormField(
-      key: const Key('editItemView_description_textFormField'),
-      initialValue: state.classification,
-      decoration: InputDecoration(
-        enabled: !state.status.isLoadingOrSuccess,
-        labelText: 'Classification',
-        hintText: hintText,
-      ),
-      maxLength: 300,
-      maxLines: 7,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(300),
-      ],
-      onChanged: (value) {
-        context.read<EditItemBloc>().add(EditItemClassificationChanged(value));
-      },
-    );
   }
 }
