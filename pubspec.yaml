@@ -13,6 +13,7 @@ dependencies:
     path: packages/esnap_api
   esnap_repository:
     path: packages/esnap_repository
+  firebase_core: ^2.14.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3

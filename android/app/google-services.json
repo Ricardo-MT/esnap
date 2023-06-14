@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "559114535701",
+    "project_id": "esnap-541ef",
+    "storage_bucket": "esnap-541ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559114535701:android:d9799467dea64e472c9f1c",
+        "android_client_info": {
+          "package_name": "com.ricardo.esnap.app.esnap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "559114535701-jucfigrgmkfm6m90ssnd767ecfsrer8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA685J27z7xvCfMtM3MMyw3ohz9456YMWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "559114535701-jucfigrgmkfm6m90ssnd767ecfsrer8n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "559114535701-5ile7g3aafad31mil00sedrb4piphbuv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ricardo.esnap.app.esnap"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
