@@ -1,6 +1,7 @@
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/colors_overview/bloc/colors_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
+import 'package:esnap/app_views/edit_item/widgets/wid_select.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,13 +15,6 @@ class EditItemPage extends StatelessWidget {
   static Route<void> route({Item? initialItem}) {
     return MaterialPageRoute(
       fullscreenDialog: true,
-      // builder: (context) => BlocProvider(
-      //   create: (context) => EditItemBloc(
-      //     esnapRepository: context.read<EsnapRepository>(),
-      //     initialItem: initialItem,
-      //   ),
-      //   child: const EditItemPage(),
-      // ),
       builder: (context) => MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -119,7 +113,10 @@ class EditItemView extends StatelessWidget {
             child: Column(
               children: [
                 _ClassificationField(),
+                spacerM,
                 _ColorField(),
+                spacerM,
+                _OccasionField(),
               ],
             ),
           ),
@@ -215,5 +212,31 @@ class _ColorField extends StatelessWidget {
     //     context.read<EditItemBloc>().add(EditItemColorChanged(value));
     //   },
     // );
+  }
+}
+
+class _OccasionField extends StatelessWidget {
+  const _OccasionField();
+
+  @override
+  Widget build(BuildContext context) {
+    final occasions = context.watch<OccasionsOverviewBloc>().state.occasions;
+    final state = context.watch<EditItemBloc>().state;
+    const hintText = 'Occasions go here';
+
+    return WidSelectMultiple(
+      label: 'Occasions',
+      values: state.occasions.map((e) => e.name).toList(),
+      hint: hintText,
+      onChanged: (value) {
+        final found = value == null
+            ? <EsnapOccasion>[]
+            : occasions
+                .where((element) => value.contains(element.name))
+                .toList();
+        context.read<EditItemBloc>().add(EditItemOccasionsChanged(found));
+      },
+      options: occasions.map((e) => e.name).toList(),
+    );
   }
 }

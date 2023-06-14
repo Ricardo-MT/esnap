@@ -90,10 +90,13 @@ ItemSchema fromItem(Item item) {
   final occasionBox = Hive.box<OccasionSchema>(EsnapBoxes.occasion);
   final occasionList = HiveList(
     occasionBox,
-  );
-  classificationList
-      .addAll(item.occasions.map((o) => occasionBox.get(o.id)!).toList());
-
+  )..addAll(
+      item.occasions
+          .map(
+            (o) => occasionBox.get(o.id)!,
+          )
+          .toList(),
+    );
   return ItemSchema(
     id: item.id,
     color: colorList,

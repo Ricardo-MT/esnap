@@ -62,6 +62,7 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
         .copyWith(
       color: state.color,
       classification: state.classification,
+      occasions: state.occasions,
     );
     try {
       await _esnapRepository.saveItem(item);

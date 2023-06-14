@@ -21,6 +21,7 @@ dependencies:
   intl: ^0.18.0
   local_storage_esnap_api:
     path: packages/local_storage_esnap_api
+  multi_select_flutter: ^4.1.3
   wid_design_system: ^0.2.3
 
 dev_dependencies:
