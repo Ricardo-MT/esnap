@@ -19,7 +19,7 @@ class ItemListTile extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       title: Text(
-        item.classification,
+        item.classification?.name ?? '(none)',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
@@ -27,7 +27,7 @@ class ItemListTile extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        item.color,
+        item.color?.name ?? '(none)',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),

@@ -13,14 +13,14 @@ final class EditItemState extends Equatable {
   const EditItemState({
     this.status = EditItemStatus.initial,
     this.initialItem,
-    this.color = '',
+    this.color,
     this.classification = '',
     this.occasions = const [],
   });
 
   final EditItemStatus status;
   final Item? initialItem;
-  final String color;
+  final EsnapColor? color;
   final String classification;
   final List<String> occasions;
 
@@ -29,7 +29,7 @@ final class EditItemState extends Equatable {
   EditItemState copyWith({
     EditItemStatus? status,
     Item? initialItem,
-    String? color,
+    EsnapColor? color,
     String? classification,
     List<String>? occasions,
   }) {

@@ -4,16 +4,16 @@ sealed class EditItemEvent extends Equatable {
   const EditItemEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 final class EditItemColorChanged extends EditItemEvent {
   const EditItemColorChanged(this.color);
 
-  final String color;
+  final EsnapColor? color;
 
   @override
-  List<Object> get props => [color];
+  List<Object?> get props => [color];
 }
 
 final class EditItemClassificationChanged extends EditItemEvent {

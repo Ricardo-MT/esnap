@@ -14,22 +14,22 @@ import 'package:rxdart/subjects.dart';
 /// {@endtemplate}
 class LocalStorageEsnapApi extends EsnapApi {
   /// {@macro local_storage_esnap_api}
-  LocalStorageEsnapApi() {
-    _init();
-  }
-
-  final _itemStreamController = BehaviorSubject<List<Item>>.seeded(const []);
-
-  Future<void> _init() async {
-    await _initHive();
-    final box = await Hive.openBox<ItemSchema>(EsnapBoxes.item);
+  LocalStorageEsnapApi(this.box) {
     final itemsRes = box.values;
     _itemStreamController.add(itemsRes.map(toItem).toList());
   }
 
-  Future<void> _initHive() async {
+  final _itemStreamController = BehaviorSubject<List<Item>>.seeded(const []);
+
+  /// The box for handling colors
+  final Box<ItemSchema> box;
+
+  /// This method opens the box, runs the initial migrations and
+  /// returns an instance of the LocalStorageColorApi class.
+  static Future<LocalStorageEsnapApi> initializer() async {
     Hive.registerAdapter(ItemSchemaAdapter());
-    await Hive.initFlutter();
+    final box = await Hive.openBox<ItemSchema>(EsnapBoxes.item);
+    return LocalStorageEsnapApi(box);
   }
 
   @override
@@ -45,7 +45,7 @@ class LocalStorageEsnapApi extends EsnapApi {
       items.add(item);
     }
     _itemStreamController.add(items);
-    final item0 = await fromItem(item);
+    final item0 = fromItem(item);
     return Hive.box<ItemSchema>(EsnapBoxes.item).put(item.id, item0);
   }
 
@@ -64,26 +64,35 @@ class LocalStorageEsnapApi extends EsnapApi {
 }
 
 /// Creates an instance of an ItemSchema from an Item
-Future<ItemSchema> fromItem(Item item) async {
+ItemSchema fromItem(Item item) {
   /// Field color
-  final colorBox = await Hive.openBox<ColorSchema>(EsnapBoxes.color);
-  final oneColor = ColorSchema.fromEsnapColor(item.color!);
-  final colorList = HiveList(colorBox, objects: [oneColor]);
+  final colorBox = Hive.box<ColorSchema>(EsnapBoxes.color);
+  final colorList = HiveList(
+    colorBox,
+  );
+  if (item.color != null) {
+    final oneColor = colorBox.get(item.color!.id);
+    colorList.add(oneColor!);
+  }
 
   /// Field classification
   final classificationBox =
-      await Hive.openBox<ClassificationSchema>(EsnapBoxes.classification);
-  final oneClassification =
-      ClassificationSchema.fromClassificationSchema(item.classification!);
-  final classificationList =
-      HiveList(classificationBox, objects: [oneClassification]);
+      Hive.box<ClassificationSchema>(EsnapBoxes.classification);
+  final classificationList = HiveList(
+    classificationBox,
+  );
+  if (item.classification != null) {
+    final oneClassification =
+        ClassificationSchema.fromClassificationSchema(item.classification!);
+    classificationList.add(oneClassification);
+  }
 
   /// Field occasions
-  final occasionBox =
-      await Hive.openBox<ColorSchema>(EsnapBoxes.classification);
-  final occasions =
-      item.occasions.map(OccasionSchema.fromEsnapOccasion).toList();
-  final occasionList = HiveList(occasionBox, objects: occasions);
+  final occasionBox = Hive.box<OccasionSchema>(EsnapBoxes.occasion);
+
+  final occasionList = HiveList(
+    occasionBox,
+  );
 
   return ItemSchema(
     id: item.id,
@@ -96,14 +105,30 @@ Future<ItemSchema> fromItem(Item item) async {
 /// Returns an item based on this instance values
 Item toItem(ItemSchema itemSchema) => Item(
       id: itemSchema.id,
-      color: itemSchema.color
-          .map((e) => (e as ColorSchema).toEsnapColor())
-          .toList()[0],
-      classification: itemSchema.classification
-          .map((e) => (e as ClassificationSchema).toEsnapClassification())
-          .toList()[0],
+      color: getFromColorList(itemSchema.color),
+      classification: getFromClassificationList(itemSchema.classification),
       occasions: itemSchema.occasions
           .map((e) => (e as OccasionSchema).toEsnapOccasion())
           .toList(),
       image: File(''),
     );
+
+/// Gets the list from the hive object and returns the first object
+EsnapColor? getFromColorList(
+  HiveList<HiveObjectMixin> colors,
+) {
+  final list = colors.map((e) => (e as ColorSchema).toEsnapColor()).toList();
+  if (list.isEmpty) return null;
+  return list[0];
+}
+
+/// Gets the list from the hive object and returns the first object
+EsnapClassification? getFromClassificationList(
+  HiveList<HiveObjectMixin> classifications,
+) {
+  final list = classifications
+      .map((e) => (e as ClassificationSchema).toEsnapClassification())
+      .toList();
+  if (list.isEmpty) return null;
+  return list[0];
+}

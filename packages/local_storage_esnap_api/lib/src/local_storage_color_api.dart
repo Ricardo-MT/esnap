@@ -9,24 +9,24 @@ import 'package:rxdart/subjects.dart';
 /// {@endtemplate}
 class LocalStorageColorApi extends ColorApi {
   /// {@macro local_storage_color_api}
-  LocalStorageColorApi() {
-    _init();
+  LocalStorageColorApi(this.box) {
+    final colorsRes = box.values;
+    _colorStreamController.add(colorsRes.map((c) => c.toEsnapColor()).toList());
   }
 
   final _colorStreamController =
       BehaviorSubject<List<EsnapColor>>.seeded(const []);
 
-  Future<void> _init() async {
-    await _initHive();
+  /// The box for handling colors
+  final Box<ColorSchema> box;
+
+  /// This method opens the box, runs the initial migrations and
+  /// returns an instance of the LocalStorageColorApi class.
+  static Future<LocalStorageColorApi> initializer() async {
+    Hive.registerAdapter(ColorSchemaAdapter());
     final box = await Hive.openBox<ColorSchema>(EsnapBoxes.color);
     await _initMigrations(box);
-    final colorsRes = box.values;
-    _colorStreamController.add(colorsRes.map((c) => c.toEsnapColor()).toList());
-  }
-
-  Future<void> _initHive() async {
-    Hive.registerAdapter(ColorSchemaAdapter());
-    await Hive.initFlutter();
+    return LocalStorageColorApi(box);
   }
 
   @override
@@ -61,9 +61,9 @@ class LocalStorageColorApi extends ColorApi {
     }
   }
 
-  Future<void> _initMigrations(Box<ColorSchema> box) async {
+  static Future<void> _initMigrations(Box<ColorSchema> box) async {
     const migratedKey = 'migratedColor';
-    final migratedBox = await Hive.openBox<bool>(EsnapBoxes.migrated);
+    final migratedBox = Hive.box<bool>(EsnapBoxes.migrated);
     final hasData = migratedBox.get(migratedKey, defaultValue: false);
     if (!(hasData ?? false)) {
       await box.clear();
@@ -73,7 +73,6 @@ class LocalStorageColorApi extends ColorApi {
         await box.put(element.id, element);
       }
       await migratedBox.put(migratedKey, true);
-      await migratedBox.close();
     }
   }
 }

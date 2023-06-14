@@ -9,25 +9,27 @@ import 'package:rxdart/subjects.dart';
 /// {@endtemplate}
 class LocalStorageClassificationApi extends ClassificationApi {
   /// {@macro local_storage_classification_api}
-  LocalStorageClassificationApi() {
-    _init();
+  LocalStorageClassificationApi(this.box) {
+    final classificationsRes = box.values;
+    _classificationStreamController
+        .add(classificationsRes.map((c) => c.toEsnapClassification()).toList());
   }
 
   final _classificationStreamController =
       BehaviorSubject<List<EsnapClassification>>.seeded(const []);
 
-  Future<void> _init() async {
-    await _initHive();
-    final box =
-        await Hive.openBox<ClassificationSchema>(EsnapBoxes.classification);
-    final classificationsRes = box.values;
-    _classificationStreamController
-        .add(classificationsRes.map(toClassification).toList());
-  }
+  /// The box for handling classifications
+  final Box<ClassificationSchema> box;
 
-  Future<void> _initHive() async {
+  /// This method opens the box, runs the initial migrations and
+  /// returns an instance of the LocalStorageClassificationApi class.
+  static Future<LocalStorageClassificationApi> initializer() async {
     Hive.registerAdapter(ClassificationSchemaAdapter());
-    await Hive.initFlutter();
+    final box = await Hive.openBox<ClassificationSchema>(
+      EsnapBoxes.classification,
+    );
+    await _initMigrations(box);
+    return LocalStorageClassificationApi(box);
   }
 
   @override
@@ -46,8 +48,10 @@ class LocalStorageClassificationApi extends ClassificationApi {
     }
     _classificationStreamController.add(classifications);
 
-    return Hive.box<ClassificationSchema>(EsnapBoxes.classification)
-        .put(classification.id, fromClassification(classification));
+    return Hive.box<ClassificationSchema>(EsnapBoxes.classification).put(
+      classification.id,
+      ClassificationSchema.fromClassificationSchema(classification),
+    );
   }
 
   @override
@@ -62,17 +66,33 @@ class LocalStorageClassificationApi extends ClassificationApi {
       // return _setValue(kTodosCollectionKey, json.encode(classifications));
     }
   }
+
+  static Future<void> _initMigrations(Box<ClassificationSchema> box) async {
+    const migratedKey = 'migratedClassification';
+    final migratedBox = Hive.box<bool>(EsnapBoxes.migrated);
+    final hasData = migratedBox.get(migratedKey, defaultValue: false);
+    if (!(hasData ?? false)) {
+      await box.clear();
+      final classifications = _baseClassification.map(
+        (c) => ClassificationSchema.fromClassificationSchema(
+          EsnapClassification(name: c),
+        ),
+      );
+      for (final element in classifications) {
+        await box.put(element.id, element);
+      }
+      await migratedBox.put(migratedKey, true);
+    }
+  }
 }
 
-/// Creates an instance from an EsnapClassification
-ClassificationSchema fromClassification(EsnapClassification classification) =>
-    ClassificationSchema(id: classification.id, name: classification.name);
-
-/// Returns an classification based on this instance values
-EsnapClassification toClassification(
-  ClassificationSchema classificationSchema,
-) =>
-    EsnapClassification(
-      id: classificationSchema.id,
-      name: classificationSchema.name,
-    );
+const _baseClassification = [
+  'jumper',
+  'blouse',
+  'shirt',
+  'skirt',
+  'short',
+  't-shirt',
+  'cap',
+  'glasses',
+];

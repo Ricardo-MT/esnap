@@ -6,7 +6,7 @@ import 'package:local_storage_esnap_api/local_storage_esnap_api.dart';
 void main() {
   group('LocalStorageEsnapApi', () {
     test('can be instantiated', () {
-      expect(LocalStorageEsnapApi(), isNotNull);
+      expect(LocalStorageEsnapApi, isNotNull);
     });
   });
 }

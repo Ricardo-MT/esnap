@@ -23,8 +23,8 @@ import 'package:uuid/uuid.dart';
 class Item extends Equatable {
   /// {@macro item}
   Item({
-    required this.classification,
     required this.image,
+    this.classification,
     this.color,
     String? id,
     this.occasions = const [],

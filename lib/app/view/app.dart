@@ -9,11 +9,15 @@ class App extends StatelessWidget {
   const App({
     required this.esnapRepository,
     required this.colorRepository,
+    required this.classificationRepository,
+    required this.occasionRepository,
     super.key,
   });
 
   final EsnapRepository esnapRepository;
   final ColorRepository colorRepository;
+  final ClassificationRepository classificationRepository;
+  final OccasionRepository occasionRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +28,12 @@ class App extends StatelessWidget {
         ),
         RepositoryProvider<ColorRepository>(
           create: (context) => colorRepository,
+        ),
+        RepositoryProvider<ClassificationRepository>(
+          create: (context) => classificationRepository,
+        ),
+        RepositoryProvider<OccasionRepository>(
+          create: (context) => occasionRepository,
         ),
       ],
       child: const AppView(),

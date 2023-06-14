@@ -121,19 +121,22 @@ class _ColorField extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.watch<ColorsOverviewBloc>().state.colors;
     final state = context.watch<EditItemBloc>().state;
-    final hintText = state.initialItem?.color ?? '';
+    const hintText = 'Color goes here';
 
-    return DropdownButtonFormField(
-      hint: Text(hintText),
+    return DropdownButtonFormField<EsnapColor>(
+      hint: const Text(hintText),
+      value: state.color,
       items: colors
           .map(
-            (e) => DropdownMenuItem(
-              value: e.id,
+            (e) => DropdownMenuItem<EsnapColor>(
+              value: e,
               child: Text(e.name),
             ),
           )
           .toList(),
-      onChanged: (value) {},
+      onChanged: (value) {
+        context.read<EditItemBloc>().add(EditItemColorChanged(value));
+      },
     );
     // return TextFormField(
     //   key: const Key('editItemView_title_textFormField'),
@@ -161,7 +164,7 @@ class _DescriptionField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<EditItemBloc>().state;
-    final hintText = state.initialItem?.classification ?? '';
+    const hintText = 'Classification goes here';
 
     return TextFormField(
       key: const Key('editItemView_description_textFormField'),

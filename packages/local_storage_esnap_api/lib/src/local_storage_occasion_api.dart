@@ -9,23 +9,25 @@ import 'package:rxdart/subjects.dart';
 /// {@endtemplate}
 class LocalStorageOccasionApi extends OccasionApi {
   /// {@macro local_storage_occasion_api}
-  LocalStorageOccasionApi() {
-    _init();
+  LocalStorageOccasionApi(this.box) {
+    final occasionsRes = box.values;
+    _occasionStreamController
+        .add(occasionsRes.map((o) => o.toEsnapOccasion()).toList());
   }
 
   final _occasionStreamController =
       BehaviorSubject<List<EsnapOccasion>>.seeded(const []);
 
-  Future<void> _init() async {
-    await _initHive();
-    final box = await Hive.openBox<OccasionSchema>(EsnapBoxes.occasion);
-    final occasionsRes = box.values;
-    _occasionStreamController.add(occasionsRes.map(toOccasion).toList());
-  }
+  /// The box for handling colors
+  final Box<OccasionSchema> box;
 
-  Future<void> _initHive() async {
+  /// This method opens the box, runs the initial migrations and
+  /// returns an instance of the LocalStorageOccasionApi class.
+  static Future<LocalStorageOccasionApi> initializer() async {
     Hive.registerAdapter(OccasionSchemaAdapter());
-    await Hive.initFlutter();
+    final box = await Hive.openBox<OccasionSchema>(EsnapBoxes.occasion);
+    await _initMigrations(box);
+    return LocalStorageOccasionApi(box);
   }
 
   @override
@@ -44,7 +46,7 @@ class LocalStorageOccasionApi extends OccasionApi {
     _occasionStreamController.add(occasions);
 
     return Hive.box<OccasionSchema>(EsnapBoxes.occasion)
-        .put(occasion.id, fromOccasion(occasion));
+        .put(occasion.id, OccasionSchema.fromEsnapOccasion(occasion));
   }
 
   @override
@@ -59,14 +61,24 @@ class LocalStorageOccasionApi extends OccasionApi {
       // return _setValue(kTodosCollectionKey, json.encode(occasions));
     }
   }
+
+  static Future<void> _initMigrations(Box<OccasionSchema> box) async {
+    const migratedKey = 'migratedOccasion';
+    final migratedBox = Hive.box<bool>(EsnapBoxes.migrated);
+    final hasData = migratedBox.get(migratedKey, defaultValue: false);
+    if (!(hasData ?? false)) {
+      await box.clear();
+      final occasions = _baseOccasions.map(
+        (c) => OccasionSchema.fromEsnapOccasion(
+          EsnapOccasion(name: c),
+        ),
+      );
+      for (final element in occasions) {
+        await box.put(element.id, element);
+      }
+      await migratedBox.put(migratedKey, true);
+    }
+  }
 }
 
-/// Creates an instance from an EsnapOccasion
-OccasionSchema fromOccasion(EsnapOccasion occasion) =>
-    OccasionSchema(id: occasion.id, name: occasion.name);
-
-/// Returns an occasion based on this instance values
-EsnapOccasion toOccasion(OccasionSchema occasionSchema) => EsnapOccasion(
-      id: occasionSchema.id,
-      name: occasionSchema.name,
-    );
+const _baseOccasions = ['casual', 'club', 'professional'];
