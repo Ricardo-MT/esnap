@@ -40,6 +40,78 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559114535701:android:16c38e13351847d42c9f1c",
+        "android_client_info": {
+          "package_name": "com.ricardo.esnap.app.esnap.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "559114535701-jucfigrgmkfm6m90ssnd767ecfsrer8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA685J27z7xvCfMtM3MMyw3ohz9456YMWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "559114535701-jucfigrgmkfm6m90ssnd767ecfsrer8n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "559114535701-5ile7g3aafad31mil00sedrb4piphbuv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ricardo.esnap.app.esnap"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559114535701:android:4b6d5a1b24e4bc2e2c9f1c",
+        "android_client_info": {
+          "package_name": "com.ricardo.esnap.app.esnap.stg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "559114535701-jucfigrgmkfm6m90ssnd767ecfsrer8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA685J27z7xvCfMtM3MMyw3ohz9456YMWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "559114535701-jucfigrgmkfm6m90ssnd767ecfsrer8n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "559114535701-5ile7g3aafad31mil00sedrb4piphbuv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ricardo.esnap.app.esnap"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

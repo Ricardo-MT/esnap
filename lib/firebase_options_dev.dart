@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart'
 ///
 /// Example:
 /// ```dart
-/// import 'firebase_options.dart';
+/// import 'firebase_options_dev.dart';
 /// // ...
 /// await Firebase.initializeApp(
 ///   options: DefaultFirebaseOptions.currentPlatform,
@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA685J27z7xvCfMtM3MMyw3ohz9456YMWU',
-    appId: '1:559114535701:android:d9799467dea64e472c9f1c',
+    appId: '1:559114535701:android:16c38e13351847d42c9f1c',
     messagingSenderId: '559114535701',
     projectId: 'esnap-541ef',
     storageBucket: 'esnap-541ef.appspot.com',
@@ -66,12 +66,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBAP2fpSsJda1rftSQpBVucIY5eDzZGMNw',
-    appId: '1:559114535701:ios:b4583aaf3c444d942c9f1c',
+    appId: '1:559114535701:ios:f49e45e9c2e1c9bc2c9f1c',
     messagingSenderId: '559114535701',
     projectId: 'esnap-541ef',
     storageBucket: 'esnap-541ef.appspot.com',
     iosClientId:
-        '559114535701-5ile7g3aafad31mil00sedrb4piphbuv.apps.googleusercontent.com',
-    iosBundleId: 'com.ricardo.esnap.app.esnap',
+        '559114535701-m1th4s0fu8r3v02b6b5e7ojk7co22g67.apps.googleusercontent.com',
+    iosBundleId: 'com.ricardo.esnap.app.esnap.dev',
   );
 }
