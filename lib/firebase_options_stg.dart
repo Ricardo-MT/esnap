@@ -2,7 +2,7 @@
 // ignore_for_file: lines_longer_than_80_chars, avoid_classes_with_only_static_members
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform, kIsWeb;
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -70,8 +70,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '559114535701',
     projectId: 'esnap-541ef',
     storageBucket: 'esnap-541ef.appspot.com',
-    iosClientId:
-        '559114535701-nlj6hh2m8c04radj04lojh73gr1ba365.apps.googleusercontent.com',
+    iosClientId: '559114535701-nlj6hh2m8c04radj04lojh73gr1ba365.apps.googleusercontent.com',
     iosBundleId: 'com.ricardo.esnap.app.esnap.stg',
   );
 }
