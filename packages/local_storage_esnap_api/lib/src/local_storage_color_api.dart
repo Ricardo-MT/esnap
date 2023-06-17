@@ -67,8 +67,15 @@ class LocalStorageColorApi extends ColorApi {
     final hasData = migratedBox.get(migratedKey, defaultValue: false);
     if (!(hasData ?? false)) {
       await box.clear();
-      final colors = _baseColors
-          .map((c) => ColorSchema.fromEsnapColor(EsnapColor(name: c)));
+      final colors = List.generate(
+        _baseColors.length,
+        (index) => ColorSchema.fromEsnapColor(
+          EsnapColor(
+            name: _baseColors[index],
+            hexColor: _baseHexColors[index],
+          ),
+        ),
+      );
       for (final element in colors) {
         await box.put(element.id, element);
       }
@@ -78,12 +85,49 @@ class LocalStorageColorApi extends ColorApi {
 }
 
 const _baseColors = [
-  'red',
-  'blue',
-  'green',
-  'yellow',
-  'white',
-  'black',
-  'silver',
-  'gold',
+  'Beige',
+  'Black',
+  'Blue',
+  'Brown',
+  'Coral',
+  'Gold',
+  'Gray',
+  'Green',
+  'Maroon',
+  'Multicolor',
+  'Navy',
+  'Olive',
+  'Orange',
+  'Pink',
+  'Purple',
+  'Red',
+  'Silver',
+  'Teal',
+  'Turquoise',
+  'White',
+  'Yellow',
+];
+
+const _baseHexColors = [
+  0xFFF5F5DC,
+  0xFF000000,
+  0xFF2020DA,
+  0xFFA52A2A,
+  0xFFFF7F50,
+  0xFFFFD700,
+  0xFF808080,
+  0xFF008000,
+  0xFF800000,
+  0xFF000000,
+  0xFF000080,
+  0xFF808000,
+  0xFFFFA500,
+  0xFFFFC0CB,
+  0xFF800080,
+  0xFFFF0000,
+  0xFFC0C0C0,
+  0xFF008080,
+  0xFF40E0D0,
+  0xFFFFFFFF,
+  0xFFFFFF00,
 ];

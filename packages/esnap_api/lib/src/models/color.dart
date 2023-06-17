@@ -17,12 +17,13 @@ class EsnapColor extends Equatable {
   /// {@macro color}
   EsnapColor({
     required this.name,
+    required this.hexColor,
     String? id,
   })  : assert(
           id == null || id.isNotEmpty,
           'id can not be null and should be empty',
         ),
-        id = id ?? const Uuid().v4();
+        id = id ?? '$name-${const Uuid().v4()}';
 
   /// The unique identifier of the `EsnapColor`.
   ///
@@ -34,16 +35,23 @@ class EsnapColor extends Equatable {
   /// Cannot be empty.
   final String name;
 
+  /// The `EsnapColor`'s hex-color.
+  ///
+  /// Cannot be empty.
+  final int hexColor;
+
   /// Returns a copy of this `EsnapColor` with the given values updated.
   ///
   /// {@macro color}
   EsnapColor copyWith({
     String? id,
     String? name,
+    int? hexColor,
   }) {
     return EsnapColor(
       id: id ?? this.id,
       name: name ?? this.name,
+      hexColor: hexColor ?? this.hexColor,
     );
   }
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:wid_design_system/wid_design_system.dart';
@@ -64,6 +65,7 @@ class ItemListTile extends StatelessWidget {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: WidAppColors.light,
+                            size: 20,
                           ),
                         ),
                       ),
@@ -84,13 +86,22 @@ class ItemListTile extends StatelessWidget {
                                 color: captionColor,
                               ),
                             ),
-                            Text(
-                              item.color?.name ?? '(none)',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: captionColor,
-                              ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  item.color?.name ?? '(none)',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: captionColor,
+                                  ),
+                                ),
+                                spacerXs,
+                                ColorIndicator(
+                                    hexColor:
+                                        item.color?.hexColor ?? 0x00FFFFFF),
+                              ],
                             )
                           ],
                         ),

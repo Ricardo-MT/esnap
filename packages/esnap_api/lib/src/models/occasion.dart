@@ -22,7 +22,7 @@ class EsnapOccasion extends Equatable {
           id == null || id.isNotEmpty,
           'id can not be null and should be empty',
         ),
-        id = id ?? const Uuid().v4();
+        id = id ?? '$name-${const Uuid().v4()}';
 
   /// The unique identifier of the `EsnapOccasion`.
   ///

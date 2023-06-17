@@ -4,6 +4,7 @@ import 'package:esnap/app_views/edit_item/edit_todo.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_image_picker.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_select.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
+import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -226,7 +227,14 @@ class _ColorField extends StatelessWidget {
           .map(
             (e) => DropdownMenuItem<EsnapColor>(
               value: e,
-              child: Text(e.name),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(e.name),
+                  spacerXs,
+                  ColorIndicator(hexColor: e.hexColor),
+                ],
+              ),
             ),
           )
           .toList(),

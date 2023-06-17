@@ -7,11 +7,18 @@ part 'color.g.dart';
 @HiveType(typeId: 2)
 class ColorSchema extends HiveObject {
   /// Basic constructor
-  ColorSchema({required this.id, required this.name});
+  ColorSchema({
+    required this.id,
+    required this.name,
+    required this.hexColor,
+  });
 
   /// Convenient constructor from EsnapColor
-  factory ColorSchema.fromEsnapColor(EsnapColor color) =>
-      ColorSchema(id: color.id, name: color.name);
+  factory ColorSchema.fromEsnapColor(EsnapColor color) => ColorSchema(
+        id: color.id,
+        name: color.name,
+        hexColor: color.hexColor,
+      );
 
   /// The unique id for the color
   @HiveField(0)
@@ -21,6 +28,14 @@ class ColorSchema extends HiveObject {
   @HiveField(1)
   String name;
 
+  /// The color name
+  @HiveField(2)
+  int hexColor;
+
   /// Convenient transformer to EsnapColor
-  EsnapColor toEsnapColor() => EsnapColor(id: id, name: name);
+  EsnapColor toEsnapColor() => EsnapColor(
+        id: id,
+        name: name,
+        hexColor: hexColor,
+      );
 }
