@@ -130,11 +130,30 @@ class _ImageField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<EditItemBloc>().state;
-    return WidImagePicker(
-      imagePath: state.imagePath,
-      onPicked: (p0) {
-        context.read<EditItemBloc>().add(EditItemImagePathChanged(p0.path));
-      },
+    return Stack(
+      children: [
+        WidImagePicker(
+          imagePath: state.imagePath,
+          onPicked: (p0) {
+            context.read<EditItemBloc>().add(EditItemImagePathChanged(p0.path));
+          },
+        ),
+        Positioned(
+          top: 5,
+          right: 5,
+          child: IconButton(
+            icon: Icon(state.favorite ? Icons.favorite : Icons.favorite_border),
+            iconSize: 30,
+            padding: EdgeInsets.zero,
+            color: Colors.white,
+            visualDensity: VisualDensity.compact,
+            splashRadius: 5,
+            onPressed: () => context
+                .read<EditItemBloc>()
+                .add(EditItemFavoriteChanged(favorite: !state.favorite)),
+          ),
+        )
+      ],
     );
   }
 }

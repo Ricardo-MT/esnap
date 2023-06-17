@@ -46,3 +46,12 @@ final class EditItemOccasionsChanged extends EditItemEvent {
 final class EditItemSubmitted extends EditItemEvent {
   const EditItemSubmitted();
 }
+
+final class EditItemFavoriteChanged extends EditItemEvent {
+  const EditItemFavoriteChanged({required this.favorite});
+
+  final bool favorite;
+
+  @override
+  List<Object?> get props => [favorite];
+}

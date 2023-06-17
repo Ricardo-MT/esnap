@@ -19,6 +19,7 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
             imagePath: initialItem?.imagePath,
             classification: initialItem?.classification,
             occasions: initialItem?.occasions.toList() ?? [],
+            favorite: initialItem?.favorite ?? false,
           ),
         ) {
     on<EditItemImagePathChanged>(_onImageChanged);
@@ -26,6 +27,7 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
     on<EditItemClassificationChanged>(_onClassificationChanged);
     on<EditItemOccasionsChanged>(_onOccasionsChanged);
     on<EditItemSubmitted>(_onSubmitted);
+    on<EditItemFavoriteChanged>(_onFavoriteChanged);
   }
 
   final EsnapRepository _esnapRepository;
@@ -58,6 +60,13 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
     emit(state.copyWith(occasions: event.occasions));
   }
 
+  void _onFavoriteChanged(
+    EditItemFavoriteChanged event,
+    Emitter<EditItemState> emit,
+  ) {
+    emit(state.copyWith(favorite: event.favorite));
+  }
+
   Future<void> _onSubmitted(
     EditItemSubmitted event,
     Emitter<EditItemState> emit,
@@ -68,6 +77,7 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
       classification: state.classification,
       occasions: state.occasions,
       imagePath: state.imagePath,
+      favorite: state.favorite,
     );
     try {
       await _esnapRepository.saveItem(item);

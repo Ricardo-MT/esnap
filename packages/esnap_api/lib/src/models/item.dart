@@ -26,6 +26,7 @@ class Item extends Equatable {
     this.color,
     String? id,
     this.occasions = const [],
+    this.favorite = false,
   })  : assert(
           id == null || id.isNotEmpty,
           'id can not be null and should be empty',
@@ -53,6 +54,9 @@ class Item extends Equatable {
   /// Cannot be empty.
   final String? imagePath;
 
+  /// Is this item marked as favorite?
+  final bool favorite;
+
   /// Returns a copy of this `item` with the given values updated.
   ///
   /// {@macro item}
@@ -62,6 +66,7 @@ class Item extends Equatable {
     EsnapClassification? classification,
     List<EsnapOccasion>? occasions,
     String? imagePath,
+    bool? favorite,
   }) {
     return Item(
       id: id ?? this.id,
@@ -70,6 +75,7 @@ class Item extends Equatable {
       occasions:
           (occasions ?? this.occasions).map((o) => o.copyWith()).toList(),
       imagePath: imagePath ?? this.imagePath,
+      favorite: favorite ?? this.favorite,
     );
   }
 
@@ -80,5 +86,6 @@ class Item extends Equatable {
   // JsonMap toJson() => _$ItemToJson(this);
 
   @override
-  List<Object?> get props => [id, color, classification, occasions, imagePath];
+  List<Object?> get props =>
+      [id, color, classification, occasions, imagePath, favorite];
 }

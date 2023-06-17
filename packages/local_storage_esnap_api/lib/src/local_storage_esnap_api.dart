@@ -104,13 +104,13 @@ Future<ItemSchema> fromItem(Item item) async {
   final directory = await getApplicationDocumentsDirectory();
   final localFile = File(path.join(directory.path, item.id));
   await localFile.writeAsBytes(File(item.imagePath!).readAsBytesSync());
-  print('LLEGA ESTE PATH${localFile.path}');
   return ItemSchema(
     id: item.id,
     color: colorList,
     classification: classificationList,
     occasions: occasionList,
     imagePath: localFile.path,
+    favorite: item.favorite,
   );
 }
 
@@ -123,6 +123,7 @@ Item toItem(ItemSchema itemSchema) => Item(
           .map((e) => (e as OccasionSchema).toEsnapOccasion())
           .toList(),
       imagePath: itemSchema.imagePath,
+      favorite: itemSchema.favorite,
     );
 
 /// Gets the list from the hive object and returns the first object

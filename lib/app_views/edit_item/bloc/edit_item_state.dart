@@ -17,6 +17,7 @@ final class EditItemState extends Equatable {
     this.color,
     this.classification,
     this.occasions = const [],
+    this.favorite = false,
   });
 
   final EditItemStatus status;
@@ -25,6 +26,7 @@ final class EditItemState extends Equatable {
   final EsnapColor? color;
   final EsnapClassification? classification;
   final List<EsnapOccasion> occasions;
+  final bool favorite;
 
   bool get isNewItem => initialItem == null;
 
@@ -35,6 +37,7 @@ final class EditItemState extends Equatable {
     EsnapColor? color,
     EsnapClassification? classification,
     List<EsnapOccasion>? occasions,
+    bool? favorite,
   }) {
     return EditItemState(
       status: status ?? this.status,
@@ -43,6 +46,7 @@ final class EditItemState extends Equatable {
       color: color ?? this.color,
       classification: classification ?? this.classification,
       occasions: (occasions ?? this.occasions).toList(),
+      favorite: favorite ?? this.favorite,
     );
   }
 
@@ -54,5 +58,6 @@ final class EditItemState extends Equatable {
         color,
         classification,
         occasions,
+        favorite,
       ];
 }
