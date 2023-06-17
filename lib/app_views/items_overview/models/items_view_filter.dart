@@ -3,6 +3,7 @@ import 'package:esnap_repository/esnap_repository.dart';
 // List of all filter types
 enum ItemsViewFilter {
   all,
+  favorite,
 }
 
 extension ItemsViewFilterX on ItemsViewFilter {
@@ -10,9 +11,9 @@ extension ItemsViewFilterX on ItemsViewFilter {
     switch (this) {
       case ItemsViewFilter.all:
         return true;
-      // case TodosViewFilter.activeOnly:
-      //   return !item.isCompleted;
-      // case TodosViewFilter.completedOnly:
+      case ItemsViewFilter.favorite:
+        return item.favorite;
+      // case ItemsViewFilter.completedOnly:
       //   return item.isCompleted;
     }
   }

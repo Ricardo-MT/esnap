@@ -28,6 +28,10 @@ class ItemsOverviewFilterButton extends StatelessWidget {
             value: ItemsViewFilter.all,
             child: Text('All items'),
           ),
+          const PopupMenuItem(
+            value: ItemsViewFilter.favorite,
+            child: Text('Favorites'),
+          ),
           // PopupMenuItem(
           //   value: TodosViewFilter.activeOnly,
           //   child: Text(l10n.todosOverviewFilterActiveOnly),
