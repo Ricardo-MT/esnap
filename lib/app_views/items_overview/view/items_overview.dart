@@ -72,21 +72,22 @@ class ItemsOverviewView extends StatelessWidget {
                 );
               }
             }
-
-            return CupertinoScrollbar(
-              child: ListView(
-                children: [
-                  for (final item in state.filteredItems)
-                    ItemListTile(
-                      item: item,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          EditItemPage.route(initialItem: item),
-                        );
-                      },
-                    ),
-                ],
-              ),
+            return GridView.count(
+              crossAxisCount: 3,
+              padding: const EdgeInsets.all(15),
+              mainAxisSpacing: 15,
+              crossAxisSpacing: 15,
+              children: [
+                for (final item in state.filteredItems)
+                  ItemListTile(
+                    item: item,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        EditItemPage.route(initialItem: item),
+                      );
+                    },
+                  ),
+              ],
             );
           },
         ),

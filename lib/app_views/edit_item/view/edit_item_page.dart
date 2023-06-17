@@ -132,11 +132,16 @@ class _ImageField extends StatelessWidget {
     final state = context.watch<EditItemBloc>().state;
     return Stack(
       children: [
-        WidImagePicker(
-          imagePath: state.imagePath,
-          onPicked: (p0) {
-            context.read<EditItemBloc>().add(EditItemImagePathChanged(p0.path));
-          },
+        Hero(
+          tag: state.imagePath ?? 'edit_image_unset_image_path',
+          child: WidImagePicker(
+            imagePath: state.imagePath,
+            onPicked: (p0) {
+              context
+                  .read<EditItemBloc>()
+                  .add(EditItemImagePathChanged(p0.path));
+            },
+          ),
         ),
         Positioned(
           top: 5,
