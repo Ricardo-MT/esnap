@@ -7,6 +7,15 @@ sealed class EditItemEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+final class EditItemImagePathChanged extends EditItemEvent {
+  const EditItemImagePathChanged(this.imagePath);
+
+  final String? imagePath;
+
+  @override
+  List<Object?> get props => [imagePath];
+}
+
 final class EditItemColorChanged extends EditItemEvent {
   const EditItemColorChanged(this.color);
 

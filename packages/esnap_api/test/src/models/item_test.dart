@@ -16,7 +16,7 @@ void main() {
         color: EsnapColor(name: color),
         classification: EsnapClassification(name: classification),
         occasions: occasions.map((e) => EsnapOccasion(name: e)).toList(),
-        image: oneFile,
+        imagePath: '',
       );
     }
 

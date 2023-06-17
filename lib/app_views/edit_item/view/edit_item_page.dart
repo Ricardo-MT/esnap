@@ -1,6 +1,7 @@
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/colors_overview/bloc/colors_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
+import 'package:esnap/app_views/edit_item/widgets/wid_image_picker.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_select.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
 import 'package:esnap_repository/esnap_repository.dart';
@@ -84,27 +85,22 @@ class EditItemView extends StatelessWidget {
     final isNewItem = context.select(
       (EditItemBloc bloc) => bloc.state.isNewItem,
     );
-    final theme = Theme.of(context);
-    final floatingActionButtonTheme = theme.floatingActionButtonTheme;
-    final fabBackgroundColor = floatingActionButtonTheme.backgroundColor ??
-        theme.colorScheme.secondary;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           isNewItem ? 'New item' : 'Editing item',
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'save',
-        backgroundColor: status.isLoadingOrSuccess
-            ? fabBackgroundColor.withOpacity(0.5)
-            : fabBackgroundColor,
+      floatingActionButton: ElevatedButton.icon(
         onPressed: status.isLoadingOrSuccess
             ? null
             : () => context.read<EditItemBloc>().add(const EditItemSubmitted()),
-        child: status.isLoadingOrSuccess
-            ? const CupertinoActivityIndicator()
-            : const Icon(Icons.check_rounded),
+        icon: status.isLoadingOrSuccess
+            ? const CupertinoActivityIndicator(
+                color: WidAppColors.light,
+              )
+            : const Icon(Icons.save),
+        label: const Text('Save'),
       ),
       body: const CupertinoScrollbar(
         child: SingleChildScrollView(
@@ -112,6 +108,8 @@ class EditItemView extends StatelessWidget {
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
+                _ImageField(),
+                spacerM,
                 _ClassificationField(),
                 spacerM,
                 _ColorField(),
@@ -122,6 +120,21 @@ class EditItemView extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ImageField extends StatelessWidget {
+  const _ImageField();
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<EditItemBloc>().state;
+    return WidImagePicker(
+      imagePath: state.imagePath,
+      onPicked: (p0) {
+        context.read<EditItemBloc>().add(EditItemImagePathChanged(p0.path));
+      },
     );
   }
 }
@@ -137,6 +150,7 @@ class _ClassificationField extends StatelessWidget {
     const hintText = 'Classification goes here';
 
     return DropdownButtonFormField<EsnapClassification>(
+      decoration: const InputDecoration(label: Text('Classification')),
       hint: const Text(hintText),
       value: state.classification,
       items: classifications
@@ -181,6 +195,7 @@ class _ColorField extends StatelessWidget {
     const hintText = 'Color goes here';
 
     return DropdownButtonFormField<EsnapColor>(
+      decoration: const InputDecoration(label: Text('Color')),
       hint: const Text(hintText),
       value: state.color,
       items: colors

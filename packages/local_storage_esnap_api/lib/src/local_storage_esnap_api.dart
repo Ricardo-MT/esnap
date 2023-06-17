@@ -7,6 +7,8 @@ import 'package:local_storage_esnap_api/src/adapters/color.dart';
 import 'package:local_storage_esnap_api/src/adapters/item.dart';
 import 'package:local_storage_esnap_api/src/adapters/occasion.dart';
 import 'package:local_storage_esnap_api/src/esnap_boxes.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/subjects.dart';
 
 /// {@template local_storage_esnap_api}
@@ -45,7 +47,7 @@ class LocalStorageEsnapApi extends EsnapApi {
       items.add(item);
     }
     _itemStreamController.add(items);
-    final item0 = fromItem(item);
+    final item0 = await fromItem(item);
     return Hive.box<ItemSchema>(EsnapBoxes.item).put(item.id, item0);
   }
 
@@ -64,7 +66,7 @@ class LocalStorageEsnapApi extends EsnapApi {
 }
 
 /// Creates an instance of an ItemSchema from an Item
-ItemSchema fromItem(Item item) {
+Future<ItemSchema> fromItem(Item item) async {
   /// Field color
   final colorBox = Hive.box<ColorSchema>(EsnapBoxes.color);
   final colorList = HiveList(
@@ -97,11 +99,18 @@ ItemSchema fromItem(Item item) {
           )
           .toList(),
     );
+
+  /// Handle the image
+  final directory = await getApplicationDocumentsDirectory();
+  final localFile = File(path.join(directory.path, item.id));
+  await localFile.writeAsBytes(File(item.imagePath!).readAsBytesSync());
+  print('LLEGA ESTE PATH${localFile.path}');
   return ItemSchema(
     id: item.id,
     color: colorList,
     classification: classificationList,
     occasions: occasionList,
+    imagePath: localFile.path,
   );
 }
 
@@ -113,7 +122,7 @@ Item toItem(ItemSchema itemSchema) => Item(
       occasions: itemSchema.occasions
           .map((e) => (e as OccasionSchema).toEsnapOccasion())
           .toList(),
-      image: File(''),
+      imagePath: itemSchema.imagePath,
     );
 
 /// Gets the list from the hive object and returns the first object

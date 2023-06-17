@@ -13,6 +13,7 @@ final class EditItemState extends Equatable {
   const EditItemState({
     this.status = EditItemStatus.initial,
     this.initialItem,
+    this.imagePath,
     this.color,
     this.classification,
     this.occasions = const [],
@@ -20,6 +21,7 @@ final class EditItemState extends Equatable {
 
   final EditItemStatus status;
   final Item? initialItem;
+  final String? imagePath;
   final EsnapColor? color;
   final EsnapClassification? classification;
   final List<EsnapOccasion> occasions;
@@ -29,6 +31,7 @@ final class EditItemState extends Equatable {
   EditItemState copyWith({
     EditItemStatus? status,
     Item? initialItem,
+    String? imagePath,
     EsnapColor? color,
     EsnapClassification? classification,
     List<EsnapOccasion>? occasions,
@@ -36,6 +39,7 @@ final class EditItemState extends Equatable {
     return EditItemState(
       status: status ?? this.status,
       initialItem: initialItem ?? this.initialItem,
+      imagePath: imagePath ?? this.imagePath,
       color: color ?? this.color,
       classification: classification ?? this.classification,
       occasions: (occasions ?? this.occasions).toList(),
@@ -46,6 +50,7 @@ final class EditItemState extends Equatable {
   List<Object?> get props => [
         status,
         initialItem,
+        imagePath,
         color,
         classification,
         occasions,

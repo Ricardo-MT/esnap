@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 import 'package:esnap_api/esnap_api.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -11,7 +9,7 @@ import 'package:uuid/uuid.dart';
 /// {@template item}
 /// A single `item`.
 ///
-/// Contains a [color], [classification], [occasions], and [image].
+/// Contains a [color], [classification], [occasions], and [imagePath].
 ///
 /// If an [id] is provided, it cannot be empty. If no [id] is provided, one
 /// will be generated.
@@ -23,7 +21,7 @@ import 'package:uuid/uuid.dart';
 class Item extends Equatable {
   /// {@macro item}
   Item({
-    required this.image,
+    this.imagePath,
     this.classification,
     this.color,
     String? id,
@@ -53,7 +51,7 @@ class Item extends Equatable {
   /// The image of the `item`.
   ///
   /// Cannot be empty.
-  final File image;
+  final String? imagePath;
 
   /// Returns a copy of this `item` with the given values updated.
   ///
@@ -63,7 +61,7 @@ class Item extends Equatable {
     EsnapColor? color,
     EsnapClassification? classification,
     List<EsnapOccasion>? occasions,
-    File? image,
+    String? imagePath,
   }) {
     return Item(
       id: id ?? this.id,
@@ -71,7 +69,7 @@ class Item extends Equatable {
       classification: (classification ?? this.classification)?.copyWith(),
       occasions:
           (occasions ?? this.occasions).map((o) => o.copyWith()).toList(),
-      image: image ?? this.image,
+      imagePath: imagePath ?? this.imagePath,
     );
   }
 
@@ -82,5 +80,5 @@ class Item extends Equatable {
   // JsonMap toJson() => _$ItemToJson(this);
 
   @override
-  List<Object?> get props => [id, color, classification, occasions, image];
+  List<Object?> get props => [id, color, classification, occasions, imagePath];
 }

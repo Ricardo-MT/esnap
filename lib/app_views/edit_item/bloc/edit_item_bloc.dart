@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -17,10 +16,12 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
           EditItemState(
             initialItem: initialItem,
             color: initialItem?.color,
+            imagePath: initialItem?.imagePath,
             classification: initialItem?.classification,
             occasions: initialItem?.occasions.toList() ?? [],
           ),
         ) {
+    on<EditItemImagePathChanged>(_onImageChanged);
     on<EditItemColorChanged>(_onColorChanged);
     on<EditItemClassificationChanged>(_onClassificationChanged);
     on<EditItemOccasionsChanged>(_onOccasionsChanged);
@@ -28,6 +29,13 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
   }
 
   final EsnapRepository _esnapRepository;
+
+  void _onImageChanged(
+    EditItemImagePathChanged event,
+    Emitter<EditItemState> emit,
+  ) {
+    emit(state.copyWith(imagePath: event.imagePath));
+  }
 
   void _onColorChanged(
     EditItemColorChanged event,
@@ -55,14 +63,11 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
     Emitter<EditItemState> emit,
   ) async {
     emit(state.copyWith(status: EditItemStatus.loading));
-    final item = (state.initialItem ??
-            Item(
-              image: File(''),
-            ))
-        .copyWith(
+    final item = (state.initialItem ?? Item()).copyWith(
       color: state.color,
       classification: state.classification,
       occasions: state.occasions,
+      imagePath: state.imagePath,
     );
     try {
       await _esnapRepository.saveItem(item);

@@ -11,6 +11,7 @@ class ItemSchema extends HiveObject {
     required this.classification,
     required this.occasions,
     required this.color,
+    required this.imagePath,
   });
 
   /// The unique id for the item
@@ -28,4 +29,8 @@ class ItemSchema extends HiveObject {
   /// A list of the item's occasions.
   @HiveField(3)
   HiveList occasions;
+
+  /// A list of the item's occasions.
+  @HiveField(4)
+  String imagePath;
 }

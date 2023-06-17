@@ -67,7 +67,7 @@ class ItemsOverviewView extends StatelessWidget {
                 return Center(
                   child: Text(
                     'No items',
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 );
               }

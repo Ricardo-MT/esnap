@@ -21,13 +21,14 @@ class ItemSchemaAdapter extends TypeAdapter<ItemSchema> {
       classification: (fields[2] as HiveList).castHiveList(),
       occasions: (fields[3] as HiveList).castHiveList(),
       color: (fields[1] as HiveList).castHiveList(),
+      imagePath: fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ItemSchema obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class ItemSchemaAdapter extends TypeAdapter<ItemSchema> {
       ..writeByte(2)
       ..write(obj.classification)
       ..writeByte(3)
-      ..write(obj.occasions);
+      ..write(obj.occasions)
+      ..writeByte(4)
+      ..write(obj.imagePath);
   }
 
   @override
