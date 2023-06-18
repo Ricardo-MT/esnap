@@ -18,10 +18,6 @@ class ItemsOverviewFilterButton extends StatelessWidget {
     return IconButton(
       onPressed: () {
         showModalBottomSheet<ItemOverviewFilterSheet>(
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-          ),
           useSafeArea: true,
           context: context,
           builder: (_) => ItemOverviewFilterSheet(

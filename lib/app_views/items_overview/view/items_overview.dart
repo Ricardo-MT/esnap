@@ -1,5 +1,6 @@
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/colors_overview/bloc/colors_overview_bloc.dart';
+import 'package:esnap/app_views/detail_item/detail_todo.dart';
 import 'package:esnap/app_views/edit_item/view/edit_item_page.dart';
 import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
 import 'package:esnap/app_views/items_overview/widgets/item_list_tile.dart';
@@ -126,7 +127,7 @@ class ItemsOverviewView extends StatelessWidget {
                                 item: item,
                                 onTap: () {
                                   Navigator.of(context).push(
-                                    EditItemPage.route(initialItem: item),
+                                    DetailItemPage.route(item: item),
                                   );
                                 },
                               ),

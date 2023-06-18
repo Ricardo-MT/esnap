@@ -154,10 +154,21 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WidText.headlineSmall(text: 'Show favorites'),
-                Switch.adaptive(
-                  value: selectedFavorite,
-                  onChanged: onFavoriteChange,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Expanded(
+                      child: WidText.headlineSmall(text: 'Show favorites'),
+                    ),
+                    Switch.adaptive(
+                      value: selectedFavorite,
+                      onChanged: onFavoriteChange,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    )
+                  ],
+                ),
+                const Divider(
+                  color: WidAppColors.n500,
                 ),
                 const WidText.headlineSmall(text: 'Classifications'),
                 Wrap(
@@ -167,16 +178,18 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                       .state
                       .classifications
                       .map(
-                        (classification) => ChoiceChip(
+                        (classification) => FilterChip(
                           label: Text(classification.name),
                           selected:
                               classification.id == selectedClassification?.id,
-                          selectedColor: WidAppColors.callToAction,
                           onSelected: (_) =>
                               onClassificationChange(classification),
                         ),
                       )
                       .toList(),
+                ),
+                const Divider(
+                  color: WidAppColors.n500,
                 ),
                 const WidText.headlineSmall(text: 'Colors'),
                 Wrap(
@@ -186,14 +199,16 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                       .state
                       .colors
                       .map(
-                        (color) => ChoiceChip(
+                        (color) => FilterChip(
                           label: Text(color.name),
                           selected: color.id == selectedColor?.id,
-                          selectedColor: WidAppColors.callToAction,
                           onSelected: (_) => onColorChange(color),
                         ),
                       )
                       .toList(),
+                ),
+                const Divider(
+                  color: WidAppColors.n500,
                 ),
                 const WidText.headlineSmall(text: 'Occasions'),
                 Wrap(
@@ -203,10 +218,9 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                       .state
                       .occasions
                       .map(
-                        (occasion) => ChoiceChip(
+                        (occasion) => FilterChip(
                           label: Text(occasion.name),
                           selected: occasion.id == selectedOccasion?.id,
-                          selectedColor: WidAppColors.callToAction,
                           onSelected: (_) => onOccasionChange(occasion),
                         ),
                       )
