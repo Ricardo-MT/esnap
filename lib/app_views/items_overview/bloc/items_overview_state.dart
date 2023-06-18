@@ -6,24 +6,26 @@ final class ItemsOverviewState extends Equatable {
   const ItemsOverviewState({
     this.status = ItemsOverviewStatus.initial,
     this.items = const [],
-    this.filter = ItemsViewFilter.all,
+    this.filters = const [],
   });
 
   final ItemsOverviewStatus status;
   final List<Item> items;
-  final ItemsViewFilter filter;
+  final List<Filter> filters;
 
-  Iterable<Item> get filteredItems => filter.applyAll(items);
+  Iterable<Item> get filteredItems => items
+      .where((element) => filters.every((filter) => filter.apply(element)))
+      .toList();
 
   ItemsOverviewState copyWith({
     ItemsOverviewStatus Function()? status,
     List<Item> Function()? items,
-    ItemsViewFilter Function()? filter,
+    List<Filter> Function()? filters,
   }) {
     return ItemsOverviewState(
       status: status != null ? status() : this.status,
       items: items != null ? items() : this.items,
-      filter: filter != null ? filter() : this.filter,
+      filters: filters != null ? filters() : this.filters,
     );
   }
 
@@ -31,6 +33,6 @@ final class ItemsOverviewState extends Equatable {
   List<Object?> get props => [
         status,
         items,
-        filter,
+        filters,
       ];
 }

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:esnap/app_views/items_overview/models/items_view_filter.dart';
+import 'package:esnap/app_views/items_overview/models/filter.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 
 part 'items_overview_event.dart';
@@ -39,6 +39,19 @@ class ItemsOverviewBloc extends Bloc<ItemsOverviewEvent, ItemsOverviewState> {
     ItemsOverviewFilterChanged event,
     Emitter<ItemsOverviewState> emit,
   ) {
-    emit(state.copyWith(filter: () => event.filter));
+    final prevFilters = state.filters.toList();
+    final found = prevFilters.indexWhere(
+      (element) => element.runtimeType == event.filter.runtimeType,
+    );
+    if (found == -1) {
+      emit(state.copyWith(filters: () => [...prevFilters, event.filter]));
+      return;
+    }
+    if (prevFilters[found].id == event.filter.id) {
+      prevFilters.removeAt(found);
+    } else {
+      prevFilters[found] = event.filter;
+    }
+    emit(state.copyWith(filters: () => prevFilters));
   }
 }

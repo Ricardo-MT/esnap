@@ -6,6 +6,7 @@ import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wid_design_system/wid_design_system.dart';
 
 class ItemsOverviewPage extends StatelessWidget {
   const ItemsOverviewPage({super.key});
@@ -72,21 +73,42 @@ class ItemsOverviewView extends StatelessWidget {
                 );
               }
             }
-            return GridView.count(
-              crossAxisCount: 3,
-              padding: const EdgeInsets.all(15),
-              mainAxisSpacing: 15,
-              crossAxisSpacing: 15,
+            return Column(
               children: [
-                for (final item in state.filteredItems)
-                  ItemListTile(
-                    item: item,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        EditItemPage.route(initialItem: item),
-                      );
-                    },
+                SizedBox(
+                  height: 30,
+                  child: ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: spacerS.width!),
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (_, index) => InputChip(
+                      label: Text(state.filters[index].getText()),
+                      onDeleted: () => context.read<ItemsOverviewBloc>().add(
+                            ItemsOverviewFilterChanged(state.filters[index]),
+                          ),
+                    ),
+                    separatorBuilder: (_, __) => spacerS,
+                    itemCount: state.filters.length,
                   ),
+                ),
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 3,
+                    padding: const EdgeInsets.all(15),
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                    children: [
+                      for (final item in state.filteredItems)
+                        ItemListTile(
+                          item: item,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              EditItemPage.route(initialItem: item),
+                            );
+                          },
+                        ),
+                    ],
+                  ),
+                ),
               ],
             );
           },

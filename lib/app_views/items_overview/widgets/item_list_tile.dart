@@ -99,8 +99,8 @@ class ItemListTile extends StatelessWidget {
                                 ),
                                 spacerXs,
                                 ColorIndicator(
-                                    hexColor:
-                                        item.color?.hexColor ?? 0x00FFFFFF),
+                                  hexColor: item.color?.hexColor ?? 0x00FFFFFF,
+                                ),
                               ],
                             )
                           ],

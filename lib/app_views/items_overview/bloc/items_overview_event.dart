@@ -14,8 +14,8 @@ final class ItemsOverviewSubscriptionRequested extends ItemsOverviewEvent {
 class ItemsOverviewFilterChanged extends ItemsOverviewEvent {
   const ItemsOverviewFilterChanged(this.filter);
 
-  final ItemsViewFilter filter;
+  final Filter filter;
 
   @override
-  List<Object> get props => [filter];
+  List<Filter> get props => [filter];
 }
