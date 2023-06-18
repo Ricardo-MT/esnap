@@ -1,7 +1,10 @@
+import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
+import 'package:esnap/app_views/colors_overview/bloc/colors_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/view/edit_item_page.dart';
 import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
 import 'package:esnap/app_views/items_overview/widgets/item_list_tile.dart';
 import 'package:esnap/app_views/items_overview/widgets/items_overview_filter_button.dart';
+import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +16,29 @@ class ItemsOverviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ItemsOverviewBloc(
-        esnapRepository: context.read<EsnapRepository>(),
-      )..add(const ItemsOverviewSubscriptionRequested()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ItemsOverviewBloc(
+            esnapRepository: context.read<EsnapRepository>(),
+          )..add(const ItemsOverviewSubscriptionRequested()),
+        ),
+        BlocProvider(
+          create: (context) => ColorsOverviewBloc(
+            colorRepository: context.read<ColorRepository>(),
+          )..add(const ColorsOverviewSubscriptionRequested()),
+        ),
+        BlocProvider(
+          create: (context) => ClassificationsOverviewBloc(
+            classificationRepository: context.read<ClassificationRepository>(),
+          )..add(const ClassificationsOverviewSubscriptionRequested()),
+        ),
+        BlocProvider(
+          create: (context) => OccasionsOverviewBloc(
+            occasionRepository: context.read<OccasionRepository>(),
+          )..add(const OccasionsOverviewSubscriptionRequested()),
+        ),
+      ],
       child: const ItemsOverviewView(),
     );
   }
@@ -91,23 +113,25 @@ class ItemsOverviewView extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: GridView.count(
-                    crossAxisCount: 3,
-                    padding: const EdgeInsets.all(15),
-                    mainAxisSpacing: 15,
-                    crossAxisSpacing: 15,
-                    children: [
-                      for (final item in state.filteredItems)
-                        ItemListTile(
-                          item: item,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              EditItemPage.route(initialItem: item),
-                            );
-                          },
+                  child: state.filteredItems.isEmpty
+                      ? const Center(child: Text('no matches'))
+                      : GridView.count(
+                          crossAxisCount: 3,
+                          padding: const EdgeInsets.all(15),
+                          mainAxisSpacing: 15,
+                          crossAxisSpacing: 15,
+                          children: [
+                            for (final item in state.filteredItems)
+                              ItemListTile(
+                                item: item,
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    EditItemPage.route(initialItem: item),
+                                  );
+                                },
+                              ),
+                          ],
                         ),
-                    ],
-                  ),
                 ),
               ],
             );
