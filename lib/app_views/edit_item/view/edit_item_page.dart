@@ -97,9 +97,7 @@ class EditItemView extends StatelessWidget {
             ? null
             : () => context.read<EditItemBloc>().add(const EditItemSubmitted()),
         icon: status.isLoadingOrSuccess
-            ? const CupertinoActivityIndicator(
-                color: WidAppColors.light,
-              )
+            ? const CupertinoActivityIndicator()
             : const Icon(Icons.save),
         label: const Text('Save'),
       ),
@@ -151,7 +149,7 @@ class _ImageField extends StatelessWidget {
             icon: Icon(state.favorite ? Icons.favorite : Icons.favorite_border),
             iconSize: 30,
             padding: EdgeInsets.zero,
-            color: Colors.white,
+            color: WidAppColors.light,
             visualDensity: VisualDensity.compact,
             splashRadius: 5,
             onPressed: () => context
@@ -172,11 +170,9 @@ class _ClassificationField extends StatelessWidget {
     final classifications =
         context.watch<ClassificationsOverviewBloc>().state.classifications;
     final state = context.watch<EditItemBloc>().state;
-    const hintText = 'Classification goes here';
 
     return DropdownButtonFormField<EsnapClassification>(
       decoration: const InputDecoration(label: Text('Classification')),
-      hint: const Text(hintText),
       value: state.classification,
       items: classifications
           .map(
@@ -217,11 +213,9 @@ class _ColorField extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.watch<ColorsOverviewBloc>().state.colors;
     final state = context.watch<EditItemBloc>().state;
-    const hintText = 'Color goes here';
 
     return DropdownButtonFormField<EsnapColor>(
       decoration: const InputDecoration(label: Text('Color')),
-      hint: const Text(hintText),
       value: state.color,
       items: colors
           .map(

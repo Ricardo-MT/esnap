@@ -30,7 +30,7 @@ class WidImagePicker extends StatelessWidget {
       borderRadius: _borderRadius,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: WidAppColors.n200,
+          color: Theme.of(context).splashColor,
           borderRadius: _borderRadius,
         ),
         child: WidTouchable(
@@ -63,9 +63,12 @@ class WidImagePicker extends StatelessWidget {
                               Icons.edit,
                               size: 14,
                             ),
-                            label: const WidText.bodySmall(
-                              text: 'Edit',
-                              style: TextStyle(color: WidAppColors.light),
+                            label: const Text(
+                              'Edit',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         )

@@ -16,8 +16,8 @@ class ColorIndicator extends StatelessWidget {
         color: Color(hexColor),
       ),
       child: const SizedBox(
-        height: 14,
-        width: 14,
+        height: 10,
+        width: 10,
       ),
     );
   }

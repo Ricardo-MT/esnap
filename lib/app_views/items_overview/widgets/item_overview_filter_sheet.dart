@@ -6,6 +6,7 @@ import 'package:esnap/app_views/items_overview/models/favorite_filter.dart';
 import 'package:esnap/app_views/items_overview/models/filter.dart';
 import 'package:esnap/app_views/items_overview/models/occasion_filter.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
+import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -200,7 +201,14 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                       .colors
                       .map(
                         (color) => FilterChip(
-                          label: Text(color.name),
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(color.name),
+                              spacerXs,
+                              ColorIndicator(hexColor: color.hexColor)
+                            ],
+                          ),
                           selected: color.id == selectedColor?.id,
                           onSelected: (_) => onColorChange(color),
                         ),

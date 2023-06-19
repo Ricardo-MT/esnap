@@ -77,7 +77,9 @@ class WidSelectMultiple extends StatelessWidget {
               suffixIcon: Icon(
                 Icons.arrow_drop_down,
                 size: 24,
-                color: Colors.grey.shade700,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white70
+                    : Colors.grey.shade700,
               ),
             ),
             key: ValueKey(values.hashCode),
