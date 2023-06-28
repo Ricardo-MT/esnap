@@ -17,20 +17,20 @@ class DetailItemBloc extends Bloc<DetailItemEvent, DetailItemState> {
             item: item,
           ),
         ) {
-    on<DetailItemSubmitted>(_onSubmitted);
+    on<DetailItemFavoriteChanged>(_onFavoriteChanged);
   }
 
   final EsnapRepository _esnapRepository;
 
-  Future<void> _onSubmitted(
-    DetailItemSubmitted event,
+  Future<void> _onFavoriteChanged(
+    DetailItemFavoriteChanged event,
     Emitter<DetailItemState> emit,
   ) async {
     emit(state.copyWith(status: DetailItemStatus.loading));
-    final item = state.item;
+    final item = state.item.copyWith(favorite: event.favorite);
     try {
       await _esnapRepository.saveItem(item);
-      emit(state.copyWith(status: DetailItemStatus.success));
+      emit(state.copyWith(status: DetailItemStatus.initial, item: item));
     } catch (e) {
       log(e.toString());
       emit(state.copyWith(status: DetailItemStatus.failure));

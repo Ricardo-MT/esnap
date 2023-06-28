@@ -7,6 +7,7 @@ extension DetailItemStatusX on DetailItemStatus {
         DetailItemStatus.loading,
         DetailItemStatus.success,
       ].contains(this);
+  bool get isLoading => this == DetailItemStatus.loading;
 }
 
 final class DetailItemState extends Equatable {

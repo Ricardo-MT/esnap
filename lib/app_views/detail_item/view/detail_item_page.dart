@@ -59,16 +59,12 @@ class DetailItemView extends StatelessWidget {
       ),
       persistentFooterButtons: [
         ElevatedButton.icon(
-          onPressed: status.isLoadingOrSuccess
+          onPressed: status.isLoading
               ? null
               : () => Navigator.of(context).pushReplacement(
                     EditItemPage.route(initialItem: state.item),
                   ),
-          icon: status.isLoadingOrSuccess
-              ? const CupertinoActivityIndicator(
-                  color: WidAppColors.light,
-                )
-              : const Icon(Icons.edit_outlined),
+          icon: const Icon(Icons.edit_outlined),
           label: const Text('Edit'),
         )
       ],
@@ -159,9 +155,21 @@ class _ImageField extends StatelessWidget {
         Positioned(
           top: 5,
           right: 5,
-          child: Icon(
-            state.item.favorite ? Icons.favorite : Icons.favorite_border,
-            color: Colors.white,
+          child: IconButton(
+            splashRadius: 1,
+            onPressed: state.status == DetailItemStatus.loading
+                ? null
+                : () {
+                    context.read<DetailItemBloc>().add(
+                          DetailItemFavoriteChanged(
+                            favorite: !state.item.favorite,
+                          ),
+                        );
+                  },
+            icon: Icon(
+              state.item.favorite ? Icons.favorite : Icons.favorite_border,
+              color: Colors.white,
+            ),
           ),
         )
       ],
