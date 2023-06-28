@@ -15,3 +15,10 @@ final class DetailItemFavoriteChanged extends DetailItemEvent {
   @override
   List<Object?> get props => [favorite];
 }
+
+final class DetailItemDeleteSubmitted extends DetailItemEvent {
+  const DetailItemDeleteSubmitted();
+
+  @override
+  List<Object?> get props => [];
+}

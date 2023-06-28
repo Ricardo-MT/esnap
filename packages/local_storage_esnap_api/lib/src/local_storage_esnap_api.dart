@@ -31,6 +31,11 @@ class LocalStorageEsnapApi extends EsnapApi {
   static Future<LocalStorageEsnapApi> initializer() async {
     Hive.registerAdapter(ItemSchemaAdapter());
     final box = await Hive.openBox<ItemSchema>(EsnapBoxes.item);
+    final directory = await getApplicationDocumentsDirectory();
+    final este = Directory('${directory.path}/item_images');
+    if (!este.existsSync()) {
+      este.createSync();
+    }
     return LocalStorageEsnapApi(box);
   }
 
@@ -58,9 +63,14 @@ class LocalStorageEsnapApi extends EsnapApi {
     if (itemIndex == -1) {
       throw ItemNotFoundException();
     } else {
+      final path = items[itemIndex].imagePath;
       items.removeAt(itemIndex);
       _itemStreamController.add(items);
-      // return _setValue(kTodosCollectionKey, json.encode(items));
+      if ((path ?? '').isNotEmpty) {
+        final localFile = File(path!);
+        await localFile.delete();
+      }
+      return Hive.box<ItemSchema>(EsnapBoxes.item).delete(id);
     }
   }
 }
@@ -102,7 +112,7 @@ Future<ItemSchema> fromItem(Item item) async {
 
   /// Handle the image
   final directory = await getApplicationDocumentsDirectory();
-  final localFile = File(path.join(directory.path, item.id));
+  final localFile = File(path.join(directory.path, 'item_images', item.id));
   await localFile.writeAsBytes(File(item.imagePath!).readAsBytesSync());
   return ItemSchema(
     id: item.id,

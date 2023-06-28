@@ -58,6 +58,36 @@ class DetailItemView extends StatelessWidget {
         ),
       ),
       persistentFooterButtons: [
+        TextButton(
+          onPressed: () async {
+            await showDialog<AlertDialog>(
+              context: context,
+              builder: (dialogContext) => AlertDialog(
+                title: const Text('Delete item'),
+                content:
+                    const Text('Are you sure you want to delete this item?'),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      context.read<DetailItemBloc>().add(
+                            const DetailItemDeleteSubmitted(),
+                          );
+                    },
+                    child: const Text('Delete'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              ),
+            );
+          },
+          child: const Text('Delete'),
+        ),
         ElevatedButton.icon(
           onPressed: status.isLoading
               ? null
@@ -110,38 +140,41 @@ class _ImageField extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1,
               child: WidTouchable(
-                onPress: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<Scaffold>(
-                      fullscreenDialog: true,
-                      builder: (context) => Scaffold(
-                        backgroundColor: WidAppColors.black,
-                        appBar: AppBar(
-                          backgroundColor: WidAppColors.black,
-                          foregroundColor: Colors.white,
-                          iconTheme: const IconThemeData(color: Colors.white),
-                        ),
-                        body: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Expanded(
-                              child: Hero(
-                                tag: state.item.imagePath ??
-                                    'edit_image_unset_image_path',
-                                child: Image.file(
-                                  File(
-                                    state.item.imagePath!,
+                onPress: state.status.isLoading
+                    ? () {}
+                    : () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<Scaffold>(
+                            fullscreenDialog: true,
+                            builder: (context) => Scaffold(
+                              backgroundColor: WidAppColors.black,
+                              appBar: AppBar(
+                                backgroundColor: WidAppColors.black,
+                                foregroundColor: Colors.white,
+                                iconTheme:
+                                    const IconThemeData(color: Colors.white),
+                              ),
+                              body: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Expanded(
+                                    child: Hero(
+                                      tag: state.item.imagePath ??
+                                          'edit_image_unset_image_path',
+                                      child: Image.file(
+                                        File(
+                                          state.item.imagePath!,
+                                        ),
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
                                   ),
-                                  fit: BoxFit.contain,
-                                ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
+                          ),
+                        );
+                      },
                 child: Image.file(
                   File(
                     state.item.imagePath!,
@@ -157,7 +190,7 @@ class _ImageField extends StatelessWidget {
           right: 5,
           child: IconButton(
             splashRadius: 1,
-            onPressed: state.status == DetailItemStatus.loading
+            onPressed: state.status.isLoading
                 ? null
                 : () {
                     context.read<DetailItemBloc>().add(
