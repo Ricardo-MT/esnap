@@ -1,8 +1,9 @@
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/colors_overview/bloc/colors_overview_bloc.dart';
-import 'package:esnap/app_views/detail_item/detail_todo.dart';
+import 'package:esnap/app_views/detail_item/detail_item.dart';
 import 'package:esnap/app_views/edit_item/view/edit_item_page.dart';
 import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
+import 'package:esnap/app_views/items_overview/models/classification_filter.dart';
 import 'package:esnap/app_views/items_overview/widgets/item_list_tile.dart';
 import 'package:esnap/app_views/items_overview/widgets/items_overview_filter_button.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
@@ -13,7 +14,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wid_design_system/wid_design_system.dart';
 
 class ItemsOverviewPage extends StatelessWidget {
-  const ItemsOverviewPage({super.key});
+  const ItemsOverviewPage({required this.childKey, super.key});
+  final GlobalKey childKey;
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +42,28 @@ class ItemsOverviewPage extends StatelessWidget {
           )..add(const OccasionsOverviewSubscriptionRequested()),
         ),
       ],
-      child: const ItemsOverviewView(),
+      child: ItemsOverviewView(
+        key: childKey,
+      ),
     );
   }
 }
 
-class ItemsOverviewView extends StatelessWidget {
+class ItemsOverviewView extends StatefulWidget {
   const ItemsOverviewView({super.key});
+
+  @override
+  State<ItemsOverviewView> createState() => ItemsOverviewViewState();
+}
+
+class ItemsOverviewViewState extends State<ItemsOverviewView> {
+  void quickFilterClassification(EsnapClassification classification) {
+    context.read<ItemsOverviewBloc>().add(
+          ItemsOverviewQuickFilterChanged(
+            ClassificationFilterItem(classification),
+          ),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {

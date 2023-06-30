@@ -1,4 +1,4 @@
-import 'package:esnap/app_views/items_overview/view/view.dart';
+import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +51,7 @@ class AppView extends StatelessWidget {
       darkTheme: WidAppTheme.dark,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const ItemsOverviewPage(),
+      home: const HomePage(),
     );
   }
 }

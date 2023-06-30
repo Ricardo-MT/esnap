@@ -19,3 +19,12 @@ class ItemsOverviewFilterChanged extends ItemsOverviewEvent {
   @override
   List<Filter> get props => [filter];
 }
+
+class ItemsOverviewQuickFilterChanged extends ItemsOverviewEvent {
+  const ItemsOverviewQuickFilterChanged(this.filter);
+
+  final Filter filter;
+
+  @override
+  List<Filter> get props => [filter];
+}
