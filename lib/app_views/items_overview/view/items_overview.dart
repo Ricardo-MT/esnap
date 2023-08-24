@@ -102,16 +102,16 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
             if (state.items.isEmpty) {
               if (state.status == ItemsOverviewStatus.loading) {
                 return const Center(child: CupertinoActivityIndicator());
-              } else if (state.status != ItemsOverviewStatus.success) {
-                return const SizedBox();
-              } else {
-                return Center(
-                  child: Text(
-                    'No items',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                );
               }
+              if (state.status != ItemsOverviewStatus.success) {
+                return const SizedBox();
+              }
+              return Center(
+                child: Text(
+                  'No items',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              );
             }
             return Column(
               children: [

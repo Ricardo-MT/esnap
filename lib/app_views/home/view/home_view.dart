@@ -1,6 +1,7 @@
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/home/cubit/home_cubit.dart';
 import 'package:esnap/app_views/items_overview/view/items_overview.dart';
+import 'package:esnap/app_views/set_overview/view/sets_overview.dart';
 import 'package:esnap/utils/classification_asset_pairer.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -59,9 +60,7 @@ class HomeView extends StatelessWidget {
             ItemsOverviewPage(
               childKey: globalKey,
             ),
-            const Center(
-              child: Text('Sets'),
-            )
+            const SetsOverviewPage(),
           ],
         ),
       ),
@@ -126,10 +125,15 @@ class _HomeViewWidget extends StatelessWidget {
               child: WidText.headlineLarge(text: 'Outfits'),
             ),
           ),
+          spacerM,
           const Text('(no outfits)'),
-          const Align(
-            alignment: Alignment.centerRight,
-            child: WidText.headlineLarge(text: 'Clothing items'),
+          spacerM,
+          Padding(
+            padding: EdgeInsets.only(right: WidAppDimensions.pageInsetGap),
+            child: const Align(
+              alignment: Alignment.centerRight,
+              child: WidText.headlineLarge(text: 'Clothing items'),
+            ),
           ),
           spacerM,
           ...List.generate(
@@ -140,7 +144,8 @@ class _HomeViewWidget extends StatelessWidget {
                 callback: () => callback(topFiveClassifications[index]),
                 label: topFiveClassifications[index].name,
                 imagePath: getAssetByClassification(
-                    topFiveClassifications[index].name),
+                  topFiveClassifications[index].name,
+                ),
               ),
             ),
           )
@@ -218,9 +223,17 @@ class _HomeQuickFilter extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: WidText.headlineMedium(
+                  child: WidText.headlineLarge(
                     text: label,
-                    style: const TextStyle(color: WidAppColors.black),
+                    style: const TextStyle(
+                      color: WidAppColors.black,
+                      shadows: [
+                        Shadow(
+                          color: Colors.white,
+                          blurRadius: 20,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const Icon(
@@ -236,11 +249,3 @@ class _HomeQuickFilter extends StatelessWidget {
     );
   }
 }
-
-const _imagePaths = [
-  'assets/img/1_blouse.png',
-  'assets/img/2_shirt.png',
-  'assets/img/3_tshirt.png',
-  'assets/img/4_bag.png',
-  'assets/img/5_skirt.png'
-];
