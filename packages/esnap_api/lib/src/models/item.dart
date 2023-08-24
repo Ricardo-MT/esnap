@@ -79,12 +79,6 @@ class Item extends Equatable {
     );
   }
 
-  /// Deserializes the given [JsonMap] into a [Item].
-  // static Item fromJson(JsonMap json) => _$ItemFromJson(json);
-
-  /// Converts this [Item] into a [JsonMap].
-  // JsonMap toJson() => _$ItemToJson(this);
-
   @override
   List<Object?> get props =>
       [id, color, classification, occasions, imagePath, favorite];

@@ -28,7 +28,7 @@ class WidSelectMultiple extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () async {
-          await showDialog(
+          await showDialog<void>(
             context: context,
             builder: (ctx) {
               final theme = Theme.of(context);

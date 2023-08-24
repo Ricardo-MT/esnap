@@ -11,6 +11,7 @@ class LocalStorageConnectionManager {
     required this.classificationTypeApi,
     required this.occasionApi,
     required this.esnapApi,
+    required this.outfitApi,
   });
 
   /// Collection of ColorApi services
@@ -28,6 +29,9 @@ class LocalStorageConnectionManager {
   /// Collection of ClassificationApi services
   final LocalStorageEsnapApi esnapApi;
 
+  /// Collection of OutfitApi services
+  final LocalStorageOutfitApi outfitApi;
+
   /// Initializes all connections and returns an instance of a
   /// LocalStorageConnectionManager
   static Future<LocalStorageConnectionManager> initialize() async {
@@ -39,8 +43,12 @@ class LocalStorageConnectionManager {
       LocalStorageClassificationApi.initializer(typesApi.box.values.toList()),
       LocalStorageOccasionApi.initializer()
     ]);
-    final [esnapApi, _] = await Future.wait(
-      [LocalStorageEsnapApi.initializer(), migratedBox.close()],
+    final [esnapApi, outfitApi, _] = await Future.wait(
+      [
+        LocalStorageEsnapApi.initializer(),
+        LocalStorageOutfitApi.initializer(),
+        migratedBox.close()
+      ],
     );
     return LocalStorageConnectionManager(
       colorApi: colorApi as LocalStorageColorApi,
@@ -48,6 +56,7 @@ class LocalStorageConnectionManager {
       classificationApi: classificationApi as LocalStorageClassificationApi,
       occasionApi: occasionApi as LocalStorageOccasionApi,
       esnapApi: esnapApi as LocalStorageEsnapApi,
+      outfitApi: outfitApi as LocalStorageOutfitApi,
     );
   }
 }

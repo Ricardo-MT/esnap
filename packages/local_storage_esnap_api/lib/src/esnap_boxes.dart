@@ -3,9 +3,6 @@ class EsnapBoxes {
   /// Box name for managing DB sync with migrations
   static String migrated = 'migratedbox';
 
-  /// Box name for storing items
-  static String item = 'itembox';
-
   /// Box name for storing colors
   static String color = 'colorbox';
 
@@ -17,4 +14,10 @@ class EsnapBoxes {
 
   /// Box name for storing occasions
   static String occasion = 'occasionbox';
+
+  /// Box name for storing items
+  static String item = 'itembox';
+
+  /// Box name for storing items
+  static String outfit = 'outfitsbox';
 }
