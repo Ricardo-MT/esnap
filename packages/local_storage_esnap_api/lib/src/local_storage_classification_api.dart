@@ -1,6 +1,7 @@
 import 'package:esnap_api/esnap_api.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:local_storage_esnap_api/src/adapters/classification.dart';
+import 'package:local_storage_esnap_api/src/adapters/classification_type.dart';
 import 'package:local_storage_esnap_api/src/esnap_boxes.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -23,14 +24,20 @@ class LocalStorageClassificationApi extends ClassificationApi {
 
   /// This method opens the box, runs the initial migrations and
   /// returns an instance of the LocalStorageClassificationApi class.
-  static Future<LocalStorageClassificationApi> initializer() async {
+  static Future<LocalStorageClassificationApi> initializer(
+    List<ClassificationTypeSchema> types,
+  ) async {
     Hive.registerAdapter(ClassificationSchemaAdapter());
     final box = await Hive.openBox<ClassificationSchema>(
       EsnapBoxes.classification,
     );
-    await _initMigrations(box);
+    await _initMigrations(box, types);
     return LocalStorageClassificationApi(box);
   }
+
+  /// The list of base classifications
+  List<String> get baseClassification =>
+      _baseClassification.map((e) => e['name']!).toList();
 
   @override
   Stream<List<EsnapClassification>> getClassifications() =>
@@ -67,7 +74,10 @@ class LocalStorageClassificationApi extends ClassificationApi {
     }
   }
 
-  static Future<void> _initMigrations(Box<ClassificationSchema> box) async {
+  static Future<void> _initMigrations(
+    Box<ClassificationSchema> box,
+    List<ClassificationTypeSchema> types,
+  ) async {
     const migratedKey = 'migratedClassification';
     final migratedBox = Hive.box<bool>(EsnapBoxes.migrated);
     final hasData = migratedBox.get(migratedKey, defaultValue: false);
@@ -75,7 +85,17 @@ class LocalStorageClassificationApi extends ClassificationApi {
       await box.clear();
       final classifications = _baseClassification.map(
         (c) => ClassificationSchema.fromClassificationSchema(
-          EsnapClassification(name: c),
+          EsnapClassification(
+            name: c['name']!,
+            id: c['name'],
+            classificationType: types
+                .firstWhere(
+                  (t) => t.name == c['type']!,
+                  orElse: () =>
+                      types.firstWhere((element) => element.name == 'Other'),
+                )
+                .toEsnapClassificationType(),
+          ),
         ),
       );
       for (final element in classifications) {
@@ -84,37 +104,44 @@ class LocalStorageClassificationApi extends ClassificationApi {
       await migratedBox.put(migratedKey, true);
     }
   }
+
+  @override
+
+  /// The list of classifications
+  List<EsnapClassification> getStaticClassifications() =>
+      box.values.map((e) => e.toEsnapClassification()).toList();
 }
 
 const _baseClassification = [
-  'Accessory',
-  'Activewear',
-  'Bag',
-  'Blouse',
-  'Boots',
-  'Bottom',
-  'Dress',
-  'Gloves',
-  'Headwear',
-  'Heels',
-  'Jacket',
-  'Jewelry',
-  'Leggings',
-  'Lingerie',
-  'Outerwear',
-  'Sandals',
-  'Shoes',
-  'Skirt',
-  'Sleepwear',
-  'Sneakers',
-  'Suiting',
-  'Sunglasses',
-  'Sweater',
-  'Swimwear',
-  'Top',
-  'Tights',
-  'Underwear',
-  'Vest',
-  'Waistcoat',
-  'Other',
+  {'name': 'Accessory', 'type': 'Top'},
+  {'name': 'Activewear', 'type': 'Top'},
+  {'name': 'Bag', 'type': 'Other'},
+  {'name': 'Blouse', 'type': 'Top'},
+  {'name': 'Boots', 'type': 'Shoes'},
+  {'name': 'Bottom', 'type': 'Bottom'},
+  {'name': 'Dress', 'type': 'Top'},
+  {'name': 'Gloves', 'type': 'Other'},
+  {'name': 'Headwear', 'type': 'Top'},
+  {'name': 'Heels', 'type': 'Shoes'},
+  {'name': 'Jacket', 'type': 'Top'},
+  {'name': 'Jewelry', 'type': 'Top'},
+  {'name': 'Leggings', 'type': 'Bottom'},
+  {'name': 'Lingerie', 'type': 'Bottom'},
+  {'name': 'Outerwear', 'type': 'Top'},
+  {'name': 'Sandals', 'type': 'Shoes'},
+  {'name': 'Shirt', 'type': 'Shirt'},
+  {'name': 'Shoes', 'type': 'Shoes'},
+  {'name': 'Skirt', 'type': 'Bottom'},
+  {'name': 'Sleepwear', 'type': 'Top'},
+  {'name': 'Sneakers', 'type': 'Shoes'},
+  {'name': 'Suiting', 'type': 'Top'},
+  {'name': 'Sunglasses', 'type': 'Top'},
+  {'name': 'Sweater', 'type': 'Top'},
+  {'name': 'Swimwear', 'type': 'Top'},
+  {'name': 'Top', 'type': 'Top'},
+  {'name': 'Tights', 'type': 'Bottom'},
+  {'name': 'Underwear', 'type': 'Bottom'},
+  {'name': 'Vest', 'type': 'Top'},
+  {'name': 'Waistcoat', 'type': 'Bottom'},
+  {'name': 'Other', 'type': 'Top'},
 ];

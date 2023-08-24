@@ -1,4 +1,6 @@
 import 'package:hive/hive.dart';
+import 'package:local_storage_esnap_api/src/adapters/classification.dart';
+import 'package:local_storage_esnap_api/src/adapters/occasion.dart';
 
 part 'item.g.dart';
 
@@ -25,11 +27,11 @@ class ItemSchema extends HiveObject {
 
   /// The item´s classification
   @HiveField(2)
-  HiveList classification;
+  HiveList<ClassificationSchema> classification;
 
   /// A list of the item's occasions.
   @HiveField(3)
-  HiveList occasions;
+  HiveList<OccasionSchema> occasions;
 
   /// A list of the item's occasions.
   @HiveField(4)

@@ -1,6 +1,7 @@
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/home/cubit/home_cubit.dart';
 import 'package:esnap/app_views/items_overview/view/items_overview.dart';
+import 'package:esnap/utils/classification_asset_pairer.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final classificationRepository = context.read<ClassificationRepository>();
+    final topFive = classificationRepository.getStaticClassifications().toList()
+      ..shuffle();
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -18,20 +22,23 @@ class HomePage extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ClassificationsOverviewBloc(
-            classificationRepository: context.read<ClassificationRepository>(),
+            classificationRepository: classificationRepository,
           )..add(
               const ClassificationsOverviewSubscriptionRequested(),
             ),
         ),
       ],
-      child: HomeView(),
+      child: HomeView(
+        topFiveClassifications: topFive.take(5).toList(),
+      ),
     );
   }
 }
 
 class HomeView extends StatelessWidget {
-  HomeView({super.key});
+  HomeView({required this.topFiveClassifications, super.key});
   final GlobalKey<ItemsOverviewViewState> globalKey = GlobalKey();
+  final List<EsnapClassification> topFiveClassifications;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +49,7 @@ class HomeView extends StatelessWidget {
           index: selectedTab.index,
           children: [
             _HomeViewWidget(
+              topFiveClassifications: topFiveClassifications,
               callback: (EsnapClassification classification) {
                 globalKey.currentState!
                     .quickFilterClassification(classification);
@@ -51,6 +59,9 @@ class HomeView extends StatelessWidget {
             ItemsOverviewPage(
               childKey: globalKey,
             ),
+            const Center(
+              child: Text('Sets'),
+            )
           ],
         ),
       ),
@@ -76,6 +87,15 @@ class HomeView extends StatelessWidget {
                 onPressed: context.read<HomeCubit>().selectItems,
               ),
             ),
+            Expanded(
+              child: _HomeTabButton(
+                groupValue: selectedTab,
+                value: HomeTab.sets,
+                icon: Icons.dashboard,
+                label: 'Sets',
+                onPressed: context.read<HomeCubit>().selectSets,
+              ),
+            ),
           ],
         ),
       ),
@@ -84,17 +104,15 @@ class HomeView extends StatelessWidget {
 }
 
 class _HomeViewWidget extends StatelessWidget {
-  const _HomeViewWidget({required this.callback});
+  const _HomeViewWidget({
+    required this.callback,
+    required this.topFiveClassifications,
+  });
   final void Function(EsnapClassification classification) callback;
+  final List<EsnapClassification> topFiveClassifications;
 
   @override
   Widget build(BuildContext context) {
-    final classifications = context
-        .watch<ClassificationsOverviewBloc>()
-        .state
-        .classifications
-        .take(5)
-        .toList();
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
         vertical: WidAppDimensions.pageInsetGap / 2,
@@ -115,13 +133,14 @@ class _HomeViewWidget extends StatelessWidget {
           ),
           spacerM,
           ...List.generate(
-            classifications.length,
+            topFiveClassifications.length,
             (index) => Padding(
               padding: const EdgeInsets.only(bottom: 6),
               child: _HomeQuickFilter(
-                callback: () => callback(classifications[index]),
-                label: classifications[index].name,
-                imagePath: _imagePaths[index],
+                callback: () => callback(topFiveClassifications[index]),
+                label: topFiveClassifications[index].name,
+                imagePath: getAssetByClassification(
+                    topFiveClassifications[index].name),
               ),
             ),
           )

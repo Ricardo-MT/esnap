@@ -10,6 +10,10 @@ class ClassificationRepository {
 
   final ClassificationApi _classificationApi;
 
+  /// The list of all classifications
+  List<EsnapClassification> getStaticClassifications() =>
+      _classificationApi.getStaticClassifications();
+
   /// Provides a [Stream] of all classifications.
   Stream<List<EsnapClassification>> getClassifications() =>
       _classificationApi.getClassifications();

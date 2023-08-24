@@ -90,7 +90,7 @@ Future<ItemSchema> fromItem(Item item) async {
   /// Field classification
   final classificationBox =
       Hive.box<ClassificationSchema>(EsnapBoxes.classification);
-  final classificationList = HiveList(
+  final classificationList = HiveList<ClassificationSchema>(
     classificationBox,
   );
   if (item.classification != null) {
@@ -100,7 +100,7 @@ Future<ItemSchema> fromItem(Item item) async {
 
   /// Field occasions
   final occasionBox = Hive.box<OccasionSchema>(EsnapBoxes.occasion);
-  final occasionList = HiveList(
+  final occasionList = HiveList<OccasionSchema>(
     occasionBox,
   )..addAll(
       item.occasions
@@ -129,9 +129,8 @@ Item toItem(ItemSchema itemSchema) => Item(
       id: itemSchema.id,
       color: getFromColorList(itemSchema.color),
       classification: getFromClassificationList(itemSchema.classification),
-      occasions: itemSchema.occasions
-          .map((e) => (e as OccasionSchema).toEsnapOccasion())
-          .toList(),
+      occasions:
+          itemSchema.occasions.map((e) => (e).toEsnapOccasion()).toList(),
       imagePath: itemSchema.imagePath,
       favorite: itemSchema.favorite,
     );

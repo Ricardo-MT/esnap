@@ -72,6 +72,7 @@ class LocalStorageColorApi extends ColorApi {
         (index) => ColorSchema.fromEsnapColor(
           EsnapColor(
             name: _baseColors[index],
+            id: _baseColors[index],
             hexColor: _baseHexColors[index],
           ),
         ),
