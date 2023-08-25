@@ -75,6 +75,7 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'addItem',
         onPressed: () => Navigator.of(context).push(EditItemPage.route()),
         child: const Icon(Icons.add),
       ),

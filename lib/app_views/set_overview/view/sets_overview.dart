@@ -30,6 +30,7 @@ class _SetsOverviewView extends StatelessWidget {
         title: const Text('All sets'),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'addSet',
         onPressed: () => Navigator.of(context).push(EditOutfitPage.route()),
         child: const Icon(Icons.add),
       ),
