@@ -15,6 +15,7 @@ dependencies:
   esnap_repository:
     path: packages/esnap_repository
   firebase_core: ^2.14.0
+  firebase_crashlytics: ^3.3.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
