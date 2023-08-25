@@ -75,7 +75,6 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        key: const Key('homeView_addTodo_floatingActionButton'),
         onPressed: () => Navigator.of(context).push(EditItemPage.route()),
         child: const Icon(Icons.add),
       ),
