@@ -5,9 +5,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:local_storage_esnap_api/src/adapters/classification.dart';
 import 'package:local_storage_esnap_api/src/adapters/color.dart';
 import 'package:local_storage_esnap_api/src/adapters/item.dart';
-import 'package:local_storage_esnap_api/src/adapters/occasion.dart';
 import 'package:local_storage_esnap_api/src/esnap_boxes.dart';
-import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -18,7 +16,13 @@ class LocalStorageEsnapApi extends EsnapApi {
   /// {@macro local_storage_esnap_api}
   LocalStorageEsnapApi(this.box) {
     final itemsRes = box.values;
-    _itemStreamController.add(itemsRes.map(toItem).toList());
+    _itemStreamController.add(
+      itemsRes
+          .map(
+            (e) => e.toItem(),
+          )
+          .toList(),
+    );
   }
 
   final _itemStreamController = BehaviorSubject<List<Item>>.seeded(const []);
@@ -52,7 +56,7 @@ class LocalStorageEsnapApi extends EsnapApi {
       items.add(item);
     }
     _itemStreamController.add(items);
-    final item0 = await fromItem(item);
+    final item0 = await ItemSchema.fromItem(item);
     return Hive.box<ItemSchema>(EsnapBoxes.item).put(item.id, item0);
   }
 
@@ -74,67 +78,6 @@ class LocalStorageEsnapApi extends EsnapApi {
     }
   }
 }
-
-/// Creates an instance of an ItemSchema from an Item
-Future<ItemSchema> fromItem(Item item) async {
-  /// Field color
-  final colorBox = Hive.box<ColorSchema>(EsnapBoxes.color);
-  final colorList = HiveList(
-    colorBox,
-  );
-  if (item.color != null) {
-    final oneColor = colorBox.get(item.color!.id);
-    colorList.add(oneColor!);
-  }
-
-  /// Field classification
-  final classificationBox =
-      Hive.box<ClassificationSchema>(EsnapBoxes.classification);
-  final classificationList = HiveList(
-    classificationBox,
-  );
-  if (item.classification != null) {
-    final oneClassification = classificationBox.get(item.classification!.id);
-    classificationList.add(oneClassification!);
-  }
-
-  /// Field occasions
-  final occasionBox = Hive.box<OccasionSchema>(EsnapBoxes.occasion);
-  final occasionList = HiveList(
-    occasionBox,
-  )..addAll(
-      item.occasions
-          .map(
-            (o) => occasionBox.get(o.id)!,
-          )
-          .toList(),
-    );
-
-  /// Handle the image
-  final directory = await getApplicationDocumentsDirectory();
-  final localFile = File(path.join(directory.path, 'item_images', item.id));
-  await localFile.writeAsBytes(File(item.imagePath!).readAsBytesSync());
-  return ItemSchema(
-    id: item.id,
-    color: colorList,
-    classification: classificationList,
-    occasions: occasionList,
-    imagePath: localFile.path,
-    favorite: item.favorite,
-  );
-}
-
-/// Returns an item based on this instance values
-Item toItem(ItemSchema itemSchema) => Item(
-      id: itemSchema.id,
-      color: getFromColorList(itemSchema.color),
-      classification: getFromClassificationList(itemSchema.classification),
-      occasions: itemSchema.occasions
-          .map((e) => (e as OccasionSchema).toEsnapOccasion())
-          .toList(),
-      imagePath: itemSchema.imagePath,
-      favorite: itemSchema.favorite,
-    );
 
 /// Gets the list from the hive object and returns the first object
 EsnapColor? getFromColorList(

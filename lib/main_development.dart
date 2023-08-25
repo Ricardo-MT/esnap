@@ -16,10 +16,17 @@ void main() async {
     classificationApi: connectionManager.classificationApi,
   );
 
+  final classificationTypeRepository = ClassificationTypeRepository(
+    classificationTypeApi: connectionManager.classificationTypeApi,
+  );
+
   final occasionRepository =
       OccasionRepository(occasionApi: connectionManager.occasionApi);
 
   final esnapRepository = EsnapRepository(esnapApi: connectionManager.esnapApi);
+
+  final outfitRepository =
+      OutfitRepository(outfitApi: connectionManager.outfitApi);
 
   // Firebase configuration for dev flavor
   await Firebase.initializeApp(
@@ -28,10 +35,12 @@ void main() async {
 
   await bootstrap(
     () => App(
+      outfitRepository: outfitRepository,
       esnapRepository: esnapRepository,
       colorRepository: colorRepository,
       classificationRepository: classificationRepository,
       occasionRepository: occasionRepository,
+      classificationTypeRepository: classificationTypeRepository,
     ),
   );
 }

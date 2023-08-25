@@ -7,6 +7,9 @@ abstract class ClassificationApi {
   /// {@macro classification_api}
   const ClassificationApi();
 
+  /// The list of all classifications
+  List<EsnapClassification> getStaticClassifications();
+
   /// Provides a [Stream] of all classifications.
   Stream<List<EsnapClassification>> getClassifications();
 

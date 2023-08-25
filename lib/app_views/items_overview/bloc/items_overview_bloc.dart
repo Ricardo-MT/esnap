@@ -13,6 +13,7 @@ class ItemsOverviewBloc extends Bloc<ItemsOverviewEvent, ItemsOverviewState> {
         super(const ItemsOverviewState()) {
     on<ItemsOverviewSubscriptionRequested>(_onSubscriptionRequested);
     on<ItemsOverviewFilterChanged>(_onFilterChanged);
+    on<ItemsOverviewQuickFilterChanged>(_onQuickFilterChanged);
   }
 
   final EsnapRepository _esnapRepository;
@@ -53,5 +54,12 @@ class ItemsOverviewBloc extends Bloc<ItemsOverviewEvent, ItemsOverviewState> {
       prevFilters[found] = event.filter;
     }
     emit(state.copyWith(filters: () => prevFilters));
+  }
+
+  void _onQuickFilterChanged(
+    ItemsOverviewQuickFilterChanged event,
+    Emitter<ItemsOverviewState> emit,
+  ) {
+    emit(state.copyWith(filters: () => [event.filter]));
   }
 }

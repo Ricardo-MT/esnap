@@ -1,4 +1,4 @@
-import 'package:esnap/app_views/items_overview/view/view.dart';
+import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -7,16 +7,20 @@ import 'package:wid_design_system/wid_design_system.dart';
 
 class App extends StatelessWidget {
   const App({
+    required this.outfitRepository,
     required this.esnapRepository,
     required this.colorRepository,
     required this.classificationRepository,
+    required this.classificationTypeRepository,
     required this.occasionRepository,
     super.key,
   });
 
   final EsnapRepository esnapRepository;
+  final OutfitRepository outfitRepository;
   final ColorRepository colorRepository;
   final ClassificationRepository classificationRepository;
+  final ClassificationTypeRepository classificationTypeRepository;
   final OccasionRepository occasionRepository;
 
   @override
@@ -26,11 +30,17 @@ class App extends StatelessWidget {
         RepositoryProvider<EsnapRepository>(
           create: (context) => esnapRepository,
         ),
+        RepositoryProvider<OutfitRepository>(
+          create: (context) => outfitRepository,
+        ),
         RepositoryProvider<ColorRepository>(
           create: (context) => colorRepository,
         ),
         RepositoryProvider<ClassificationRepository>(
           create: (context) => classificationRepository,
+        ),
+        RepositoryProvider<ClassificationTypeRepository>(
+          create: (context) => classificationTypeRepository,
         ),
         RepositoryProvider<OccasionRepository>(
           create: (context) => occasionRepository,
@@ -51,7 +61,7 @@ class AppView extends StatelessWidget {
       darkTheme: WidAppTheme.dark,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const ItemsOverviewPage(),
+      home: const HomePage(),
     );
   }
 }

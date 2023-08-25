@@ -70,7 +70,10 @@ class LocalStorageOccasionApi extends OccasionApi {
       await box.clear();
       final occasions = _baseOccasions.map(
         (c) => OccasionSchema.fromEsnapOccasion(
-          EsnapOccasion(name: c),
+          EsnapOccasion(
+            name: c,
+            id: c,
+          ),
         ),
       );
       for (final element in occasions) {

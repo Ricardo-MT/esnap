@@ -2,5 +2,11 @@
 library esnap_repository;
 
 export 'package:esnap_api/esnap_api.dart'
-    show EsnapClassification, EsnapColor, EsnapOccasion, Item;
+    show
+        EsnapClassification,
+        EsnapClassificationType,
+        EsnapColor,
+        EsnapOccasion,
+        Item,
+        Outfit;
 export 'src/repositories.dart';

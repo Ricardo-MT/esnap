@@ -1,6 +1,6 @@
 import 'package:esnap/app/app.dart';
 import 'package:esnap/bootstrap.dart';
-import 'package:esnap/firebase_options.dart';
+import 'package:esnap/firebase_options_dev.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
@@ -16,22 +16,31 @@ void main() async {
     classificationApi: connectionManager.classificationApi,
   );
 
+  final classificationTypeRepository = ClassificationTypeRepository(
+    classificationTypeApi: connectionManager.classificationTypeApi,
+  );
+
   final occasionRepository =
       OccasionRepository(occasionApi: connectionManager.occasionApi);
 
   final esnapRepository = EsnapRepository(esnapApi: connectionManager.esnapApi);
 
-  // Firebase configuration for production flavor
+  final outfitRepository =
+      OutfitRepository(outfitApi: connectionManager.outfitApi);
+
+  // Firebase configuration for dev flavor
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   await bootstrap(
     () => App(
+      outfitRepository: outfitRepository,
       esnapRepository: esnapRepository,
       colorRepository: colorRepository,
       classificationRepository: classificationRepository,
       occasionRepository: occasionRepository,
+      classificationTypeRepository: classificationTypeRepository,
     ),
   );
 }
