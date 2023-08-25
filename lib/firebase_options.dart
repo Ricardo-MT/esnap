@@ -2,7 +2,7 @@
 // ignore_for_file: lines_longer_than_80_chars, avoid_classes_with_only_static_members
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform, kIsWeb;
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -48,12 +48,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDAv4mPBbDyhUrgKnE6n3ufm3EuH6nR7ko',
-    appId: '1:559114535701:web:77ec7904f3ce2c4f2c9f1c',
+    appId: '1:559114535701:web:d04a522349eadfda2c9f1c',
     messagingSenderId: '559114535701',
     projectId: 'esnap-541ef',
     authDomain: 'esnap-541ef.firebaseapp.com',
     storageBucket: 'esnap-541ef.appspot.com',
-    measurementId: 'G-BF291HWJFN',
+    measurementId: 'G-ZRW4H782J1',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -70,8 +70,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '559114535701',
     projectId: 'esnap-541ef',
     storageBucket: 'esnap-541ef.appspot.com',
-    iosClientId:
-        '559114535701-5ile7g3aafad31mil00sedrb4piphbuv.apps.googleusercontent.com',
+    iosClientId: '559114535701-5ile7g3aafad31mil00sedrb4piphbuv.apps.googleusercontent.com',
     iosBundleId: 'com.ricardo.esnap.app.esnap',
   );
 }

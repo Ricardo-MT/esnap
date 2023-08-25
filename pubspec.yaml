@@ -1,6 +1,6 @@
 name: esnap
 description: A mobile app for managing your clothes and accesories
-version: 1.0.1+5
+version: 1.0.1+6
 publish_to: none
 
 environment:
@@ -15,6 +15,7 @@ dependencies:
   esnap_repository:
     path: packages/esnap_repository
   firebase_core: ^2.14.0
+  firebase_crashlytics: ^3.3.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
