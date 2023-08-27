@@ -148,7 +148,7 @@ class _HomeViewWidget extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -240,7 +240,7 @@ class _HomeQuickFilter extends StatelessWidget {
                   Icons.arrow_forward_ios,
                   size: 18,
                   color: WidAppColors.black,
-                )
+                ),
               ],
             ),
           ),
