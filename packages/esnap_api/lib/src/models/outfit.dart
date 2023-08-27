@@ -65,10 +65,35 @@ class Outfit extends Equatable {
   }
 
   @override
+  String toString() {
+    var res = '';
+    final a = _nameFromItem(top);
+    final b = _nameFromItem(bottom);
+    final c = _nameFromItem(shoes);
+
+    res = [a, b, c].where((element) => element.isNotEmpty).join(', ');
+
+    res = res.toLowerCase();
+    return res.isEmpty
+        ? '(no name)'
+        : '${res[0].toUpperCase()}${res.substring(1)}';
+  }
+
+  @override
   List<Object?> get props => [
         id,
         top,
         bottom,
         shoes,
       ];
+}
+
+String _nameFromItem(Item? item) {
+  var a = item?.color?.name ?? '';
+  if (item?.classification != null) {
+    a += '${a.isEmpty ? '' : ' '}${item?.classification?.name ?? ''}';
+  } else {
+    a = '';
+  }
+  return a;
 }

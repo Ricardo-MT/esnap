@@ -93,12 +93,9 @@ class _EditOutfitView extends StatelessWidget {
                   key: const Key('editOutfitView_save_iconButton'),
                   onPressed: !state.isValid
                       ? null
-                      : () {
-                          context
-                              .read<EditOutfitBloc>()
-                              .add(const EditOutfitSubmitted());
-                          Navigator.of(context).pop();
-                        },
+                      : () => context
+                          .read<EditOutfitBloc>()
+                          .add(const EditOutfitSubmitted()),
                   icon: const Icon(Icons.save),
                 );
               },

@@ -30,7 +30,7 @@ void main() {
       test('throws AssertionError when id is empty', () {
         expect(() => createSubject(id: ''), throwsA(isA<AssertionError>()));
       });
-      test('sets id if not provided', () {
+      test('outifts id if not provided', () {
         expect(createSubject(id: null).id, isNotEmpty);
       });
       test('supports value equality', () {

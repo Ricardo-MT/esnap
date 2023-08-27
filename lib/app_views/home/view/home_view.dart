@@ -89,7 +89,7 @@ class HomeView extends StatelessWidget {
             Expanded(
               child: _HomeTabButton(
                 groupValue: selectedTab,
-                value: HomeTab.sets,
+                value: HomeTab.outifts,
                 icon: Icons.dashboard,
                 label: 'Sets',
                 onPressed: context.read<HomeCubit>().selectSets,

@@ -27,7 +27,7 @@ class _SetsOverviewView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All sets'),
+        title: const Text('All outifts'),
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'addSet',
@@ -46,27 +46,34 @@ class _SetsOverviewView extends StatelessWidget {
               }
               return Center(
                 child: Text(
-                  'No sets',
+                  'No outifts',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               );
             }
-            return GridView.count(
-              crossAxisCount: 2,
-              padding: const EdgeInsets.all(15),
-              mainAxisSpacing: 15,
-              crossAxisSpacing: 15,
-              children: [
-                for (final item in state.items)
-                  SetListTile(
-                    item: item,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        EditOutfitPage.route(initialOutfit: item),
-                      );
-                    },
-                  ),
-              ],
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final width = ((constraints.maxWidth).toInt() - 15 * 3) / 2;
+                final height = width + 45;
+                return GridView.count(
+                  childAspectRatio: width / height,
+                  crossAxisCount: 2,
+                  padding: const EdgeInsets.all(15).copyWith(bottom: 80),
+                  mainAxisSpacing: 15,
+                  crossAxisSpacing: 15,
+                  children: [
+                    for (final item in state.items)
+                      SetListTile(
+                        item: item,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            EditOutfitPage.route(initialOutfit: item),
+                          );
+                        },
+                      ),
+                  ],
+                );
+              },
             );
           },
         ),
