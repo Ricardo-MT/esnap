@@ -36,7 +36,6 @@ class OutfitOverview extends StatelessWidget {
             type: 'Shoes',
           ),
         ),
-        spacerXs,
       ],
     );
   }
@@ -74,8 +73,12 @@ class _ItemDisplay extends StatelessWidget {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox.fromSize(
-              size: const Size(24, 24),
+            const Visibility.maintain(
+              visible: false,
+              child: IconButton(
+                onPressed: null,
+                icon: Icon(Icons.remove_circle),
+              ),
             ),
             WidTouchable(
               onPress: () => context.read<EditOutfitBloc>().add(
@@ -121,24 +124,26 @@ class _ItemDisplay extends StatelessWidget {
             Visibility.maintain(
               visible: item != null,
               child: IconButton(
-                onPressed: () {
-                  final blocProvider = context.read<EditOutfitBloc>();
-                  if (type == 'Top') {
-                    blocProvider.add(const EditOutfitRemovedTop());
-                    return;
-                  }
-                  if (type == 'Bottom') {
-                    blocProvider.add(const EditOutfitRemovedBottom());
-                    return;
-                  }
-                  if (type == 'Shoes') {
-                    blocProvider.add(const EditOutfitRemovedShoes());
-                    return;
-                  }
-                },
+                onPressed: item != null
+                    ? () {
+                        final blocProvider = context.read<EditOutfitBloc>();
+                        if (type == 'Top') {
+                          blocProvider.add(const EditOutfitRemovedTop());
+                          return;
+                        }
+                        if (type == 'Bottom') {
+                          blocProvider.add(const EditOutfitRemovedBottom());
+                          return;
+                        }
+                        if (type == 'Shoes') {
+                          blocProvider.add(const EditOutfitRemovedShoes());
+                          return;
+                        }
+                      }
+                    : null,
                 icon: const Icon(Icons.remove_circle),
               ),
-            )
+            ),
           ],
         );
       },

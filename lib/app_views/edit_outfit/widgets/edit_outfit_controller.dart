@@ -18,59 +18,11 @@ class OutfitControllers extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        spacerXs,
-        _TypesField(),
-        spacerXs,
         _ItemsField(),
-        spacerXs,
+        spacerS,
         _ClassificationField(),
         spacerS,
       ],
-    );
-  }
-}
-
-class _TypesField extends StatelessWidget {
-  const _TypesField();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<EditOutfitBloc, EditOutfitState>(
-      builder: (context, state) {
-        final types = context
-            .watch<ClassificationTypesOverviewBloc>()
-            .state
-            .types
-            .where((element) => element.name != 'Other')
-            .toList()
-          ..sort(_classificationTypeSorter);
-        return SizedBox(
-          height: _chipsHeight,
-          child: Row(
-            children: [
-              for (final type in types)
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: FilterChip(
-                      label: SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          type.name,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      selected: state.type == type.name,
-                      onSelected: (_) => context
-                          .read<EditOutfitBloc>()
-                          .add(EditOutfitTypeChanged(type.name)),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
