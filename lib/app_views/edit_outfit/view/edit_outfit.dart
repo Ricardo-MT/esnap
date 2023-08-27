@@ -7,6 +7,7 @@ import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wid_design_system/wid_design_system.dart';
 
 class EditOutfitPage extends StatelessWidget {
   const EditOutfitPage._();
@@ -40,7 +41,7 @@ class EditOutfitPage extends StatelessWidget {
               outfit: initialOutfit,
             ),
             child: const _EditOutfitView(),
-          )
+          ),
         ],
         child: const EditOutfitPage._(),
       ),
@@ -93,12 +94,9 @@ class _EditOutfitView extends StatelessWidget {
                   key: const Key('editOutfitView_save_iconButton'),
                   onPressed: !state.isValid
                       ? null
-                      : () {
-                          context
-                              .read<EditOutfitBloc>()
-                              .add(const EditOutfitSubmitted());
-                          Navigator.of(context).pop();
-                        },
+                      : () => context
+                          .read<EditOutfitBloc>()
+                          .add(const EditOutfitSubmitted()),
                   icon: const Icon(Icons.save),
                 );
               },
@@ -109,6 +107,7 @@ class _EditOutfitView extends StatelessWidget {
           child: Column(
             children: [
               Expanded(child: OutfitOverview()),
+              spacerS,
               OutfitControllers(),
             ],
           ),

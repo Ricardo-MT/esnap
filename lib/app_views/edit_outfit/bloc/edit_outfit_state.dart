@@ -18,7 +18,8 @@ final class EditOutfitState extends Equatable {
     this.top,
     this.bottom,
     this.shoes,
-  }) : _isValid = top != null || bottom != null || shoes != null;
+    bool isValid = false,
+  }) : _isValid = isValid;
 
   final EditOutfitStatus status;
   final Outfit? initialOutfit;
@@ -53,15 +54,26 @@ final class EditOutfitState extends Equatable {
     final finalTop = forceTop ? top : top ?? this.top;
     final finalBottom = forceBottom ? bottom : bottom ?? this.bottom;
     final finalShoes = forceShoes ? shoes : shoes ?? this.shoes;
+    final finalOutfit = initialOutfit ?? this.initialOutfit;
 
     return EditOutfitState(
       status: status ?? this.status,
       type: type ?? this.type,
-      initialOutfit: initialOutfit ?? this.initialOutfit,
+      initialOutfit: finalOutfit,
       classification: finalClassification,
       top: finalTop,
       bottom: finalBottom,
       shoes: finalShoes,
+      isValid: (finalOutfit == null ||
+                  finalOutfit !=
+                      finalOutfit.copyWith(
+                        top: finalTop,
+                        bottom: finalBottom,
+                        shoes: finalShoes,
+                      )) &&
+              finalTop != null ||
+          finalBottom != null ||
+          finalShoes != null,
     );
   }
 

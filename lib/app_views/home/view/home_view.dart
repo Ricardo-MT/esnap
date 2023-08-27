@@ -45,6 +45,9 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final selectedTab = context.select((HomeCubit cubit) => cubit.state);
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('eSnap'),
+      ),
       body: SafeArea(
         child: IndexedStack(
           index: selectedTab.index,
@@ -89,7 +92,7 @@ class HomeView extends StatelessWidget {
             Expanded(
               child: _HomeTabButton(
                 groupValue: selectedTab,
-                value: HomeTab.sets,
+                value: HomeTab.outifts,
                 icon: Icons.dashboard,
                 label: 'Sets',
                 onPressed: context.read<HomeCubit>().selectSets,
@@ -119,27 +122,17 @@ class _HomeViewWidget extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: WidAppDimensions.pageInsetGap),
-            child: const Align(
-              alignment: Alignment.centerLeft,
-              child: WidText.headlineLarge(text: 'Outfits'),
-            ),
-          ),
-          spacerM,
-          const Text('(no outfits)'),
-          spacerM,
-          Padding(
             padding: EdgeInsets.only(right: WidAppDimensions.pageInsetGap),
             child: const Align(
               alignment: Alignment.centerRight,
-              child: WidText.headlineLarge(text: 'Clothing items'),
+              child: WidText.headlineLarge(text: 'Clothing types'),
             ),
           ),
           spacerM,
           ...List.generate(
             topFiveClassifications.length,
             (index) => Padding(
-              padding: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.only(bottom: 1),
               child: _HomeQuickFilter(
                 callback: () => callback(topFiveClassifications[index]),
                 label: topFiveClassifications[index].name,
@@ -148,7 +141,7 @@ class _HomeViewWidget extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -210,9 +203,16 @@ class _HomeQuickFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const mainColor = WidAppColors.light;
     return DecoratedBox(
       decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage(imagePath)),
+        image: DecorationImage(
+          image: AssetImage(imagePath),
+          colorFilter: ColorFilter.mode(
+            WidAppColors.primary.withOpacity(0.9),
+            BlendMode.colorBurn,
+          ),
+        ),
       ),
       child: WidTouchable(
         onPress: callback,
@@ -222,25 +222,22 @@ class _HomeQuickFilter extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Expanded(
-                  child: WidText.headlineLarge(
-                    text: label,
-                    style: const TextStyle(
-                      color: WidAppColors.black,
-                      shadows: [
-                        Shadow(
-                          color: Colors.white,
-                          blurRadius: 20,
-                        ),
-                      ],
-                    ),
+                WidText.headlineLarge(
+                  text: label,
+                  style: const TextStyle(
+                    color: mainColor,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 18,
-                  color: WidAppColors.black,
-                )
+                spacerExpanded,
+                const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 18,
+                    color: mainColor,
+                  ),
+                ),
               ],
             ),
           ),

@@ -16,27 +16,23 @@ class SetListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final items =
+        [item.top, item.bottom, item.shoes].where((element) => element != null);
+    final first = items.elementAtOrNull(0);
+    final second = items.elementAtOrNull(1);
+    final third = items.elementAtOrNull(2);
     return WidTouchable(
       onPress: onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ClipRRect(
-            borderRadius:
-                BorderRadius.circular(WidAppDimensions.borderRadiusControllers),
+          AspectRatio(
+            aspectRatio: 1,
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      image: item.top == null
-                          ? null
-                          : DecorationImage(
-                              image: FileImage(File(item.top!.imagePath!)),
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                  ),
+                  child: _OutfitImage(item: first),
                 ),
                 Positioned.fill(
                   child: Align(
@@ -46,18 +42,7 @@ class SetListTile extends StatelessWidget {
                       child: FractionallySizedBox(
                         heightFactor: 0.5,
                         widthFactor: 0.5,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            image: item.bottom == null
-                                ? null
-                                : DecorationImage(
-                                    image: FileImage(
-                                      File(item.bottom!.imagePath!),
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                        ),
+                        child: _OutfitImage(item: second),
                       ),
                     ),
                   ),
@@ -70,17 +55,7 @@ class SetListTile extends StatelessWidget {
                       child: FractionallySizedBox(
                         heightFactor: 0.35,
                         widthFactor: 0.35,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            image: item.shoes == null
-                                ? null
-                                : DecorationImage(
-                                    image:
-                                        FileImage(File(item.shoes!.imagePath!)),
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                        ),
+                        child: _OutfitImage(item: third),
                       ),
                     ),
                   ),
@@ -88,11 +63,51 @@ class SetListTile extends StatelessWidget {
               ],
             ),
           ),
-          const WidText.bodyMedium(
-            text: 'Blusa blanca, vaqueros azules y tacones',
+          SizedBox(
+            height: 44,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                item.toString(),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 18,
+                  height: 1,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           )
         ],
       ),
     );
   }
 }
+
+class _OutfitImage extends StatelessWidget {
+  const _OutfitImage({
+    this.item,
+  });
+  final Item? item;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: _borderRadius,
+        image: item?.imagePath == null
+            ? null
+            : DecorationImage(
+                image: FileImage(
+                  File(item!.imagePath!),
+                ),
+                fit: BoxFit.cover,
+              ),
+      ),
+    );
+  }
+}
+
+final _borderRadius =
+    BorderRadius.circular(WidAppDimensions.borderRadiusControllers);
