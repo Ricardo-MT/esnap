@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:esnap/app_views/detail_item/bloc/detail_item_bloc.dart';
 import 'package:esnap/app_views/edit_item/view/edit_item_page.dart';
+import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,7 +38,7 @@ class DetailItemPage extends StatelessWidget {
               previous.status != current.status &&
               current.status == DetailItemStatus.success,
           listener: (context, state) => Navigator.of(context).pop(),
-        )
+        ),
       ],
       child: const WidTapToHideKeyboard(child: DetailItemView()),
     );
@@ -56,13 +57,26 @@ class DetailItemView extends StatelessWidget {
         title: Text(
           state.item.classification?.name ?? '(no classification)',
         ),
+        actions: [
+          TextButton(
+            style: removeSplashEffect(context),
+            onPressed: status.isLoading
+                ? null
+                : () => Navigator.of(context).pushReplacement(
+                      EditItemPage.route(initialItem: state.item),
+                    ),
+            child: const Text('Edit'),
+          ),
+        ],
       ),
       persistentFooterButtons: [
         TextButton(
+          style: removeSplashEffect(context),
           onPressed: () async {
-            await showDialog<AlertDialog>(
+            await showAdaptiveDialog<AlertDialog>(
               context: context,
               builder: (dialogContext) => AlertDialog(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 title: const Text('Delete item'),
                 content:
                     const Text('Are you sure you want to delete this item?'),
@@ -77,6 +91,7 @@ class DetailItemView extends StatelessWidget {
                     child: const Text('Delete'),
                   ),
                   TextButton(
+                    style: removeSplashEffect(context),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -88,15 +103,6 @@ class DetailItemView extends StatelessWidget {
           },
           child: const Text('Delete'),
         ),
-        ElevatedButton.icon(
-          onPressed: status.isLoading
-              ? null
-              : () => Navigator.of(context).pushReplacement(
-                    EditItemPage.route(initialItem: state.item),
-                  ),
-          icon: const Icon(Icons.edit_outlined),
-          label: const Text('Edit'),
-        )
       ],
       body: CupertinoScrollbar(
         child: SingleChildScrollView(
@@ -204,7 +210,7 @@ class _ImageField extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -223,7 +229,7 @@ class _ColorField extends StatelessWidget {
         Visibility(
           visible: color != null,
           child: ColorIndicator(hexColor: color!.hexColor),
-        )
+        ),
       ],
     );
   }

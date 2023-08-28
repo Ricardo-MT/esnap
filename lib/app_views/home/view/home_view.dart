@@ -45,9 +45,6 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final selectedTab = context.select((HomeCubit cubit) => cubit.state);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('eSnap'),
-      ),
       body: SafeArea(
         child: IndexedStack(
           index: selectedTab.index,
@@ -115,34 +112,32 @@ class _HomeViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(
-        vertical: WidAppDimensions.pageInsetGap / 2,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Esnap'),
       ),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(right: WidAppDimensions.pageInsetGap),
-            child: const Align(
-              alignment: Alignment.centerRight,
-              child: WidText.headlineLarge(text: 'Clothing types'),
-            ),
-          ),
-          spacerM,
-          ...List.generate(
-            topFiveClassifications.length,
-            (index) => Padding(
-              padding: const EdgeInsets.only(bottom: 1),
-              child: _HomeQuickFilter(
-                callback: () => callback(topFiveClassifications[index]),
-                label: topFiveClassifications[index].name,
-                imagePath: getAssetByClassification(
-                  topFiveClassifications[index].name,
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          vertical: WidAppDimensions.pageInsetGap / 2,
+        ),
+        child: Column(
+          children: [
+            spacerM,
+            ...List.generate(
+              topFiveClassifications.length,
+              (index) => Padding(
+                padding: const EdgeInsets.only(bottom: 1),
+                child: _HomeQuickFilter(
+                  callback: () => callback(topFiveClassifications[index]),
+                  label: topFiveClassifications[index].name,
+                  imagePath: getAssetByClassification(
+                    topFiveClassifications[index].name,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
