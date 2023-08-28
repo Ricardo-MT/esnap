@@ -228,7 +228,7 @@ class _ColorField extends StatelessWidget {
         spacerS,
         Visibility(
           visible: color != null,
-          child: ColorIndicator(hexColor: color!.hexColor),
+          child: ColorIndicator(hexColor: color?.hexColor ?? 0x00000000),
         ),
       ],
     );

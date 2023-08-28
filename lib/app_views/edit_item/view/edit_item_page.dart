@@ -3,6 +3,7 @@ import 'package:esnap/app_views/colors_overview/bloc/colors_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_image_picker.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_select.dart';
+import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap/widgets/color_indicator.dart';
@@ -70,7 +71,18 @@ class EditItemPage extends StatelessWidget {
           listenWhen: (previous, current) =>
               previous.status != current.status &&
               current.status == EditItemStatus.success,
-          listener: (context, state) => Navigator.of(context).pop(),
+          listener: (context, state) {
+            if (state.status == EditItemStatus.success) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute<dynamic>(
+                  builder: (_) => const HomePage(
+                    index: 1,
+                  ),
+                ),
+                (route) => false,
+              );
+            }
+          },
         ),
       ],
       child: const WidTapToHideKeyboard(child: EditItemView()),

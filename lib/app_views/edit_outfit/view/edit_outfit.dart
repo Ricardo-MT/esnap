@@ -3,6 +3,7 @@ import 'package:esnap/app_views/classifications_overview/bloc/classifications_ov
 import 'package:esnap/app_views/edit_outfit/bloc/edit_outfit_bloc.dart';
 import 'package:esnap/app_views/edit_outfit/widgets/edit_outfit_controller.dart';
 import 'package:esnap/app_views/edit_outfit/widgets/edit_outfit_overview.dart';
+import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap_repository/esnap_repository.dart';
@@ -72,7 +73,14 @@ class _EditOutfitView extends StatelessWidget {
           return;
         }
         if (state.status == EditOutfitStatus.success) {
-          Navigator.of(context).pop();
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute<dynamic>(
+              builder: (_) => const HomePage(
+                index: 2,
+              ),
+            ),
+            (route) => false,
+          );
         }
       },
       child: Scaffold(
