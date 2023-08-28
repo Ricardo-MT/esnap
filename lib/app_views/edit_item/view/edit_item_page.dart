@@ -183,6 +183,8 @@ class _ClassificationField extends StatelessWidget {
 
     return DropdownButtonFormField<EsnapClassification>(
       decoration: const InputDecoration(label: Text('Classification')),
+      // TODO(me): Add a scrollable dropdown max height in WidDesignSystem.
+      menuMaxHeight: 300,
       value: state.classification,
       items: classifications
           .map(
@@ -209,6 +211,7 @@ class _ColorField extends StatelessWidget {
 
     return DropdownButtonFormField<EsnapColor>(
       decoration: const InputDecoration(label: Text('Color')),
+      menuMaxHeight: 300,
       value: state.color,
       items: colors
           .map(
