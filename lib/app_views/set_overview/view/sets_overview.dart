@@ -1,3 +1,4 @@
+import 'package:esnap/app_views/detail_outfit/detail_outfit.dart';
 import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
 import 'package:esnap/app_views/set_overview/bloc/sets_overview_bloc.dart';
 import 'package:esnap/app_views/set_overview/widgets/set_list_tile.dart';
@@ -67,7 +68,7 @@ class _SetsOverviewView extends StatelessWidget {
                         item: item,
                         onTap: () {
                           Navigator.of(context).push(
-                            EditOutfitPage.route(initialOutfit: item),
+                            DetailOutfitPage.route(item: item),
                           );
                         },
                       ),
