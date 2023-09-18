@@ -44,7 +44,7 @@ void main() {
             'red', // color
             'jumper', // classification
             <String>[], // occasions
-            oneFile
+            oneFile,
           ]),
         );
       });

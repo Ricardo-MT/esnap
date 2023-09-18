@@ -15,7 +15,8 @@ abstract class ClassificationTypeApi {
 
   /// Saves a [classification].
   ///
-  /// If a [classification] with the same id already exists, it will be replaced.
+  /// If a [classification] with the same id already exists,
+  /// it will be replaced.
   Future<void> saveClassificationType(EsnapClassificationType classification);
 }
 

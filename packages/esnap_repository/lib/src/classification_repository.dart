@@ -20,14 +20,15 @@ class ClassificationRepository {
 
   /// Saves an [classification].
   ///
-  /// If an [classification] with the same id already exists, it will be replaced.
+  /// If an [classification] with the same id already exists,
+  /// it will be replaced.
   Future<void> saveClassification(EsnapClassification classification) =>
       _classificationApi.saveClassification(classification);
 
   /// Deletes the `classification` with the given id.
   ///
-  /// If no `classification` with the given id exists, a [ClassificationNotFoundException] error is
-  /// thrown.
+  /// If no `classification` with the given id exists,
+  /// a [ClassificationNotFoundException] error is thrown.
   Future<void> deleteClassification(String id) =>
       _classificationApi.deleteClassification(id);
 }

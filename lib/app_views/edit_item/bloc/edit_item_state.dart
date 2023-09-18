@@ -50,24 +50,25 @@ final class EditItemState extends Equatable {
     final finalOccasions = occasions ?? this.occasions;
     final finalFavorite = favorite ?? this.favorite;
     return EditItemState(
-        status: status ?? this.status,
-        initialItem: finalInitialItem,
-        imagePath: finalImagePath,
-        color: finalColor,
-        classification: finalClassification,
-        occasions: finalOccasions.toList(),
-        favorite: finalFavorite,
-        isValid: (finalInitialItem == null ||
-                finalInitialItem !=
-                    finalInitialItem.copyWith(
-                      imagePath: finalImagePath,
-                      color: finalColor,
-                      classification: finalClassification,
-                      occasions: finalOccasions,
-                      favorite: finalFavorite,
-                    )) &&
-            finalImagePath != null &&
-            finalClassification != null);
+      status: status ?? this.status,
+      initialItem: finalInitialItem,
+      imagePath: finalImagePath,
+      color: finalColor,
+      classification: finalClassification,
+      occasions: finalOccasions.toList(),
+      favorite: finalFavorite,
+      isValid: (finalInitialItem == null ||
+              finalInitialItem !=
+                  finalInitialItem.copyWith(
+                    imagePath: finalImagePath,
+                    color: finalColor,
+                    classification: finalClassification,
+                    occasions: finalOccasions,
+                    favorite: finalFavorite,
+                  )) &&
+          finalImagePath != null &&
+          finalClassification != null,
+    );
   }
 
   @override

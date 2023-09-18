@@ -19,7 +19,7 @@ class ColorRepository {
 
   /// Deletes the `color` with the given id.
   ///
-  /// If no `color` with the given id exists, a [ColorNotFoundException] error is
-  /// thrown.
+  /// If no `color` with the given id exists, a [ColorNotFoundException]
+  /// error is thrown.
   Future<void> deleteColor(String id) => _colorApi.deleteColor(id);
 }

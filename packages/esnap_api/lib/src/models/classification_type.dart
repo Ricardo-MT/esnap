@@ -34,7 +34,8 @@ class EsnapClassificationType extends Equatable {
   /// Cannot be empty.
   final String name;
 
-  /// Returns a copy of this `EsnapClassificationType` with the given values updated.
+  /// Returns a copy of this `EsnapClassificationType` with the given
+  /// values updated.
   ///
   /// {@macro classification}
   EsnapClassificationType copyWith({

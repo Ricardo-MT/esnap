@@ -41,13 +41,13 @@ class LocalStorageConnectionManager {
     final [colorApi, classificationApi, occasionApi] = await Future.wait([
       LocalStorageColorApi.initializer(),
       LocalStorageClassificationApi.initializer(typesApi.box.values.toList()),
-      LocalStorageOccasionApi.initializer()
+      LocalStorageOccasionApi.initializer(),
     ]);
-    final [esnapApi, outfitApi, _] = await Future.wait(
+    final [esnapApi, outfitApi, _] = await Future.wait<dynamic>(
       [
         LocalStorageEsnapApi.initializer(),
         LocalStorageOutfitApi.initializer(),
-        migratedBox.close()
+        migratedBox.close(),
       ],
     );
     return LocalStorageConnectionManager(

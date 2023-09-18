@@ -59,7 +59,7 @@ class SetListTile extends StatelessWidget {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -78,7 +78,7 @@ class SetListTile extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

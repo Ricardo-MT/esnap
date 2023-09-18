@@ -21,7 +21,8 @@ class ClassificationTypeRepository {
 
   /// Saves an [classificationType].
   ///
-  /// If an [classificationType] with the same id already exists, it will be replaced.
+  /// If an [classificationType] with the same id already exists,
+  /// it will be replaced.
   Future<void> saveClassificationType(
     EsnapClassificationType classificationType,
   ) =>

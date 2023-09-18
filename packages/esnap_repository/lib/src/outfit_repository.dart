@@ -20,7 +20,7 @@ class OutfitRepository {
 
   /// Deletes the `outfit` with the given id.
   ///
-  /// If no `outfit` with the given id exists, a [OutfitNotFoundException] error is
-  /// thrown.
+  /// If no `outfit` with the given id exists, a [OutfitNotFoundException]
+  /// error is thrown.
   Future<void> deleteOutfit(String id) => _outfitApi.deleteOutfit(id);
 }

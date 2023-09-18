@@ -58,12 +58,13 @@ class WidSelectMultiple extends StatelessWidget {
                 height: 600,
                 items: [
                   for (var i = 0; i < options.length; i++)
-                    MultiSelectItem(options[i], options[i])
+                    MultiSelectItem(options[i], options[i]),
                 ],
                 initialValue: values ?? [],
                 onConfirm: (values) {
                   onChanged?.call([
-                    for (var i = 0; i < values.length; i++) values[i].toString()
+                    for (var i = 0; i < values.length; i++)
+                      values[i].toString(),
                   ]);
                 },
               );

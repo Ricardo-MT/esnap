@@ -21,7 +21,7 @@ class OccasionRepository {
 
   /// Deletes the `occasion` with the given id.
   ///
-  /// If no `occasion` with the given id exists, a [OccasionNotFoundException] error is
-  /// thrown.
+  /// If no `occasion` with the given id exists, a [OccasionNotFoundException]
+  /// error is thrown.
   Future<void> deleteOccasion(String id) => _occasionApi.deleteOccasion(id);
 }
