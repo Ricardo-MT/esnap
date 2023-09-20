@@ -1,4 +1,6 @@
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
+import 'package:esnap/app_views/edit_item/edit_todo.dart';
+import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
 import 'package:esnap/app_views/home/cubit/home_cubit.dart';
 import 'package:esnap/app_views/items_overview/view/items_overview.dart';
 import 'package:esnap/app_views/set_overview/view/sets_overview.dart';
@@ -9,7 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wid_design_system/wid_design_system.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, this.index = 0});
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class HomePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => HomeCubit(),
+          create: (_) => HomeCubit(index),
         ),
         BlocProvider(
           create: (context) => ClassificationsOverviewBloc(
@@ -29,15 +32,15 @@ class HomePage extends StatelessWidget {
             ),
         ),
       ],
-      child: HomeView(
+      child: _HomeView(
         topFiveClassifications: topFive.take(5).toList(),
       ),
     );
   }
 }
 
-class HomeView extends StatelessWidget {
-  HomeView({required this.topFiveClassifications, super.key});
+class _HomeView extends StatelessWidget {
+  _HomeView({required this.topFiveClassifications});
   final GlobalKey<ItemsOverviewViewState> globalKey = GlobalKey();
   final List<EsnapClassification> topFiveClassifications;
 
@@ -45,9 +48,6 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final selectedTab = context.select((HomeCubit cubit) => cubit.state);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('eSnap'),
-      ),
       body: SafeArea(
         child: IndexedStack(
           index: selectedTab.index,
@@ -115,34 +115,43 @@ class _HomeViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(
-        vertical: WidAppDimensions.pageInsetGap / 2,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Esnap'),
       ),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(right: WidAppDimensions.pageInsetGap),
-            child: const Align(
-              alignment: Alignment.centerRight,
-              child: WidText.headlineLarge(text: 'Clothing types'),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          vertical: WidAppDimensions.pageInsetGap / 2,
+        ),
+        child: Column(
+          children: [
+            _HomeQuickFilter(
+              callback: () => Navigator.of(context).push(EditItemPage.route()),
+              label: 'Add clothing item',
+              iconPlus: true,
             ),
-          ),
-          spacerM,
-          ...List.generate(
-            topFiveClassifications.length,
-            (index) => Padding(
-              padding: const EdgeInsets.only(bottom: 1),
-              child: _HomeQuickFilter(
-                callback: () => callback(topFiveClassifications[index]),
-                label: topFiveClassifications[index].name,
-                imagePath: getAssetByClassification(
-                  topFiveClassifications[index].name,
+            _HomeQuickFilter(
+              callback: () =>
+                  Navigator.of(context).push(EditOutfitPage.route()),
+              label: 'Add outfit',
+              iconPlus: true,
+            ),
+            spacerM,
+            ...List.generate(
+              topFiveClassifications.length,
+              (index) => Padding(
+                padding: const EdgeInsets.only(bottom: 1),
+                child: _HomeQuickFilter(
+                  callback: () => callback(topFiveClassifications[index]),
+                  label: topFiveClassifications[index].name,
+                  imagePath: getAssetByClassification(
+                    topFiveClassifications[index].name,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -195,24 +204,28 @@ class _HomeQuickFilter extends StatelessWidget {
   const _HomeQuickFilter({
     required this.callback,
     required this.label,
-    required this.imagePath,
+    this.imagePath,
+    this.iconPlus = false,
   });
   final void Function() callback;
   final String label;
-  final String imagePath;
+  final String? imagePath;
+  final bool iconPlus;
 
   @override
   Widget build(BuildContext context) {
     const mainColor = WidAppColors.light;
     return DecoratedBox(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          colorFilter: ColorFilter.mode(
-            WidAppColors.primary.withOpacity(0.9),
-            BlendMode.colorBurn,
-          ),
-        ),
+        image: imagePath == null
+            ? null
+            : DecorationImage(
+                image: AssetImage(imagePath!),
+                colorFilter: ColorFilter.mode(
+                  WidAppColors.primary.withOpacity(0.9),
+                  BlendMode.colorBurn,
+                ),
+              ),
       ),
       child: WidTouchable(
         onPress: callback,
@@ -230,10 +243,10 @@ class _HomeQuickFilter extends StatelessWidget {
                   ),
                 ),
                 spacerExpanded,
-                const Padding(
-                  padding: EdgeInsets.all(8),
+                Padding(
+                  padding: const EdgeInsets.all(8),
                   child: Icon(
-                    Icons.arrow_forward_ios,
+                    iconPlus ? Icons.add_circle : Icons.arrow_forward_ios,
                     size: 18,
                     color: mainColor,
                   ),

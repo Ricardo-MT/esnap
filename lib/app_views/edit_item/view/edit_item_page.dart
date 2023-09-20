@@ -3,7 +3,9 @@ import 'package:esnap/app_views/colors_overview/bloc/colors_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_image_picker.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_select.dart';
+import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
+import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,8 +71,19 @@ class EditItemPage extends StatelessWidget {
           listenWhen: (previous, current) =>
               previous.status != current.status &&
               current.status == EditItemStatus.success,
-          listener: (context, state) => Navigator.of(context).pop(),
-        )
+          listener: (context, state) {
+            if (state.status == EditItemStatus.success) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute<dynamic>(
+                  builder: (_) => const HomePage(
+                    index: 1,
+                  ),
+                ),
+                (route) => false,
+              );
+            }
+          },
+        ),
       ],
       child: const WidTapToHideKeyboard(child: EditItemView()),
     );
@@ -91,15 +104,24 @@ class EditItemView extends StatelessWidget {
         title: Text(
           isNewItem ? 'New item' : 'Editing item',
         ),
-      ),
-      floatingActionButton: ElevatedButton.icon(
-        onPressed: status.isLoadingOrSuccess
-            ? null
-            : () => context.read<EditItemBloc>().add(const EditItemSubmitted()),
-        icon: status.isLoadingOrSuccess
-            ? const CupertinoActivityIndicator()
-            : const Icon(Icons.save),
-        label: const Text('Save'),
+        actions: [
+          BlocBuilder<EditItemBloc, EditItemState>(
+            buildWhen: (previous, current) =>
+                previous.isValid != current.isValid,
+            builder: (context, state) {
+              return TextButton(
+                key: const Key('editItemView_save_iconButton'),
+                style: removeSplashEffect(context),
+                onPressed: (status.isLoadingOrSuccess || !state.isValid)
+                    ? null
+                    : () => context
+                        .read<EditItemBloc>()
+                        .add(const EditItemSubmitted()),
+                child: const Text('Save'),
+              );
+            },
+          ),
+        ],
       ),
       body: const CupertinoScrollbar(
         child: SingleChildScrollView(
@@ -156,7 +178,7 @@ class _ImageField extends StatelessWidget {
                 .read<EditItemBloc>()
                 .add(EditItemFavoriteChanged(favorite: !state.favorite)),
           ),
-        )
+        ),
       ],
     );
   }
@@ -173,6 +195,7 @@ class _ClassificationField extends StatelessWidget {
 
     return DropdownButtonFormField<EsnapClassification>(
       decoration: const InputDecoration(label: Text('Classification')),
+      menuMaxHeight: 300,
       value: state.classification,
       items: classifications
           .map(
@@ -186,23 +209,6 @@ class _ClassificationField extends StatelessWidget {
         context.read<EditItemBloc>().add(EditItemClassificationChanged(value));
       },
     );
-    // return TextFormField(
-    //   key: const Key('editItemView_description_textFormField'),
-    //   initialValue: state.classification,
-    //   decoration: InputDecoration(
-    //     enabled: !state.status.isLoadingOrSuccess,
-    //     labelText: 'Classification',
-    //     hintText: hintText,
-    //   ),
-    //   maxLength: 300,
-    //   maxLines: 7,
-    //   inputFormatters: [
-    //     LengthLimitingTextInputFormatter(300),
-    //   ],
-    //   onChanged: (value) {
-    //     context.read<EditItemBloc>().add(EditItemClassificationChanged(value));
-    //   },
-    // );
   }
 }
 
@@ -216,6 +222,7 @@ class _ColorField extends StatelessWidget {
 
     return DropdownButtonFormField<EsnapColor>(
       decoration: const InputDecoration(label: Text('Color')),
+      menuMaxHeight: 300,
       value: state.color,
       items: colors
           .map(
@@ -236,23 +243,6 @@ class _ColorField extends StatelessWidget {
         context.read<EditItemBloc>().add(EditItemColorChanged(value));
       },
     );
-    // return TextFormField(
-    //   key: const Key('editItemView_title_textFormField'),
-    //   initialValue: state.color,
-    //   decoration: InputDecoration(
-    //     enabled: !state.status.isLoadingOrSuccess,
-    //     labelText: 'Title',
-    //     hintText: hintText,
-    //   ),
-    //   maxLength: 50,
-    //   inputFormatters: [
-    //     LengthLimitingTextInputFormatter(50),
-    //     FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]')),
-    //   ],
-    //   onChanged: (value) {
-    //     context.read<EditItemBloc>().add(EditItemColorChanged(value));
-    //   },
-    // );
   }
 }
 

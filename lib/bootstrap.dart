@@ -23,12 +23,13 @@ class AppBlocObserver extends BlocObserver {
 }
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
-  // Pass all uncaught "fatal" errors from the framework to Crashlytics
+  // Pass all uncaught "fatal" errors from the framework to Crashlytics.
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
     log(errorDetails.exceptionAsString(), stackTrace: errorDetails.stack);
   };
-  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter
+  // framework to Crashlytics.
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     log(error.toString(), stackTrace: stack);

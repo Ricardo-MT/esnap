@@ -42,7 +42,7 @@ class ItemListTile extends StatelessWidget {
                       gradient: LinearGradient(
                         colors: [
                           Colors.transparent,
-                          WidAppColors.black.withOpacity(0.6)
+                          WidAppColors.black.withOpacity(0.6),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -90,7 +90,7 @@ class ItemListTile extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  item.color?.name ?? '(none)',
+                                  item.color?.name ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: theme.textTheme.bodyMedium?.copyWith(
@@ -102,10 +102,10 @@ class ItemListTile extends StatelessWidget {
                                   hexColor: item.color?.hexColor ?? 0x00FFFFFF,
                                 ),
                               ],
-                            )
+                            ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

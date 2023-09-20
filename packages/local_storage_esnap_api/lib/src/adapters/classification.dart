@@ -23,8 +23,7 @@ class ClassificationSchema extends HiveObject {
         Hive.box<ClassificationTypeSchema>(EsnapBoxes.classificationType);
     final list = HiveList<ClassificationTypeSchema>(
       box,
-    );
-    list.add(box.get(classification.classificationType.id)!);
+    )..add(box.get(classification.classificationType.id)!);
     return ClassificationSchema(
       id: classification.id,
       name: classification.name,

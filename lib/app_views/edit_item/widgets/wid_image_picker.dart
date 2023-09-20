@@ -71,7 +71,7 @@ class WidImagePicker extends StatelessWidget {
                               ),
                             ),
                           ),
-                        )
+                        ),
                       ],
                     )
                   : const Center(
@@ -82,7 +82,7 @@ class WidImagePicker extends StatelessWidget {
                             Icons.file_upload_outlined,
                             color: WidAppColors.n600,
                           ),
-                          WidText.headlineSmall(text: 'Select image')
+                          WidText.headlineSmall(text: 'Select image'),
                         ],
                       ),
                     ),

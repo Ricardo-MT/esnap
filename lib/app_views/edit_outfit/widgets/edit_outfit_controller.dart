@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:esnap/app_views/classification_types_overview/bloc/classification_types_overview_bloc.dart';
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/edit_outfit/bloc/edit_outfit_bloc.dart';
 import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
@@ -159,28 +158,3 @@ bool _shouldDisplayItem(
 
 const _chipsHeight = 34.0;
 const _chipsPadding = 12.0;
-
-int _classificationTypeSorter(
-  EsnapClassificationType a,
-  EsnapClassificationType b,
-) {
-  if (a.name == 'Top') {
-    return -1;
-  }
-  if (b.name == 'Top') {
-    return 1;
-  }
-  if (a.name == 'Bottom') {
-    return -1;
-  }
-  if (b.name == 'Bottom') {
-    return 1;
-  }
-  if (a.name == 'Shoes') {
-    return -1;
-  }
-  if (b.name == 'Shoes') {
-    return 1;
-  }
-  return a.name.compareTo(b.name);
-}

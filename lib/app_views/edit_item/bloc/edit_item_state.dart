@@ -18,7 +18,8 @@ final class EditItemState extends Equatable {
     this.classification,
     this.occasions = const [],
     this.favorite = false,
-  });
+    bool isValid = false,
+  }) : _isValid = isValid;
 
   final EditItemStatus status;
   final Item? initialItem;
@@ -27,6 +28,9 @@ final class EditItemState extends Equatable {
   final EsnapClassification? classification;
   final List<EsnapOccasion> occasions;
   final bool favorite;
+  final bool _isValid;
+
+  bool get isValid => _isValid;
 
   bool get isNewItem => initialItem == null;
 
@@ -39,14 +43,31 @@ final class EditItemState extends Equatable {
     List<EsnapOccasion>? occasions,
     bool? favorite,
   }) {
+    final finalInitialItem = initialItem ?? this.initialItem;
+    final finalImagePath = imagePath ?? this.imagePath;
+    final finalColor = color ?? this.color;
+    final finalClassification = classification ?? this.classification;
+    final finalOccasions = occasions ?? this.occasions;
+    final finalFavorite = favorite ?? this.favorite;
     return EditItemState(
       status: status ?? this.status,
-      initialItem: initialItem ?? this.initialItem,
-      imagePath: imagePath ?? this.imagePath,
-      color: color ?? this.color,
-      classification: classification ?? this.classification,
-      occasions: (occasions ?? this.occasions).toList(),
-      favorite: favorite ?? this.favorite,
+      initialItem: finalInitialItem,
+      imagePath: finalImagePath,
+      color: finalColor,
+      classification: finalClassification,
+      occasions: finalOccasions.toList(),
+      favorite: finalFavorite,
+      isValid: (finalInitialItem == null ||
+              finalInitialItem !=
+                  finalInitialItem.copyWith(
+                    imagePath: finalImagePath,
+                    color: finalColor,
+                    classification: finalClassification,
+                    occasions: finalOccasions,
+                    favorite: finalFavorite,
+                  )) &&
+          finalImagePath != null &&
+          finalClassification != null,
     );
   }
 
@@ -59,5 +80,6 @@ final class EditItemState extends Equatable {
         classification,
         occasions,
         favorite,
+        _isValid,
       ];
 }

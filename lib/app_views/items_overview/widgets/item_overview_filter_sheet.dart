@@ -144,7 +144,7 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                 splashRadius: 20,
                 padding: const EdgeInsets.all(4),
                 icon: const Icon(Icons.close_outlined),
-              )
+              ),
             ],
           ),
         ),
@@ -165,7 +165,7 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                       value: selectedFavorite,
                       onChanged: onFavoriteChange,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    )
+                    ),
                   ],
                 ),
                 const Divider(
@@ -206,7 +206,7 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                             children: [
                               Text(color.name),
                               spacerXs,
-                              ColorIndicator(hexColor: color.hexColor)
+                              ColorIndicator(hexColor: color.hexColor),
                             ],
                           ),
                           selected: color.id == selectedColor?.id,
@@ -233,11 +233,11 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                         ),
                       )
                       .toList(),
-                )
+                ),
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }
