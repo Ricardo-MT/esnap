@@ -214,7 +214,7 @@ class _HomeQuickFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const mainColor = WidAppColors.light;
+    final mainColor = Theme.of(context).textTheme.bodyLarge?.color;
     return DecoratedBox(
       decoration: BoxDecoration(
         image: imagePath == null
@@ -237,7 +237,7 @@ class _HomeQuickFilter extends StatelessWidget {
               children: [
                 WidText.headlineLarge(
                   text: label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: mainColor,
                     fontWeight: FontWeight.bold,
                   ),

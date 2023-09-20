@@ -75,7 +75,6 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final colors = sections.map((e) => e.color).toList();
-    final overlayColor = Theme.of(context).colorScheme.onBackground;
     return Scaffold(
       body: Stack(
         children: [
@@ -112,7 +111,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
             );
           }),
           Positioned(
-            bottom: 200 - height,
+            bottom: 230 - height,
             left: -width,
             child: IgnorePointer(
               child: AnimatedBuilder(
@@ -205,58 +204,63 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                     },
                   ),
                 ),
-                spacerXL,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Visibility.maintain(
-                      visible: !_isFirstPage,
-                      child: TextButton(
+                spacerL,
+                SafeArea(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Visibility.maintain(
+                        visible: !_isFirstPage,
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            fixedSize: const Size.fromWidth(80),
+                          ),
+                          onPressed: previousPage,
+                          child: const Text('Back'),
+                        ),
+                      ),
+                      Row(
+                        children: List.generate(
+                          sections.length,
+                          (index) => AnimatedBuilder(
+                            animation: _pageController,
+                            builder: (context, child) {
+                              final page = _pageController.page ?? 0;
+                              final deltaPage = (page - index).abs();
+                              final value = 1 - deltaPage;
+                              return Opacity(
+                                opacity: value.clamp(0.5, 1),
+                                child: Transform.scale(
+                                  scale: value.clamp(0.6, 1),
+                                  child: Container(
+                                    margin: const EdgeInsets.all(4),
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.color,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      TextButton(
                         style: TextButton.styleFrom(
                           fixedSize: const Size.fromWidth(80),
                         ),
-                        onPressed: previousPage,
-                        child: const Text('Back'),
+                        onPressed: _isLastPage
+                            ? () => handleFinishOnboard(context)
+                            : nextPage,
+                        child: Text(_isLastPage ? 'Done' : 'Next'),
                       ),
-                    ),
-                    Row(
-                      children: List.generate(
-                        sections.length,
-                        (index) => AnimatedBuilder(
-                          animation: _pageController,
-                          builder: (context, child) {
-                            final page = _pageController.page ?? 0;
-                            final deltaPage = (page - index).abs();
-                            final value = 1 - deltaPage;
-                            return Opacity(
-                              opacity: value.clamp(0.5, 1),
-                              child: Transform.scale(
-                                scale: value.clamp(0.6, 1),
-                                child: Container(
-                                  margin: const EdgeInsets.all(4),
-                                  width: 8,
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    color: overlayColor,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        fixedSize: const Size.fromWidth(80),
-                      ),
-                      onPressed: _isLastPage
-                          ? () => handleFinishOnboard(context)
-                          : nextPage,
-                      child: Text(_isLastPage ? 'Done' : 'Next'),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -268,7 +272,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
 }
 
 double getY(double x) {
-  return 8.5 * pow(x, 2) - 14.5 * x + 15;
+  return 8.5 * pow(x, 2) - 14.5 * x + 14.8;
 }
 
 const sections = [
