@@ -5,6 +5,8 @@ import 'package:esnap_repository/esnap_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:local_storage_esnap_api/local_storage_esnap_api.dart';
+import 'package:preferences_api_services/preferences_api_services.dart';
+import 'package:preferences_repository/preferences_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,8 +36,13 @@ void main() async {
   final outfitRepository =
       OutfitRepository(outfitApi: connectionManager.outfitApi);
 
+  final preferencesRepository = PreferencesRepository(
+    client: PreferencesApiServices(),
+  );
+
   await bootstrap(
     () => App(
+      preferencesRepository: preferencesRepository,
       outfitRepository: outfitRepository,
       esnapRepository: esnapRepository,
       colorRepository: colorRepository,
