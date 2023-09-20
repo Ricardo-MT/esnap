@@ -5,10 +5,11 @@ ButtonStyle removeSplashEffect(BuildContext context) => ButtonStyle(
         Colors.transparent,
       ),
       foregroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+        final mainColor =
+            Theme.of(context).textTheme.headlineLarge?.color ?? Colors.black;
         if (states.contains(MaterialState.disabled)) {
-          return Theme.of(context).disabledColor;
+          return mainColor.withOpacity(0.5);
         }
-        final mainColor = Theme.of(context).colorScheme.onBackground;
         if (states.contains(MaterialState.pressed)) {
           return mainColor.withOpacity(0.5);
         }
