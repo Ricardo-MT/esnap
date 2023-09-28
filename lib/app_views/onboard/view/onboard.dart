@@ -72,8 +72,8 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    const skipColor = Colors.black;
+    const foregroundColor = Colors.white;
     final colors = sections.map((e) => e.color).toList();
     return Scaffold(
       body: Stack(
@@ -87,7 +87,6 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
           ...List.generate(sections.length, (index) {
             final i = sections.length - index - 1;
             final image = sections[i].image;
-            final color = sections[i].color;
             return Positioned.fill(
               child: IgnorePointer(
                 child: AnimatedBuilder(
@@ -101,8 +100,6 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                       child: Image.asset(
                         image,
                         fit: BoxFit.cover,
-                        color: color.withOpacity(0.7),
-                        colorBlendMode: BlendMode.multiply,
                       ),
                     );
                   },
@@ -110,9 +107,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
               ),
             );
           }),
-          Positioned(
-            bottom: 230 - height,
-            left: -width,
+          Positioned.fill(
             child: IgnorePointer(
               child: AnimatedBuilder(
                 animation: _pageController,
@@ -122,28 +117,21 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                   final max = page.ceil();
                   final minColor = colors[min];
                   final maxColor = colors[max];
-                  final color = Color.lerp(minColor, maxColor, page - min);
-                  return Transform.rotate(
-                    angle: pi / getY(page),
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        -getY(page) * 4,
-                      ),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          border: Border.fromBorderSide(
-                            BorderSide(
-                              color: color!,
-                              width: 12,
-                            ),
-                          ),
-                        ),
-                        child: SizedBox(
-                          height: height,
-                          width: width * 2,
-                        ),
+                  final color = Color.lerp(minColor, maxColor, page - min) ??
+                      Theme.of(context).scaffoldBackgroundColor;
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          color.withOpacity(0),
+                          color.withOpacity(1),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomLeft,
+                        stops: const [
+                          0.4,
+                          1,
+                        ],
                       ),
                     ),
                   );
@@ -157,7 +145,10 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
             child: SafeArea(
               child: TextButton(
                 onPressed: () => handleFinishOnboard(context),
-                child: const Text('Skip'),
+                child: const Text(
+                  'Skip',
+                  style: TextStyle(color: skipColor),
+                ),
               ),
             ),
           ),
@@ -178,7 +169,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 14),
                         child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 170),
                           child: Column(
                             key: ValueKey(index),
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -186,16 +177,27 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                             children: [
                               Text(
                                 section.title1,
-                                style: Theme.of(context).textTheme.titleLarge,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge
+                                    ?.copyWith(color: foregroundColor),
                               ),
                               Text(
                                 section.title2,
-                                style: Theme.of(context).textTheme.titleLarge,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge
+                                    ?.copyWith(color: foregroundColor),
                               ),
                               spacerM,
                               Text(
                                 section.description,
-                                style: Theme.of(context).textTheme.bodyLarge,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(
+                                      color: foregroundColor,
+                                    ),
                               ),
                             ],
                           ),
@@ -204,19 +206,25 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                     },
                   ),
                 ),
-                spacerL,
+                spacerM,
                 SafeArea(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Visibility.maintain(
-                        visible: !_isFirstPage,
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
                         child: TextButton(
+                          key: ValueKey(_isFirstPage),
                           style: TextButton.styleFrom(
                             fixedSize: const Size.fromWidth(80),
                           ),
-                          onPressed: previousPage,
-                          child: const Text('Back'),
+                          onPressed: _isFirstPage ? null : previousPage,
+                          child: Text(
+                            _isFirstPage ? '' : 'Back',
+                            style: const TextStyle(
+                              color: foregroundColor,
+                            ),
+                          ),
                         ),
                       ),
                       Row(
@@ -236,11 +244,8 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                                     margin: const EdgeInsets.all(4),
                                     width: 8,
                                     height: 8,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.color,
+                                    decoration: const BoxDecoration(
+                                      color: foregroundColor,
                                       shape: BoxShape.circle,
                                     ),
                                   ),
@@ -250,14 +255,21 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          fixedSize: const Size.fromWidth(80),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: TextButton(
+                          key: ValueKey(_isLastPage),
+                          style: TextButton.styleFrom(
+                            fixedSize: const Size.fromWidth(80),
+                          ),
+                          onPressed: _isLastPage
+                              ? () => handleFinishOnboard(context)
+                              : nextPage,
+                          child: Text(
+                            _isLastPage ? 'Done' : 'Next',
+                            style: const TextStyle(color: foregroundColor),
+                          ),
                         ),
-                        onPressed: _isLastPage
-                            ? () => handleFinishOnboard(context)
-                            : nextPage,
-                        child: Text(_isLastPage ? 'Done' : 'Next'),
                       ),
                     ],
                   ),
@@ -281,7 +293,7 @@ const sections = [
     title2: 'Your Wardrobe',
     description: 'Easily add your clothes for a stylish, organized closet.',
     image: 'assets/img/section_1.png',
-    color: Color(0xFF610f7f),
+    color: Color(0xFFBC44E7),
   ),
   OnboardSection(
     title1: 'Mix &',

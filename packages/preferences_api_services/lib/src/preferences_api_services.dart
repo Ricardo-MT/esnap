@@ -13,11 +13,11 @@ class PreferencesApiServices extends PreferencesApi {
 
   @override
   Future<void> finishOnboarding() =>
-      _storage.write(key: 'onboarding_complete', value: 'true');
+      _storage.write(key: 'onboarding_completed', value: 'true');
 
   @override
   Future<bool> isFirstLogin() async {
-    final value = await _storage.read(key: 'onboarding_complete');
+    final value = await _storage.read(key: 'onboarding_completed');
     return value == null;
   }
 }
