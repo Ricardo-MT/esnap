@@ -5,6 +5,7 @@ import 'package:esnap/app_views/edit_item/widgets/wid_image_picker.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_select.dart';
 import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
+import 'package:esnap/utils/dimensions.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
@@ -195,7 +196,7 @@ class _ClassificationField extends StatelessWidget {
 
     return DropdownButtonFormField<EsnapClassification>(
       decoration: const InputDecoration(label: Text('Classification')),
-      menuMaxHeight: 300,
+      menuMaxHeight: AppDimenssions.menuMaxHeight,
       value: state.classification,
       items: classifications
           .map(
@@ -222,7 +223,7 @@ class _ColorField extends StatelessWidget {
 
     return DropdownButtonFormField<EsnapColor>(
       decoration: const InputDecoration(label: Text('Color')),
-      menuMaxHeight: 300,
+      menuMaxHeight: AppDimenssions.menuMaxHeight,
       value: state.color,
       items: colors
           .map(
