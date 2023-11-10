@@ -78,12 +78,15 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
     return Scaffold(
       body: Stack(
         children: [
+          /// Dummy page view to allow for page transitions
           Positioned.fill(
             child: PageView(
               controller: _pageController,
               children: sections.map((e) => const SizedBox.expand()).toList(),
             ),
           ),
+
+          /// Background images
           ...List.generate(sections.length, (index) {
             final i = sections.length - index - 1;
             final image = sections[i].image;
@@ -107,6 +110,8 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
               ),
             );
           }),
+
+          /// Foreground gradient
           Positioned.fill(
             child: IgnorePointer(
               child: AnimatedBuilder(
@@ -139,6 +144,8 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
               ),
             ),
           ),
+
+          /// Skip button
           Positioned(
             right: 0,
             top: 0,
@@ -152,6 +159,8 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
               ),
             ),
           ),
+
+          /// Text description, page indicator and navigation buttons
           Positioned(
             right: 0,
             left: 0,
@@ -180,14 +189,20 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                                 style: Theme.of(context)
                                     .textTheme
                                     .displayLarge
-                                    ?.copyWith(color: foregroundColor),
+                                    ?.copyWith(
+                                      color: foregroundColor,
+                                      fontSize: 34,
+                                    ),
                               ),
                               Text(
                                 section.title2,
                                 style: Theme.of(context)
                                     .textTheme
                                     .displayLarge
-                                    ?.copyWith(color: foregroundColor),
+                                    ?.copyWith(
+                                      color: foregroundColor,
+                                      fontSize: 34,
+                                    ),
                               ),
                               spacerM,
                               Text(
@@ -197,6 +212,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                                     .titleLarge
                                     ?.copyWith(
                                       color: foregroundColor,
+                                      fontSize: 18,
                                     ),
                               ),
                             ],
@@ -206,7 +222,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                     },
                   ),
                 ),
-                spacerM,
+                spacerXs,
                 SafeArea(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -90,7 +90,7 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
                   ..hideCurrentSnackBar()
                   ..showSnackBar(
                     const SnackBar(
-                      content: Text('ERROR DESCONOCIDO'),
+                      content: Text('error'),
                     ),
                   );
               }
@@ -99,19 +99,11 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
         ],
         child: BlocBuilder<ItemsOverviewBloc, ItemsOverviewState>(
           builder: (context, state) {
-            if (state.items.isEmpty) {
-              if (state.status == ItemsOverviewStatus.loading) {
-                return const Center(child: CupertinoActivityIndicator());
-              }
-              if (state.status != ItemsOverviewStatus.success) {
-                return const SizedBox();
-              }
-              return Center(
-                child: Text(
-                  'No items',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              );
+            if (state.status == ItemsOverviewStatus.failure) {
+              return const Center(child: Text('error'));
+            }
+            if (state.status == ItemsOverviewStatus.loading) {
+              return const Center(child: CupertinoActivityIndicator());
             }
             return Column(
               children: [
@@ -132,7 +124,12 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
                 ),
                 Expanded(
                   child: state.filteredItems.isEmpty
-                      ? const Center(child: Text('no matches'))
+                      ? Center(
+                          child: Text(
+                            'No items',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        )
                       : GridView.count(
                           crossAxisCount: 3,
                           padding: const EdgeInsets.all(15),

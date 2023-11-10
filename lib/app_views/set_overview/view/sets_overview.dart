@@ -38,17 +38,20 @@ class _SetsOverviewView extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<SetsOverviewBloc, SetsOverviewState>(
           builder: (context, state) {
+            if (state.status == SetsOverviewStatus.failure) {
+              return const Center(child: Text('error'));
+            }
+            if (state.status == SetsOverviewStatus.loading) {
+              return const Center(child: CupertinoActivityIndicator());
+            }
             if (state.items.isEmpty) {
-              if (state.status == SetsOverviewStatus.loading) {
-                return const Center(child: CupertinoActivityIndicator());
-              }
-              if (state.status != SetsOverviewStatus.success) {
-                return const SizedBox();
-              }
               return Center(
-                child: Text(
-                  'No outifts',
-                  style: Theme.of(context).textTheme.bodyLarge,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: Text(
+                    'No outifts',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
               );
             }
