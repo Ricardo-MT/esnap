@@ -37,7 +37,7 @@ void main() async {
       OutfitRepository(outfitApi: connectionManager.outfitApi);
 
   final preferencesRepository = PreferencesRepository(
-    client: PreferencesApiServices(),
+    client: await PreferencesApiServices.initializer(),
   );
 
   await bootstrap(

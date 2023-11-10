@@ -3,6 +3,7 @@ import 'package:esnap/app_views/edit_item/edit_todo.dart';
 import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
 import 'package:esnap/app_views/home/cubit/home_cubit.dart';
 import 'package:esnap/app_views/items_overview/view/items_overview.dart';
+import 'package:esnap/app_views/preferences/view/view.dart';
 import 'package:esnap/app_views/set_overview/view/sets_overview.dart';
 import 'package:esnap/utils/classification_asset_pairer.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
@@ -120,6 +121,13 @@ class _HomeViewWidget extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Esnap'),
+        actions: [
+          IconButton(
+            onPressed: () =>
+                Navigator.of(context).push(PreferencesPage.route()),
+            icon: const Icon(Icons.settings),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(

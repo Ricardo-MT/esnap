@@ -7,10 +7,28 @@ sealed class PreferencesEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-final class PreferencesCheckFirstLogin extends PreferencesEvent {
-  const PreferencesCheckFirstLogin();
+final class PreferencesInitialCheck extends PreferencesEvent {
+  const PreferencesInitialCheck();
 }
 
 final class PreferencesFinishOnboarding extends PreferencesEvent {
   const PreferencesFinishOnboarding();
+}
+
+final class PreferencesThemeChangeRequest extends PreferencesEvent {
+  const PreferencesThemeChangeRequest(this.themeType);
+
+  final ThemeType themeType;
+
+  @override
+  List<Object?> get props => [themeType];
+}
+
+final class PreferencesThemeChanged extends PreferencesEvent {
+  const PreferencesThemeChanged(this.themeType);
+
+  final ThemeType themeType;
+
+  @override
+  List<Object?> get props => [themeType];
 }
