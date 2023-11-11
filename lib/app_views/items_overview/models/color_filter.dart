@@ -8,9 +8,4 @@ class ColorFilterItem extends Filter {
   bool apply(Item item) {
     return item.color?.id == color.id;
   }
-
-  @override
-  String getText() {
-    return color.name;
-  }
 }

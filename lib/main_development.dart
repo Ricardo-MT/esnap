@@ -16,6 +16,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  final preferencesRepository = PreferencesRepository(
+    client: await PreferencesApiServices.initializer(),
+  );
+
   final connectionManager = await LocalStorageConnectionManager.initialize();
 
   final colorRepository = ColorRepository(colorApi: connectionManager.colorApi);
@@ -35,10 +39,6 @@ void main() async {
 
   final outfitRepository =
       OutfitRepository(outfitApi: connectionManager.outfitApi);
-
-  final preferencesRepository = PreferencesRepository(
-    client: await PreferencesApiServices.initializer(),
-  );
 
   await bootstrap(
     () => App(

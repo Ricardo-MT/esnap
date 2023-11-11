@@ -1,7 +1,11 @@
 export 'classification.dart';
+export 'classification_translation.dart';
 export 'classification_type.dart';
+export 'classification_type_translation.dart';
 export 'color.dart';
+export 'color_translation.dart';
 export 'item.dart';
 export 'json_map.dart';
 export 'occasion.dart';
+export 'occasion_translation.dart';
 export 'outfit.dart';

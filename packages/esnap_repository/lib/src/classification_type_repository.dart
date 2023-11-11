@@ -11,20 +11,7 @@ class ClassificationTypeRepository {
 
   final ClassificationTypeApi _classificationTypeApi;
 
-  /// The list of all classificationTypes
-  List<String> get classificationTypes =>
-      _classificationTypeApi.classificationTypes;
-
   /// Provides a [Stream] of all classificationTypes.
   Stream<List<EsnapClassificationType>> getClassificationTypes() =>
       _classificationTypeApi.getClassificationTypes();
-
-  /// Saves an [classificationType].
-  ///
-  /// If an [classificationType] with the same id already exists,
-  /// it will be replaced.
-  Future<void> saveClassificationType(
-    EsnapClassificationType classificationType,
-  ) =>
-      _classificationTypeApi.saveClassificationType(classificationType);
 }

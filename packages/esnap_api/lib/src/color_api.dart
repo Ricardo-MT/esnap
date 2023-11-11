@@ -10,16 +10,8 @@ abstract class ColorApi {
   /// Provides a [Stream] of all colors.
   Stream<List<EsnapColor>> getColors();
 
-  /// Saves a [color].
-  ///
-  /// If a [color] with the same id already exists, it will be replaced.
-  Future<void> saveColor(EsnapColor color);
-
-  /// Deletes the `color` with the given id.
-  ///
-  /// If no `color` with the given id exists, a [ColorNotFoundException] error
-  /// is thrown.
-  Future<void> deleteColor(String id);
+  /// List of all translations for the colors.
+  List<EsnapColorTranslation> getStaticTranslations();
 }
 
 /// Error thrown when a [EsnapColor] with a given id is not found.

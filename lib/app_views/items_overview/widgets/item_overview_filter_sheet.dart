@@ -6,6 +6,7 @@ import 'package:esnap/app_views/items_overview/models/favorite_filter.dart';
 import 'package:esnap/app_views/items_overview/models/filter.dart';
 import 'package:esnap/app_views/items_overview/models/occasion_filter.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
+import 'package:esnap/app_views/translations/translations_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
@@ -128,6 +129,7 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final translationBloc = context.watch<TranslationsBloc>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -182,7 +184,11 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                       .classifications
                       .map(
                         (classification) => FilterChip(
-                          label: Text(classification.name),
+                          label: Text(
+                            translationBloc.getTranslationForClassification(
+                              classification,
+                            )!,
+                          ),
                           selected:
                               classification.id == selectedClassification?.id,
                           onSelected: (_) =>
@@ -206,7 +212,11 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                           label: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(color.name),
+                              Text(
+                                translationBloc.getTranslationForColor(
+                                  color,
+                                )!,
+                              ),
                               spacerXs,
                               ColorIndicator(hexColor: color.hexColor),
                             ],
@@ -229,7 +239,11 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                       .occasions
                       .map(
                         (occasion) => FilterChip(
-                          label: Text(occasion.name),
+                          label: Text(
+                            translationBloc.getTranslationForOccasion(
+                              occasion,
+                            )!,
+                          ),
                           selected: occasion.id == selectedOccasion?.id,
                           onSelected: (_) => onOccasionChange(occasion),
                         ),

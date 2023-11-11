@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:esnap/app_views/translations/translations_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wid_design_system/wid_design_system.dart';
 
 class ItemListTile extends StatelessWidget {
@@ -21,6 +23,7 @@ class ItemListTile extends StatelessWidget {
     final theme = Theme.of(context);
     const captionColor = WidAppColors.light;
     final l10n = context.l10n;
+    final translationBloc = context.watch<TranslationsBloc>();
 
     return ClipRRect(
       borderRadius:
@@ -58,17 +61,28 @@ class ItemListTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Icon(
-                            item.favorite
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: WidAppColors.light,
-                            size: 20,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 4,
+                              ),
+                              child: ColorIndicator(
+                                hexColor: item.color?.hexColor ?? 0x00FFFFFF,
+                              ),
+                            ),
+                            Icon(
+                              item.favorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: WidAppColors.light,
+                              size: 20,
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
@@ -76,36 +90,16 @@ class ItemListTile extends StatelessWidget {
                           horizontal: 6,
                           vertical: 4,
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              item.classification?.name ?? l10n.none,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                color: captionColor,
-                              ),
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  item.color?.name ?? '',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: captionColor,
-                                  ),
-                                ),
-                                spacerXs,
-                                ColorIndicator(
-                                  hexColor: item.color?.hexColor ?? 0x00FFFFFF,
-                                ),
-                              ],
-                            ),
-                          ],
+                        child: Text(
+                          translationBloc.getTranslationForClassification(
+                                item.classification,
+                              ) ??
+                              l10n.none,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: captionColor,
+                          ),
                         ),
                       ),
                     ],

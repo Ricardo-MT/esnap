@@ -12,14 +12,7 @@ class ColorRepository {
   /// Provides a [Stream] of all colors.
   Stream<List<EsnapColor>> getColors() => _colorApi.getColors();
 
-  /// Saves an [color].
-  ///
-  /// If an [color] with the same id already exists, it will be replaced.
-  Future<void> saveColor(EsnapColor color) => _colorApi.saveColor(color);
-
-  /// Deletes the `color` with the given id.
-  ///
-  /// If no `color` with the given id exists, a [ColorNotFoundException]
-  /// error is thrown.
-  Future<void> deleteColor(String id) => _colorApi.deleteColor(id);
+  /// List of all translations for the colors.
+  List<EsnapColorTranslation> getStaticTranslations() =>
+      _colorApi.getStaticTranslations();
 }

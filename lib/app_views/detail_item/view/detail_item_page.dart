@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:esnap/app_views/detail_item/bloc/detail_item_bloc.dart';
 import 'package:esnap/app_views/edit_item/view/edit_item_page.dart';
+import 'package:esnap/app_views/translations/translations_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap/widgets/color_indicator.dart';
@@ -53,11 +54,14 @@ class DetailItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = context.select((DetailItemBloc bloc) => bloc.state.status);
     final state = context.watch<DetailItemBloc>().state;
+    final translationBloc = context.watch<TranslationsBloc>();
     final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          state.item.classification?.name ?? l10n.noClassification,
+          translationBloc
+                  .getTranslationForClassification(state.item.classification) ??
+              l10n.noClassification,
         ),
         actions: [
           TextButton(
@@ -223,10 +227,13 @@ class _ColorField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = context.watch<DetailItemBloc>().state.item.color;
+    final translationBloc = context.watch<TranslationsBloc>();
     final l10n = context.l10n;
     return Row(
       children: [
-        WidText.headlineLarge(text: color?.name ?? l10n.noColor),
+        WidText.headlineLarge(
+          text: translationBloc.getTranslationForColor(color) ?? l10n.noColor,
+        ),
         spacerS,
         Visibility(
           visible: color != null,
@@ -243,11 +250,16 @@ class _OccasionField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final occasions = context.watch<DetailItemBloc>().state.item.occasions;
+    final translationBloc = context.watch<TranslationsBloc>();
     final l10n = context.l10n;
     return WidText.headlineSmall(
       text: occasions.isEmpty
           ? l10n.noOcassions
-          : occasions.map((e) => e.name).join(', '),
+          : occasions
+              .map(
+                translationBloc.getTranslationForOccasion,
+              )
+              .join(', '),
     );
   }
 }
