@@ -5,6 +5,7 @@ import 'package:esnap/app_views/edit_item/widgets/wid_image_picker.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_select.dart';
 import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
+import 'package:esnap/app_views/translations/translations_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/dimensions.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
@@ -194,6 +195,7 @@ class _ClassificationField extends StatelessWidget {
   Widget build(BuildContext context) {
     final classifications =
         context.watch<ClassificationsOverviewBloc>().state.classifications;
+    final translationBloc = context.watch<TranslationsBloc>();
     final state = context.watch<EditItemBloc>().state;
     final l10n = context.l10n;
 
@@ -203,9 +205,12 @@ class _ClassificationField extends StatelessWidget {
       value: state.classification,
       items: classifications
           .map(
-            (e) => DropdownMenuItem<EsnapClassification>(
-              value: e,
-              child: Text(e.name),
+            (classification) => DropdownMenuItem<EsnapClassification>(
+              value: classification,
+              child: Text(
+                translationBloc
+                    .getTranslationForClassification(classification)!,
+              ),
             ),
           )
           .toList(),
@@ -223,6 +228,7 @@ class _ColorField extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.watch<ColorsOverviewBloc>().state.colors;
     final state = context.watch<EditItemBloc>().state;
+    final translationBloc = context.watch<TranslationsBloc>();
     final l10n = context.l10n;
 
     return DropdownButtonFormField<EsnapColor>(
@@ -231,14 +237,16 @@ class _ColorField extends StatelessWidget {
       value: state.color,
       items: colors
           .map(
-            (e) => DropdownMenuItem<EsnapColor>(
-              value: e,
+            (color) => DropdownMenuItem<EsnapColor>(
+              value: color,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(e.name),
+                  Text(
+                    translationBloc.getTranslationForColor(color)!,
+                  ),
                   spacerXs,
-                  ColorIndicator(hexColor: e.hexColor),
+                  ColorIndicator(hexColor: color.hexColor),
                 ],
               ),
             ),
@@ -257,22 +265,35 @@ class _OccasionField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final occasions = context.watch<OccasionsOverviewBloc>().state.occasions;
+    final translationBloc = context.watch<TranslationsBloc>();
     final state = context.watch<EditItemBloc>().state;
     final l10n = context.l10n;
 
     return WidSelectMultiple(
       label: l10n.ocassionsLabel,
-      values: state.occasions.map((e) => e.name).toList(),
+      values: state.occasions
+          .map(
+            (occasion) => translationBloc.getTranslationForOccasion(occasion)!,
+          )
+          .toList(),
       hint: l10n.ocassionsHintText,
       onChanged: (value) {
         final found = value == null
             ? <EsnapOccasion>[]
             : occasions
-                .where((element) => value.contains(element.name))
+                .where(
+                  (occasion) => value.contains(
+                    translationBloc.getTranslationForOccasion(occasion),
+                  ),
+                )
                 .toList();
         context.read<EditItemBloc>().add(EditItemOccasionsChanged(found));
       },
-      options: occasions.map((e) => e.name).toList(),
+      options: occasions
+          .map(
+            (occasion) => translationBloc.getTranslationForOccasion(occasion)!,
+          )
+          .toList(),
     );
   }
 }

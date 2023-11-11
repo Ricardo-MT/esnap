@@ -34,7 +34,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
     _pageController = PageController();
     _isLastPage = false;
     _isFirstPage = true;
-    sections = getSections(context);
+    sections = [];
     super.initState();
     _pageController.addListener(() {
       final page = _pageController.page?.round() ?? 0;
@@ -47,6 +47,14 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
         });
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    setState(() {
+      sections = getSections(context);
+    });
+    super.didChangeDependencies();
   }
 
   void handleFinishOnboard(BuildContext context) {
@@ -75,6 +83,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     const skipColor = Colors.black;
     const foregroundColor = Colors.white;
     final colors = sections.map((e) => e.color).toList();
@@ -114,7 +123,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
             );
           }),
 
-          /// Foreground gradient
+          /// Foreground color gradient
           Positioned.fill(
             child: IgnorePointer(
               child: AnimatedBuilder(
@@ -137,7 +146,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomLeft,
                         stops: const [
-                          0.4,
+                          0.5,
                           1,
                         ],
                       ),
@@ -155,9 +164,9 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
             child: SafeArea(
               child: TextButton(
                 onPressed: () => handleFinishOnboard(context),
-                child: const Text(
-                  'Skip',
-                  style: TextStyle(color: skipColor),
+                child: Text(
+                  l10n.skip,
+                  style: const TextStyle(color: skipColor),
                 ),
               ),
             ),
@@ -179,7 +188,8 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                       final index = page.round();
                       final section = sections[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 14),
+                        padding: const EdgeInsets.symmetric(horizontal: 14)
+                            .copyWith(right: 60),
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 170),
                           child: Column(
@@ -194,7 +204,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                                     .displayLarge
                                     ?.copyWith(
                                       color: foregroundColor,
-                                      fontSize: 34,
+                                      fontSize: 26,
                                     ),
                               ),
                               Text(
@@ -204,7 +214,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                                     .displayLarge
                                     ?.copyWith(
                                       color: foregroundColor,
-                                      fontSize: 34,
+                                      fontSize: 26,
                                     ),
                               ),
                               spacerM,
@@ -215,7 +225,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                                     .titleLarge
                                     ?.copyWith(
                                       color: foregroundColor,
-                                      fontSize: 18,
+                                      fontSize: 16,
                                     ),
                               ),
                             ],
@@ -239,7 +249,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                           ),
                           onPressed: _isFirstPage ? null : previousPage,
                           child: Text(
-                            _isFirstPage ? '' : 'Back',
+                            _isFirstPage ? '' : l10n.back,
                             style: const TextStyle(
                               color: foregroundColor,
                             ),
@@ -285,7 +295,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
                               ? () => handleFinishOnboard(context)
                               : nextPage,
                           child: Text(
-                            _isLastPage ? 'Done' : 'Next',
+                            _isLastPage ? l10n.done : l10n.next,
                             style: const TextStyle(color: foregroundColor),
                           ),
                         ),

@@ -13,15 +13,7 @@ class OccasionRepository {
   /// Provides a [Stream] of all occasions.
   Stream<List<EsnapOccasion>> getOccasions() => _occasionApi.getOccasions();
 
-  /// Saves an [occasion].
-  ///
-  /// If an [occasion] with the same id already exists, it will be replaced.
-  Future<void> saveOccasion(EsnapOccasion occasion) =>
-      _occasionApi.saveOccasion(occasion);
-
-  /// Deletes the `occasion` with the given id.
-  ///
-  /// If no `occasion` with the given id exists, a [OccasionNotFoundException]
-  /// error is thrown.
-  Future<void> deleteOccasion(String id) => _occasionApi.deleteOccasion(id);
+  /// List of all translations for the occasions.
+  List<EsnapOccasionTranslation> getStaticTranslations() =>
+      _occasionApi.getStaticTranslations();
 }

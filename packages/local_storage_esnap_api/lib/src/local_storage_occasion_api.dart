@@ -1,7 +1,9 @@
 import 'package:esnap_api/esnap_api.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:local_storage_esnap_api/src/adapters/occasion.dart';
+import 'package:local_storage_esnap_api/src/adapters/occasion_translation.dart';
 import 'package:local_storage_esnap_api/src/esnap_boxes.dart';
+import 'package:local_storage_esnap_api/src/seed_data/occasion_seed.dart';
 import 'package:rxdart/subjects.dart';
 
 /// {@template local_storage_occasion_api}
@@ -9,7 +11,7 @@ import 'package:rxdart/subjects.dart';
 /// {@endtemplate}
 class LocalStorageOccasionApi extends OccasionApi {
   /// {@macro local_storage_occasion_api}
-  LocalStorageOccasionApi(this.box) {
+  LocalStorageOccasionApi(this.box, this.translationBox) {
     final occasionsRes = box.values;
     _occasionStreamController
         .add(occasionsRes.map((o) => o.toEsnapOccasion()).toList());
@@ -21,104 +23,81 @@ class LocalStorageOccasionApi extends OccasionApi {
   /// The box for handling colors
   final Box<OccasionSchema> box;
 
+  /// The box for handling color translations
+  final Box<OccasionTranslationSchema> translationBox;
+
   /// This method opens the box, runs the initial migrations and
   /// returns an instance of the LocalStorageOccasionApi class.
   static Future<LocalStorageOccasionApi> initializer() async {
-    Hive.registerAdapter(OccasionSchemaAdapter());
+    Hive
+      ..registerAdapter(OccasionSchemaAdapter())
+      ..registerAdapter(OccasionTranslationSchemaAdapter());
     final box = await Hive.openBox<OccasionSchema>(EsnapBoxes.occasion);
-    await _initMigrations(box);
-    return LocalStorageOccasionApi(box);
+    final translationBox = await Hive.openBox<OccasionTranslationSchema>(
+      EsnapBoxes.occasionTranslation,
+    );
+    await _initMigrations(box, translationBox);
+    return LocalStorageOccasionApi(box, translationBox);
   }
 
   @override
   Stream<List<EsnapOccasion>> getOccasions() =>
       _occasionStreamController.asBroadcastStream();
 
-  @override
-  Future<void> saveOccasion(EsnapOccasion occasion) {
-    final occasions = [..._occasionStreamController.value];
-    final occasionIndex = occasions.indexWhere((t) => t.id == occasion.id);
-    if (occasionIndex >= 0) {
-      occasions[occasionIndex] = occasion;
-    } else {
-      occasions.add(occasion);
-    }
-    _occasionStreamController.add(occasions);
-
-    return Hive.box<OccasionSchema>(EsnapBoxes.occasion)
-        .put(occasion.id, OccasionSchema.fromEsnapOccasion(occasion));
-  }
-
-  @override
-  Future<void> deleteOccasion(String id) async {
-    final occasions = [..._occasionStreamController.value];
-    final occasionIndex = occasions.indexWhere((t) => t.id == id);
-    if (occasionIndex == -1) {
-      throw OccasionNotFoundException();
-    } else {
-      occasions.removeAt(occasionIndex);
-      _occasionStreamController.add(occasions);
-      // return _setValue(kTodosCollectionKey, json.encode(occasions));
-    }
-  }
-
-  static Future<void> _initMigrations(Box<OccasionSchema> box) async {
+  static Future<void> _initMigrations(
+    Box<OccasionSchema> box,
+    Box<OccasionTranslationSchema> translationBox,
+  ) async {
     const migratedKey = 'migratedOccasion';
     final migratedBox = Hive.box<bool>(EsnapBoxes.migrated);
     final hasData = migratedBox.get(migratedKey, defaultValue: false);
     if (!(hasData ?? false)) {
-      await box.clear();
-      final occasions = _baseOccasions.map(
-        (c) => OccasionSchema.fromEsnapOccasion(
-          EsnapOccasion(
-            name: c,
-            id: c,
-          ),
-        ),
+      await Future.wait([
+        box.clear(),
+        translationBox.clear(),
+      ]);
+      final translations = <dynamic, OccasionTranslationSchema>{};
+      final occasions = occasionSeeds.map(
+        (c) {
+          final schema = OccasionSchema.fromEsnapOccasion(
+            EsnapOccasion(
+              name: c.name,
+              id: c.name,
+            ),
+          );
+          final translationEn =
+              OccasionTranslationSchema.fromOccasionTranslationSchema(
+            EsnapOccasionTranslation(
+              languageCode: 'en',
+              name: c.en,
+              occasionId: schema.id,
+            ),
+          );
+          final translationEs =
+              OccasionTranslationSchema.fromOccasionTranslationSchema(
+            EsnapOccasionTranslation(
+              languageCode: 'es',
+              name: c.es,
+              occasionId: schema.id,
+            ),
+          );
+          translations[translationEn.id] = translationEn;
+          translations[translationEs.id] = translationEs;
+          return schema;
+        },
       );
       for (final element in occasions) {
         await box.put(element.id, element);
       }
+      await translationBox.putAll(translations);
       await migratedBox.put(migratedKey, true);
     }
   }
-}
 
-const _baseOccasions = [
-  'Afternoon tea',
-  'Art gallery opening',
-  'Athletic',
-  'Beachwear',
-  'Black tie',
-  'Business casual',
-  'Business formal',
-  'Business presentation',
-  'Charity gala',
-  'Clubbing',
-  'Concert',
-  'Costume or cosplay',
-  'Cruise',
-  'Date night',
-  'Festival',
-  'Graduation',
-  'Workout',
-  'Job interview',
-  'Lounge or sleepwear',
-  'Maternity',
-  'Matinee and theater',
-  'Outdoor and adventure',
-  'Outdoor wedding',
-  'Party wear',
-  'Picnic and outdoor gathering',
-  'Professional conference',
-  'Prom or formal dance',
-  'Religious or cultural ceremony',
-  'Resort casual',
-  'Resort wear',
-  'Ski or snowboarding',
-  'Sports team jersey or fan gear',
-  'Vacation or travel',
-  'Wedding guest',
-  'White tie',
-  'Yoga wear',
-];
+  @override
+  List<EsnapOccasionTranslation> getStaticTranslations() {
+    final translations =
+        translationBox.values.map((t) => t.toEsnapOccasion()).toList();
+    return translations;
+  }
+}

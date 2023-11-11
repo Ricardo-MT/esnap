@@ -5,6 +5,7 @@ import 'package:esnap/app_views/home/cubit/home_cubit.dart';
 import 'package:esnap/app_views/items_overview/view/items_overview.dart';
 import 'package:esnap/app_views/preferences/view/view.dart';
 import 'package:esnap/app_views/set_overview/view/sets_overview.dart';
+import 'package:esnap/app_views/translations/translations_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/classification_asset_pairer.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
@@ -121,13 +122,14 @@ class _HomeViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final navigator = Navigator.of(context);
+    final translationBloc = context.read<TranslationsBloc>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Esnap'),
         actions: [
           IconButton(
-            onPressed: () =>
-                Navigator.of(context).push(PreferencesPage.route()),
+            onPressed: () => navigator.push(PreferencesPage.route()),
             icon: const Icon(Icons.settings),
           ),
         ],
@@ -139,29 +141,33 @@ class _HomeViewWidget extends StatelessWidget {
         child: Column(
           children: [
             _HomeQuickFilter(
-              callback: () => Navigator.of(context).push(EditItemPage.route()),
+              callback: () => navigator.push(EditItemPage.route()),
               label: l10n.addItemCTA,
               iconPlus: true,
             ),
             _HomeQuickFilter(
-              callback: () =>
-                  Navigator.of(context).push(EditOutfitPage.route()),
+              callback: () => navigator.push(EditOutfitPage.route()),
               label: l10n.addOutfitCTA,
               iconPlus: true,
             ),
             spacerM,
             ...List.generate(
               topFiveClassifications.length,
-              (index) => Padding(
-                padding: const EdgeInsets.only(bottom: 1),
-                child: _HomeQuickFilter(
-                  callback: () => callback(topFiveClassifications[index]),
-                  label: topFiveClassifications[index].name,
-                  imagePath: getAssetByClassification(
-                    topFiveClassifications[index].name,
+              (index) {
+                final classification = topFiveClassifications[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 1),
+                  child: _HomeQuickFilter(
+                    callback: () => callback(classification),
+                    label: translationBloc.getTranslationForClassification(
+                      classification,
+                    )!,
+                    imagePath: getAssetByClassification(
+                      classification.name,
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -194,7 +200,7 @@ class _HomeTabButton extends StatelessWidget {
       onPressed: onPressed,
       style: removeSplashEffect(context),
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

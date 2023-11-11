@@ -6,6 +6,7 @@ import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
 import 'package:esnap/app_views/items_overview/models/classification_filter.dart';
 import 'package:esnap/app_views/items_overview/widgets/item_list_tile.dart';
 import 'package:esnap/app_views/items_overview/widgets/items_overview_filter_button.dart';
+import 'package:esnap/app_views/items_overview/widgets/items_overview_filter_chips.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap_repository/esnap_repository.dart';
@@ -72,6 +73,10 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.itemsPageTitle),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(30 + spacerS.height!),
+          child: const ItemsOverviewFilterChips(),
+        ),
         actions: const [
           ItemsOverviewFilterButton(),
         ],
@@ -109,21 +114,6 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
             }
             return Column(
               children: [
-                SizedBox(
-                  height: 30,
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: spacerS.width!),
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (_, index) => InputChip(
-                      label: Text(state.filters[index].getText()),
-                      onDeleted: () => context.read<ItemsOverviewBloc>().add(
-                            ItemsOverviewFilterChanged(state.filters[index]),
-                          ),
-                    ),
-                    separatorBuilder: (_, __) => spacerS,
-                    itemCount: state.filters.length,
-                  ),
-                ),
                 Expanded(
                   child: state.filteredItems.isEmpty
                       ? Center(
