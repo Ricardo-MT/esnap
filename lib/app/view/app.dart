@@ -146,7 +146,17 @@ class _AppViewState extends State<AppView> {
             },
           ),
         ],
-        child: child ?? const SizedBox(),
+        child: Builder(
+          builder: (context) {
+            Widget error = const Text('...rendering error...');
+            if (child is Scaffold || child is Navigator) {
+              error = Scaffold(body: Center(child: error));
+            }
+            ErrorWidget.builder = (errorDetails) => error;
+            if (child != null) return child;
+            throw 'child is null';
+          },
+        ),
       ),
       onGenerateRoute: (settings) => MaterialPageRoute(
         settings: settings,
