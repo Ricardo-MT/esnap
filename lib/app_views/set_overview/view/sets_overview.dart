@@ -7,6 +7,7 @@ import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wid_design_system/wid_design_system.dart';
 
 class SetsOverviewPage extends StatelessWidget {
   const SetsOverviewPage({super.key});
@@ -49,7 +50,7 @@ class _SetsOverviewView extends StatelessWidget {
             if (state.items.isEmpty) {
               return Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 30),
+                  padding: EdgeInsets.only(top: 30 + spacerS.height!),
                   child: Text(
                     l10n.noOutfitsFound,
                     style: Theme.of(context).textTheme.bodyLarge,

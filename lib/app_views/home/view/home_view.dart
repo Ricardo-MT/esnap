@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
         ),
       ],
       child: _HomeView(
-        topFiveClassifications: topFive.take(5).toList(),
+        topFiveClassifications: topFive,
       ),
     );
   }
