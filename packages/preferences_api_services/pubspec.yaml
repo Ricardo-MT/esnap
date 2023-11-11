@@ -13,6 +13,7 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   preferences_api:
     path: ../preferences_api
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:

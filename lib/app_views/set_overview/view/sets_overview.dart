@@ -2,6 +2,7 @@ import 'package:esnap/app_views/detail_outfit/detail_outfit.dart';
 import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
 import 'package:esnap/app_views/set_overview/bloc/sets_overview_bloc.dart';
 import 'package:esnap/app_views/set_overview/widgets/set_list_tile.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +27,10 @@ class _SetsOverviewView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All outifts'),
+        title: Text(l10n.outfitsPageTitle),
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'addSet',
@@ -38,17 +40,20 @@ class _SetsOverviewView extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<SetsOverviewBloc, SetsOverviewState>(
           builder: (context, state) {
+            if (state.status == SetsOverviewStatus.failure) {
+              return const Center(child: Text('error'));
+            }
+            if (state.status == SetsOverviewStatus.loading) {
+              return const Center(child: CupertinoActivityIndicator());
+            }
             if (state.items.isEmpty) {
-              if (state.status == SetsOverviewStatus.loading) {
-                return const Center(child: CupertinoActivityIndicator());
-              }
-              if (state.status != SetsOverviewStatus.success) {
-                return const SizedBox();
-              }
               return Center(
-                child: Text(
-                  'No outifts',
-                  style: Theme.of(context).textTheme.bodyLarge,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: Text(
+                    l10n.noOutfitsFound,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
               );
             }

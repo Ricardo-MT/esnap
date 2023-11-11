@@ -1,3 +1,4 @@
+import 'package:esnap/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:wid_design_system/wid_design_system.dart';
@@ -24,6 +25,7 @@ class WidSelectMultiple extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -43,12 +45,12 @@ class WidSelectMultiple extends StatelessWidget {
                 ),
                 backgroundColor: colorScheme.background,
                 cancelText: Text(
-                  'cancel',
+                  l10n.cancel,
                   style: textStyles,
                 ),
-                confirmText: const Text(
-                  'ok',
-                  style: TextStyle(color: WidAppColors.callToAction),
+                confirmText: Text(
+                  l10n.ok,
+                  style: const TextStyle(color: WidAppColors.callToAction),
                 ),
                 selectedColor: WidAppColors.callToAction,
                 unselectedColor: theme.disabledColor,

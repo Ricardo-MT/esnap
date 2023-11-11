@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:esnap/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wid_design_system/wid_design_system.dart';
@@ -26,6 +27,7 @@ class WidImagePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return ClipRRect(
       borderRadius: _borderRadius,
       child: DecoratedBox(
@@ -63,9 +65,9 @@ class WidImagePicker extends StatelessWidget {
                               Icons.edit,
                               size: 14,
                             ),
-                            label: const Text(
-                              'Edit',
-                              style: TextStyle(
+                            label: Text(
+                              l10n.edit,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -74,15 +76,15 @@ class WidImagePicker extends StatelessWidget {
                         ),
                       ],
                     )
-                  : const Center(
+                  : Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.file_upload_outlined,
                             color: WidAppColors.n600,
                           ),
-                          WidText.headlineSmall(text: 'Select image'),
+                          WidText.headlineSmall(text: l10n.selectImageLabel),
                         ],
                       ),
                     ),

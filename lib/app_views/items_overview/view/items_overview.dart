@@ -7,6 +7,7 @@ import 'package:esnap/app_views/items_overview/models/classification_filter.dart
 import 'package:esnap/app_views/items_overview/widgets/item_list_tile.dart';
 import 'package:esnap/app_views/items_overview/widgets/items_overview_filter_button.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,9 +68,10 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All items'),
+        title: Text(l10n.itemsPageTitle),
         actions: const [
           ItemsOverviewFilterButton(),
         ],
@@ -90,7 +92,7 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
                   ..hideCurrentSnackBar()
                   ..showSnackBar(
                     const SnackBar(
-                      content: Text('ERROR DESCONOCIDO'),
+                      content: Text('error'),
                     ),
                   );
               }
@@ -99,19 +101,11 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
         ],
         child: BlocBuilder<ItemsOverviewBloc, ItemsOverviewState>(
           builder: (context, state) {
-            if (state.items.isEmpty) {
-              if (state.status == ItemsOverviewStatus.loading) {
-                return const Center(child: CupertinoActivityIndicator());
-              }
-              if (state.status != ItemsOverviewStatus.success) {
-                return const SizedBox();
-              }
-              return Center(
-                child: Text(
-                  'No items',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              );
+            if (state.status == ItemsOverviewStatus.failure) {
+              return const Center(child: Text('error'));
+            }
+            if (state.status == ItemsOverviewStatus.loading) {
+              return const Center(child: CupertinoActivityIndicator());
             }
             return Column(
               children: [
@@ -132,7 +126,12 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
                 ),
                 Expanded(
                   child: state.filteredItems.isEmpty
-                      ? const Center(child: Text('no matches'))
+                      ? Center(
+                          child: Text(
+                            l10n.noItemsFound,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        )
                       : GridView.count(
                           crossAxisCount: 3,
                           padding: const EdgeInsets.all(15),

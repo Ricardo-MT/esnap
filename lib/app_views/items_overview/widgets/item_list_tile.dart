@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class ItemListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     const captionColor = WidAppColors.light;
+    final l10n = context.l10n;
 
     return ClipRRect(
       borderRadius:
@@ -79,7 +81,7 @@ class ItemListTile extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
-                              item.classification?.name ?? '(none)',
+                              item.classification?.name ?? l10n.none,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.headlineMedium?.copyWith(

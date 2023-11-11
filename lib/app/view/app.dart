@@ -57,7 +57,7 @@ class App extends StatelessWidget {
       child: BlocProvider(
         create: (context) =>
             PreferencesBloc(preferencesRepository: preferencesRepository)
-              ..add(const PreferencesCheckFirstLogin()),
+              ..add(const PreferencesInitialCheck()),
         child: const AppView(),
       ),
     );
@@ -81,10 +81,13 @@ class _AppViewState extends State<AppView> {
     return MaterialApp(
       navigatorKey: _navigatorKey,
       debugShowCheckedModeBanner: false,
+      themeMode: context.select((PreferencesBloc bloc) => bloc.state.themeMode),
       theme: WidAppTheme.light,
       darkTheme: WidAppTheme.dark,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      locale:
+          context.select((PreferencesBloc bloc) => Locale(bloc.state.language)),
       supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
       builder: (context, child) =>
           BlocListener<PreferencesBloc, PreferencesState>(
         listenWhen: (previous, current) =>
