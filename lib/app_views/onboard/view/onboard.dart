@@ -34,7 +34,7 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
     _pageController = PageController();
     _isLastPage = false;
     _isFirstPage = true;
-    sections = getSections(context);
+    sections = [];
     super.initState();
     _pageController.addListener(() {
       final page = _pageController.page?.round() ?? 0;
@@ -47,6 +47,14 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
         });
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    setState(() {
+      sections = getSections(context);
+    });
+    super.didChangeDependencies();
   }
 
   void handleFinishOnboard(BuildContext context) {

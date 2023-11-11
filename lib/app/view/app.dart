@@ -1,6 +1,7 @@
 import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/app_views/onboard/view/onboard.dart';
 import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
+import 'package:esnap/app_views/translations/translations_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -54,10 +55,21 @@ class App extends StatelessWidget {
           create: (context) => occasionRepository,
         ),
       ],
-      child: BlocProvider(
-        create: (context) =>
-            PreferencesBloc(preferencesRepository: preferencesRepository)
-              ..add(const PreferencesInitialCheck()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                PreferencesBloc(preferencesRepository: preferencesRepository)
+                  ..add(const PreferencesInitialCheck()),
+          ),
+          BlocProvider(
+            create: (context) => TranslationsBloc(
+              classificationRepository: classificationRepository,
+              colorRepository: colorRepository,
+              occasionRepository: occasionRepository,
+            )..add(const TranslationsLanguageChanged(languageCode: 'en')),
+          ),
+        ],
         child: const AppView(),
       ),
     );
@@ -88,41 +100,53 @@ class _AppViewState extends State<AppView> {
           context.select((PreferencesBloc bloc) => Locale(bloc.state.language)),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      builder: (context, child) =>
+      builder: (context, child) => MultiBlocListener(
+        listeners: [
           BlocListener<PreferencesBloc, PreferencesState>(
-        listenWhen: (previous, current) =>
-            previous.isFirstLogin != current.isFirstLogin,
-        listener: (context, state) async {
-          if (state.isFirstLogin == true) {
-            /// Cache images using the build context
-            await Future.wait([
-              precacheImage(
-                const AssetImage('assets/img/section_1.png'),
-                context,
-              ),
-              precacheImage(
-                const AssetImage('assets/img/section_2.png'),
-                context,
-              ),
-              precacheImage(
-                const AssetImage('assets/img/section_3.png'),
-                context,
-              ),
-            ]);
-            await _navigator.pushReplacement(
-              MaterialPageRoute<void>(
-                builder: (context) => const OnboardPage(),
-              ),
-            );
-          } else {
-            await _navigator.pushReplacement(
-              MaterialPageRoute<void>(
-                builder: (context) => const HomePage(),
-              ),
-            );
-          }
-        },
-        child: child,
+            listenWhen: (previous, current) =>
+                previous.isFirstLogin != current.isFirstLogin,
+            listener: (context, state) async {
+              if (state.isFirstLogin == true) {
+                /// Cache images using the build context
+                await Future.wait([
+                  precacheImage(
+                    const AssetImage('assets/img/section_1.png'),
+                    context,
+                  ),
+                  precacheImage(
+                    const AssetImage('assets/img/section_2.png'),
+                    context,
+                  ),
+                  precacheImage(
+                    const AssetImage('assets/img/section_3.png'),
+                    context,
+                  ),
+                ]);
+                await _navigator.pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const OnboardPage(),
+                  ),
+                );
+              } else {
+                await _navigator.pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const HomePage(),
+                  ),
+                );
+              }
+            },
+          ),
+          BlocListener<PreferencesBloc, PreferencesState>(
+            listenWhen: (previous, current) =>
+                previous.language != current.language,
+            listener: (context, state) {
+              context.read<TranslationsBloc>().add(
+                    TranslationsLanguageChanged(languageCode: state.language),
+                  );
+            },
+          ),
+        ],
+        child: child ?? const SizedBox(),
       ),
       onGenerateRoute: (settings) => MaterialPageRoute(
         settings: settings,

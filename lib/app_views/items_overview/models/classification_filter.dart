@@ -8,9 +8,4 @@ class ClassificationFilterItem extends Filter {
   bool apply(Item item) {
     return item.classification?.id == classification.id;
   }
-
-  @override
-  String getText() {
-    return classification.name;
-  }
 }

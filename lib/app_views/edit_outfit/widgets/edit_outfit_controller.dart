@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/edit_outfit/bloc/edit_outfit_bloc.dart';
 import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
+import 'package:esnap/app_views/translations/translations_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap_api/esnap_api.dart';
 import 'package:flutter/material.dart';
@@ -94,6 +95,7 @@ class _ClassificationField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translationBloc = context.watch<TranslationsBloc>();
     return BlocBuilder<EditOutfitBloc, EditOutfitState>(
       builder: (context, state) {
         final classifications = context
@@ -114,7 +116,10 @@ class _ClassificationField extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(right: _chipsPadding),
                 child: FilterChip(
-                  label: Text(classification.name),
+                  label: Text(
+                    translationBloc
+                        .getTranslationForClassification(classification)!,
+                  ),
                   selected: state.classification?.id == classification.id,
                   onSelected: (_) => context.read<EditOutfitBloc>().add(
                         EditOutfitClassificationChanged(

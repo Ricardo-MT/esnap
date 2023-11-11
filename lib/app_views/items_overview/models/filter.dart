@@ -5,5 +5,4 @@ abstract class Filter {
   Filter(this.id);
   final String id;
   bool apply(Item item);
-  String getText();
 }

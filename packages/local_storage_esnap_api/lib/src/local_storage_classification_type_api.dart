@@ -1,7 +1,9 @@
 import 'package:esnap_api/esnap_api.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:local_storage_esnap_api/src/adapters/classification_type.dart';
+import 'package:local_storage_esnap_api/src/adapters/classification_type_translation.dart';
 import 'package:local_storage_esnap_api/src/esnap_boxes.dart';
+import 'package:local_storage_esnap_api/src/seed_data/classification_type_seed.dart';
 import 'package:rxdart/subjects.dart';
 
 /// {@template local_storage_classification_api}
@@ -9,7 +11,7 @@ import 'package:rxdart/subjects.dart';
 /// {@endtemplate}
 class LocalStorageClassificationTypeApi extends ClassificationTypeApi {
   /// {@macro local_storage_classification_api}
-  LocalStorageClassificationTypeApi(this.box) {
+  LocalStorageClassificationTypeApi(this.box, this.translationBox) {
     final classificationsRes = box.values;
     _classificationStreamController.add(
       classificationsRes.map((c) => c.toEsnapClassificationType()).toList(),
@@ -22,66 +24,80 @@ class LocalStorageClassificationTypeApi extends ClassificationTypeApi {
   /// The box for handling classifications
   final Box<ClassificationTypeSchema> box;
 
+  /// The box for handling classification types translations
+  final Box<ClassificationTypeTranslationSchema> translationBox;
+
   /// This method opens the box, runs the initial migrations and
   /// returns an instance of the LocalStorageClassificationTypeApi class.
   static Future<LocalStorageClassificationTypeApi> initializer() async {
-    Hive.registerAdapter(ClassificationTypeSchemaAdapter());
+    Hive
+      ..registerAdapter(ClassificationTypeSchemaAdapter())
+      ..registerAdapter(ClassificationTypeTranslationSchemaAdapter());
     final box = await Hive.openBox<ClassificationTypeSchema>(
       EsnapBoxes.classificationType,
     );
-    await _initMigrations(box);
-    return LocalStorageClassificationTypeApi(box);
+    final translationBox =
+        await Hive.openBox<ClassificationTypeTranslationSchema>(
+      EsnapBoxes.classificationTypeTranslation,
+    );
+    await _initMigrations(box, translationBox);
+    return LocalStorageClassificationTypeApi(box, translationBox);
   }
-
-  @override
-  List<String> get classificationTypes =>
-      _baseClassificationTypes.map((e) => e).toList();
 
   @override
   Stream<List<EsnapClassificationType>> getClassificationTypes() =>
       _classificationStreamController.asBroadcastStream();
 
-  @override
-  Future<void> saveClassificationType(EsnapClassificationType classification) {
-    final classifications = [..._classificationStreamController.value];
-    final classificationIndex =
-        classifications.indexWhere((t) => t.id == classification.id);
-    if (classificationIndex >= 0) {
-      classifications[classificationIndex] = classification;
-    } else {
-      classifications.add(classification);
-    }
-    _classificationStreamController.add(classifications);
-
-    return Hive.box<ClassificationTypeSchema>(EsnapBoxes.classificationType)
-        .put(
-      classification.id,
-      ClassificationTypeSchema.fromEsnapClassificationType(classification),
-    );
-  }
-
-  static Future<void> _initMigrations(Box<ClassificationTypeSchema> box) async {
+  static Future<void> _initMigrations(
+    Box<ClassificationTypeSchema> box,
+    Box<ClassificationTypeTranslationSchema> translationBox,
+  ) async {
     const migratedKey = 'migratedClassificationType';
     final migratedBox = Hive.box<bool>(EsnapBoxes.migrated);
     final hasData = migratedBox.get(migratedKey, defaultValue: false) ?? false;
     if (!hasData) {
-      await box.clear();
-      final classifications = _baseClassificationTypes.map(
-        (c) => ClassificationTypeSchema.fromEsnapClassificationType(
-          EsnapClassificationType(name: c, id: c),
-        ),
+      await Future.wait([
+        box.clear(),
+        translationBox.clear(),
+      ]);
+      final translations = <dynamic, ClassificationTypeTranslationSchema>{};
+      final classifications = classificationTypeSeeds.map(
+        (c) {
+          final schema = ClassificationTypeSchema.fromEsnapClassificationType(
+            EsnapClassificationType(name: c.name, id: c.name),
+          );
+          final translationEn = ClassificationTypeTranslationSchema
+              .fromClassificationTypeTranslationSchema(
+            EsnapClassificationTypeTranslation(
+              name: c.en,
+              classificationTypeId: schema.id,
+              languageCode: 'en',
+            ),
+          );
+          final translationEs = ClassificationTypeTranslationSchema
+              .fromClassificationTypeTranslationSchema(
+            EsnapClassificationTypeTranslation(
+              name: c.es,
+              classificationTypeId: schema.id,
+              languageCode: 'es',
+            ),
+          );
+          translations[translationEn.id] = translationEn;
+          translations[translationEs.id] = translationEs;
+          return schema;
+        },
       );
       for (final element in classifications) {
         await box.put(element.id, element);
       }
+      await translationBox.putAll(translations);
       await migratedBox.put(migratedKey, true);
     }
   }
-}
 
-const _baseClassificationTypes = [
-  'Top',
-  'Bottom',
-  'Shoes',
-  'Other',
-];
+  @override
+  List<EsnapClassificationTypeTranslation> getStaticTranslations() {
+    final translations = translationBox.values;
+    return translations.map((t) => t.toEsnapClassification()).toList();
+  }
+}

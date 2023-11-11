@@ -31,9 +31,9 @@ class PreferencesPage extends StatelessWidget {
             child: Column(
               children: [
                 spacerM,
-                _ThemeController(),
-                spacerM,
                 _LanguageController(),
+                spacerM,
+                _ThemeController(),
               ],
             ),
           ),
@@ -79,7 +79,10 @@ class _ThemeController extends StatelessWidget {
                   PreferencesThemeChangeRequest(themeType!),
                 );
           },
-          value: ThemeType.light,
+          value: ThemeType.values.firstWhere(
+            (e) => e.name == state.themeMode.name,
+            orElse: () => ThemeType.system,
+          ),
         );
       },
     );

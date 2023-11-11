@@ -8,9 +8,4 @@ class FavoriteFilterItem extends Filter {
   bool apply(Item item) {
     return item.favorite == favorite;
   }
-
-  @override
-  String getText() {
-    return 'Favorites';
-  }
 }

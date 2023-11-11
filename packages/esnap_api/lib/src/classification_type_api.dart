@@ -7,17 +7,11 @@ abstract class ClassificationTypeApi {
   /// {@macro classification_api}
   const ClassificationTypeApi();
 
-  /// The list of all classifications
-  List<String> get classificationTypes;
-
   /// Provides a [Stream] of all classifications.
   Stream<List<EsnapClassificationType>> getClassificationTypes();
 
-  /// Saves a [classification].
-  ///
-  /// If a [classification] with the same id already exists,
-  /// it will be replaced.
-  Future<void> saveClassificationType(EsnapClassificationType classification);
+  /// List of all translations for the classifications.
+  List<EsnapClassificationTypeTranslation> getStaticTranslations();
 }
 
 /// Error thrown when a [EsnapClassificationType] with a given id is not found.

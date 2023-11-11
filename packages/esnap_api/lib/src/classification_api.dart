@@ -13,17 +13,8 @@ abstract class ClassificationApi {
   /// Provides a [Stream] of all classifications.
   Stream<List<EsnapClassification>> getClassifications();
 
-  /// Saves a [classification].
-  ///
-  /// If a [classification] with the same id already exists,
-  /// it will be replaced.
-  Future<void> saveClassification(EsnapClassification classification);
-
-  /// Deletes the `classification` with the given id.
-  ///
-  /// If no `classification` with the given id exists, a
-  /// [ClassificationNotFoundException] error is thrown.
-  Future<void> deleteClassification(String id);
+  /// List of all translations for the classifications.
+  List<EsnapClassificationTranslation> getStaticTranslations();
 }
 
 /// Error thrown when a [EsnapClassification] with a given id is not found.

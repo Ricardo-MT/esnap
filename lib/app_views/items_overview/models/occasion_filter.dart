@@ -10,9 +10,4 @@ class OccasionFilterItem extends Filter {
         .where((element) => element.id == occasion.id)
         .isNotEmpty;
   }
-
-  @override
-  String getText() {
-    return occasion.name;
-  }
 }
