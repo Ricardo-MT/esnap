@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:esnap/app_views/onboard/model/onboarding_section.dart';
 import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wid_design_system/wid_design_system.dart';
@@ -26,12 +27,14 @@ class _OnboardView extends State<OnboardView> with TickerProviderStateMixin {
   late PageController _pageController;
   late bool _isLastPage;
   late bool _isFirstPage;
+  late List<OnboardSection> sections;
 
   @override
   void initState() {
     _pageController = PageController();
     _isLastPage = false;
     _isFirstPage = true;
+    sections = getSections(context);
     super.initState();
     _pageController.addListener(() {
       final page = _pageController.page?.round() ?? 0;
@@ -303,26 +306,29 @@ double getY(double x) {
   return 8.5 * pow(x, 2) - 14.5 * x + 14.8;
 }
 
-const sections = [
-  OnboardSection(
-    title1: 'Build',
-    title2: 'Your Wardrobe',
-    description: 'Easily add your clothes for a stylish, organized closet.',
-    image: 'assets/img/section_1.png',
-    color: Color(0xFFBC44E7),
-  ),
-  OnboardSection(
-    title1: 'Mix &',
-    title2: 'Match',
-    description: 'Craft perfect outfits from your wardrobe effortlessly.',
-    image: 'assets/img/section_2.png',
-    color: Color(0xFF01f472),
-  ),
-  OnboardSection(
-    title1: 'Effortless',
-    title2: 'Management',
-    description: 'Experience hassle-free clothing organization and styling.',
-    image: 'assets/img/section_3.png',
-    color: Color(0xFFFF82B8),
-  ),
-];
+List<OnboardSection> getSections(BuildContext context) {
+  final l10n = context.l10n;
+  return [
+    OnboardSection(
+      title1: l10n.onboardOneTitle1,
+      title2: l10n.onboardOneTitle2,
+      description: l10n.onboardOneDescription,
+      image: 'assets/img/section_1.png',
+      color: const Color(0xFFBC44E7),
+    ),
+    OnboardSection(
+      title1: l10n.onboardTwoTitle1,
+      title2: l10n.onboardTwoTitle2,
+      description: l10n.onboardTwoDescription,
+      image: 'assets/img/section_2.png',
+      color: const Color(0xFF01f472),
+    ),
+    OnboardSection(
+      title1: l10n.onboardThreeTitle1,
+      title2: l10n.onboardThreeTitle2,
+      description: l10n.onboardThreeDescription,
+      image: 'assets/img/section_3.png',
+      color: const Color(0xFFFF82B8),
+    ),
+  ];
+}

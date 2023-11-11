@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:preferences_api/preferences_api.dart';
 import 'package:rxdart/rxdart.dart';
@@ -10,9 +12,13 @@ class PreferencesApiServices extends PreferencesApi {
   PreferencesApiServices({
     required FlutterSecureStorage storage,
     required ThemeType initialTheme,
+    String? initialLanguage,
   }) {
     _storage = storage;
     _themeStreamController.add(initialTheme);
+    if (initialLanguage != null) {
+      _languageStreamController.add(initialLanguage);
+    }
   }
   late final FlutterSecureStorage _storage;
 
@@ -20,17 +26,22 @@ class PreferencesApiServices extends PreferencesApi {
   final _themeStreamController =
       BehaviorSubject<ThemeType>.seeded(ThemeType.system);
 
+  /// Stream of the user's theme preference
+  final _languageStreamController = BehaviorSubject<String>();
+
   /// Reads the initial theme from the secure storage and returns an instance
   static Future<PreferencesApiServices> initializer() async {
     const storage = FlutterSecureStorage();
-    final res = await storage.read(key: SecureStorageKeys.theme);
+    final resTheme = await storage.read(key: SecureStorageKeys.theme);
+    final resLanguage = await storage.read(key: SecureStorageKeys.language);
     final initialTheme = ThemeType.values.firstWhere(
-      (element) => element.name == res,
+      (element) => element.name == resTheme,
       orElse: () => ThemeType.system,
     );
     return PreferencesApiServices(
       storage: storage,
       initialTheme: initialTheme,
+      initialLanguage: resLanguage ?? Platform.localeName,
     );
   }
 
@@ -60,8 +71,22 @@ class PreferencesApiServices extends PreferencesApi {
 
   @override
   Future<void> setTheme(ThemeType theme) async {
-    await _storage.write(key: SecureStorageKeys.theme, value: theme.name);
     _themeStreamController.add(theme);
+    await _storage.write(key: SecureStorageKeys.theme, value: theme.name);
+  }
+
+  @override
+  Future<String?> getLanguage() =>
+      _storage.read(key: SecureStorageKeys.language);
+
+  @override
+  Stream<String> getLanguageAsStream() =>
+      _languageStreamController.asBroadcastStream();
+
+  @override
+  Future<void> setLanguage(String language) {
+    _languageStreamController.add(language);
+    return _storage.write(key: SecureStorageKeys.language, value: language);
   }
 }
 
@@ -72,4 +97,7 @@ class SecureStorageKeys {
 
   /// Key for storing the theme
   static const theme = 'theme';
+
+  /// Key for storing the language
+  static const language = 'language';
 }

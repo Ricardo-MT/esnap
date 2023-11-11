@@ -5,6 +5,7 @@ import 'package:esnap/app_views/edit_item/widgets/wid_image_picker.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_select.dart';
 import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/dimensions.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap/widgets/color_indicator.dart';
@@ -62,7 +63,7 @@ class EditItemPage extends StatelessWidget {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   const SnackBar(
-                    content: Text('ERROR DESCONOCIDO'),
+                    content: Text('error'),
                   ),
                 );
             }
@@ -100,10 +101,11 @@ class EditItemView extends StatelessWidget {
     final isNewItem = context.select(
       (EditItemBloc bloc) => bloc.state.isNewItem,
     );
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          isNewItem ? 'New item' : 'Editing item',
+          isNewItem ? l10n.newItemTitle : l10n.editingItemTitle,
         ),
         actions: [
           BlocBuilder<EditItemBloc, EditItemState>(
@@ -118,7 +120,7 @@ class EditItemView extends StatelessWidget {
                     : () => context
                         .read<EditItemBloc>()
                         .add(const EditItemSubmitted()),
-                child: const Text('Save'),
+                child: Text(l10n.save),
               );
             },
           ),
@@ -193,9 +195,10 @@ class _ClassificationField extends StatelessWidget {
     final classifications =
         context.watch<ClassificationsOverviewBloc>().state.classifications;
     final state = context.watch<EditItemBloc>().state;
+    final l10n = context.l10n;
 
     return DropdownButtonFormField<EsnapClassification>(
-      decoration: const InputDecoration(label: Text('Classification')),
+      decoration: InputDecoration(label: Text(l10n.classificationLabel)),
       menuMaxHeight: AppDimenssions.menuMaxHeight,
       value: state.classification,
       items: classifications
@@ -220,9 +223,10 @@ class _ColorField extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.watch<ColorsOverviewBloc>().state.colors;
     final state = context.watch<EditItemBloc>().state;
+    final l10n = context.l10n;
 
     return DropdownButtonFormField<EsnapColor>(
-      decoration: const InputDecoration(label: Text('Color')),
+      decoration: InputDecoration(label: Text(l10n.colorLabel)),
       menuMaxHeight: AppDimenssions.menuMaxHeight,
       value: state.color,
       items: colors
@@ -254,12 +258,12 @@ class _OccasionField extends StatelessWidget {
   Widget build(BuildContext context) {
     final occasions = context.watch<OccasionsOverviewBloc>().state.occasions;
     final state = context.watch<EditItemBloc>().state;
-    const hintText = 'Occasions go here';
+    final l10n = context.l10n;
 
     return WidSelectMultiple(
-      label: 'Occasions',
+      label: l10n.ocassionsLabel,
       values: state.occasions.map((e) => e.name).toList(),
-      hint: hintText,
+      hint: l10n.ocassionsHintText,
       onChanged: (value) {
         final found = value == null
             ? <EsnapOccasion>[]

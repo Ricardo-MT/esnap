@@ -5,6 +5,7 @@ import 'package:esnap/app_views/home/cubit/home_cubit.dart';
 import 'package:esnap/app_views/items_overview/view/items_overview.dart';
 import 'package:esnap/app_views/preferences/view/view.dart';
 import 'package:esnap/app_views/set_overview/view/sets_overview.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/classification_asset_pairer.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap_repository/esnap_repository.dart';
@@ -50,6 +51,7 @@ class _HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedTab = context.select((HomeCubit cubit) => cubit.state);
+    final l10n = context.l10n;
     return Scaffold(
       body: SafeArea(
         child: IndexedStack(
@@ -79,7 +81,7 @@ class _HomeView extends StatelessWidget {
                 groupValue: selectedTab,
                 value: HomeTab.home,
                 icon: Icons.home_outlined,
-                label: 'Home',
+                label: l10n.homePageTitle,
                 onPressed: context.read<HomeCubit>().selectHome,
               ),
             ),
@@ -88,7 +90,7 @@ class _HomeView extends StatelessWidget {
                 groupValue: selectedTab,
                 value: HomeTab.items,
                 icon: Icons.dry_cleaning_outlined,
-                label: 'All items',
+                label: l10n.itemsPageTitle,
                 onPressed: context.read<HomeCubit>().selectItems,
               ),
             ),
@@ -97,7 +99,7 @@ class _HomeView extends StatelessWidget {
                 groupValue: selectedTab,
                 value: HomeTab.outifts,
                 icon: Icons.dashboard,
-                label: 'Outfits',
+                label: l10n.outfitsPageTitle,
                 onPressed: context.read<HomeCubit>().selectSets,
               ),
             ),
@@ -118,6 +120,7 @@ class _HomeViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Esnap'),
@@ -137,13 +140,13 @@ class _HomeViewWidget extends StatelessWidget {
           children: [
             _HomeQuickFilter(
               callback: () => Navigator.of(context).push(EditItemPage.route()),
-              label: 'Add clothing item',
+              label: l10n.addItemCTA,
               iconPlus: true,
             ),
             _HomeQuickFilter(
               callback: () =>
                   Navigator.of(context).push(EditOutfitPage.route()),
-              label: 'Add outfit',
+              label: l10n.addOutfitCTA,
               iconPlus: true,
             ),
             spacerM,

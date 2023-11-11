@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:esnap/app_views/edit_outfit/bloc/edit_outfit_bloc.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wid_design_system/wid_design_system.dart';
@@ -10,13 +11,14 @@ class OutfitOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    final l10n = context.l10n;
+    return Column(
       children: [
         spacerXs,
         Expanded(
           flex: 4,
           child: _ItemDisplay(
-            label: 'Top',
+            label: l10n.top,
             type: 'Top',
           ),
         ),
@@ -24,7 +26,7 @@ class OutfitOverview extends StatelessWidget {
         Expanded(
           flex: 4,
           child: _ItemDisplay(
-            label: 'Bottom',
+            label: l10n.bottom,
             type: 'Bottom',
           ),
         ),
@@ -32,7 +34,7 @@ class OutfitOverview extends StatelessWidget {
         Expanded(
           flex: 3,
           child: _ItemDisplay(
-            label: 'Shoes',
+            label: l10n.shoes,
             type: 'Shoes',
           ),
         ),

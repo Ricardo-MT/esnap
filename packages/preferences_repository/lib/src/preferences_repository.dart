@@ -24,4 +24,13 @@ class PreferencesRepository {
 
   /// Sets the user's preferred theme
   Future<void> setTheme(ThemeType theme) => _client.setTheme(theme);
+
+  /// Returns the user's preferred language
+  Future<String?> getLanguage() => _client.getLanguage();
+
+  /// Provides a [Stream] of the user's preferred language
+  Stream<String> getLanguageAsStream() => _client.getLanguageAsStream();
+
+  /// Sets the user's preferred language
+  Future<void> setLanguage(String language) => _client.setLanguage(language);
 }

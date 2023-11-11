@@ -21,4 +21,13 @@ abstract class PreferencesApi {
 
   /// Sets the user's preferred theme
   Future<void> setTheme(ThemeType theme);
+
+  /// Returns the user's preferred language
+  Future<String?> getLanguage();
+
+  /// Provides a [Stream] of the user's preferred language
+  Stream<String> getLanguageAsStream();
+
+  /// Sets the user's preferred language
+  Future<void> setLanguage(String language);
 }

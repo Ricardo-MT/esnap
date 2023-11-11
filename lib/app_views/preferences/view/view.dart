@@ -1,4 +1,6 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/dimensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +19,10 @@ class PreferencesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Preferences'),
+        title: Text(l10n.preferencesPageTitle),
       ),
       body: const CupertinoScrollbar(
         child: SingleChildScrollView(
@@ -29,6 +32,8 @@ class PreferencesPage extends StatelessWidget {
               children: [
                 spacerM,
                 _ThemeController(),
+                spacerM,
+                _LanguageController(),
               ],
             ),
           ),
@@ -43,11 +48,17 @@ class _ThemeController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final labels = {
+      ThemeType.light: l10n.light,
+      ThemeType.dark: l10n.dark,
+      ThemeType.system: l10n.system,
+    };
     return BlocBuilder<PreferencesBloc, PreferencesState>(
       buildWhen: (previous, current) => previous.themeMode != current.themeMode,
       builder: (context, state) {
         return DropdownButtonFormField<ThemeType>(
-          decoration: const InputDecoration(label: Text('Theme mode')),
+          decoration: InputDecoration(label: Text(l10n.themeControllerLabel)),
           menuMaxHeight: AppDimenssions.menuMaxHeight,
           items: ThemeType.values
               .map(
@@ -57,7 +68,7 @@ class _ThemeController extends StatelessWidget {
                     children: [
                       Icon(_themeIcons[e]),
                       const SizedBox(width: 8),
-                      Text(e.name),
+                      Text(labels[e]!),
                     ],
                   ),
                 ),
@@ -75,8 +86,51 @@ class _ThemeController extends StatelessWidget {
   }
 }
 
+class _LanguageController extends StatelessWidget {
+  const _LanguageController();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final languages = {
+      'en': l10n.english,
+      'es': l10n.spanish,
+    };
+    return BlocBuilder<PreferencesBloc, PreferencesState>(
+      buildWhen: (previous, current) => previous.language != current.language,
+      builder: (context, state) {
+        return DropdownButtonFormField<String>(
+          decoration:
+              InputDecoration(label: Text(l10n.languageControllerLabel)),
+          menuMaxHeight: AppDimenssions.menuMaxHeight,
+          items: ['en', 'es']
+              .map(
+                (e) => DropdownMenuItem<String>(
+                  value: e,
+                  child: Row(
+                    children: [
+                      CountryFlag.fromLanguageCode(e, width: 24, height: 24),
+                      const SizedBox(width: 8),
+                      Text(languages[e]!),
+                    ],
+                  ),
+                ),
+              )
+              .toList(),
+          onChanged: (themeType) {
+            context.read<PreferencesBloc>().add(
+                  PreferencesLanguageChangeRequest(themeType!),
+                );
+          },
+          value: state.language,
+        );
+      },
+    );
+  }
+}
+
 const _themeIcons = {
   ThemeType.light: Icons.light_mode,
   ThemeType.dark: Icons.dark_mode,
-  ThemeType.system: Icons.settings,
+  ThemeType.system: Icons.contrast,
 };

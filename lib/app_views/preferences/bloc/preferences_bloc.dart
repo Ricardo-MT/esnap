@@ -24,6 +24,11 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
     preferencesRepository.getThemeAsStream().listen((theme) {
       add(PreferencesThemeChanged(theme));
     });
+    on<PreferencesLanguageChangeRequest>(_onLanguageChangeRequest);
+    on<PreferencesLanguageChanged>(_onLanguageChanged);
+    preferencesRepository.getLanguageAsStream().listen((language) {
+      add(PreferencesLanguageChanged(language));
+    });
   }
 
   final PreferencesRepository _preferencesRepository;
@@ -53,12 +58,14 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
       );
       final isFirstLogin = await _preferencesRepository.isFirstLogin();
       final theme = await _preferencesRepository.getTheme();
+      final language = await _preferencesRepository.getLanguage();
 
       emit(
         state.copyWith(
           status: FormzSubmissionStatus.success,
           isFirstLogin: isFirstLogin,
           themeMode: _getThemeMode(theme),
+          language: language ?? 'en',
         ),
       );
     } catch (e) {
@@ -87,6 +94,24 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
     Emitter<PreferencesState> emit,
   ) {
     _preferencesRepository.setTheme(event.themeType);
+  }
+
+  FutureOr<void> _onLanguageChangeRequest(
+    PreferencesLanguageChangeRequest event,
+    Emitter<PreferencesState> emit,
+  ) {
+    _preferencesRepository.setLanguage(event.language);
+  }
+
+  FutureOr<void> _onLanguageChanged(
+    PreferencesLanguageChanged event,
+    Emitter<PreferencesState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        language: event.language,
+      ),
+    );
   }
 }
 
