@@ -24,22 +24,16 @@ class PreferencesPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(l10n.preferencesPageTitle),
       ),
-      body: CupertinoScrollbar(
+      body: const CupertinoScrollbar(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             child: Column(
               children: [
                 spacerM,
-                const _LanguageController(),
+                _LanguageController(),
                 spacerM,
-                const _ThemeController(),
-                TextButton(
-                  onPressed: () {
-                    throw Exception('Test Crash');
-                  },
-                  child: const Text('Crash'),
-                ),
+                _ThemeController(),
               ],
             ),
           ),
