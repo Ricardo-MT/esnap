@@ -32,3 +32,21 @@ final class PreferencesThemeChanged extends PreferencesEvent {
   @override
   List<Object?> get props => [themeType];
 }
+
+final class PreferencesLanguageChangeRequest extends PreferencesEvent {
+  const PreferencesLanguageChangeRequest(this.language);
+
+  final String language;
+
+  @override
+  List<Object?> get props => [language];
+}
+
+final class PreferencesLanguageChanged extends PreferencesEvent {
+  const PreferencesLanguageChanged(this.language);
+
+  final String language;
+
+  @override
+  List<Object?> get props => [language];
+}

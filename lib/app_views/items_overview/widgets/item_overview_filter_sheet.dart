@@ -6,6 +6,7 @@ import 'package:esnap/app_views/items_overview/models/favorite_filter.dart';
 import 'package:esnap/app_views/items_overview/models/filter.dart';
 import 'package:esnap/app_views/items_overview/models/occasion_filter.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -126,6 +127,7 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -136,7 +138,7 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8).copyWith(top: 8),
-                  child: const WidText.headlineLarge(text: 'Filters'),
+                  child: WidText.headlineLarge(text: l10n.filters),
                 ),
               ),
               IconButton(
@@ -158,8 +160,8 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    const Expanded(
-                      child: WidText.headlineSmall(text: 'Show favorites'),
+                    Expanded(
+                      child: WidText.headlineSmall(text: l10n.showFavorites),
                     ),
                     Switch.adaptive(
                       value: selectedFavorite,
@@ -171,7 +173,7 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                 const Divider(
                   color: WidAppColors.n500,
                 ),
-                const WidText.headlineSmall(text: 'Classifications'),
+                WidText.headlineSmall(text: l10n.classificationLabel),
                 Wrap(
                   spacing: 8,
                   children: context
@@ -192,7 +194,7 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                 const Divider(
                   color: WidAppColors.n500,
                 ),
-                const WidText.headlineSmall(text: 'Colors'),
+                WidText.headlineSmall(text: l10n.colorLabel),
                 Wrap(
                   spacing: 8,
                   children: context
@@ -218,7 +220,7 @@ class _ItemOverviewFilterSheet extends StatelessWidget {
                 const Divider(
                   color: WidAppColors.n500,
                 ),
-                const WidText.headlineSmall(text: 'Occasions'),
+                WidText.headlineSmall(text: l10n.ocassionsLabel),
                 Wrap(
                   spacing: 8,
                   children: context

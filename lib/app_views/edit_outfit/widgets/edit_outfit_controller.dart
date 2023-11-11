@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/edit_outfit/bloc/edit_outfit_bloc.dart';
 import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap_api/esnap_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +32,7 @@ class _ItemsField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocBuilder<EditOutfitBloc, EditOutfitState>(
       builder: (context, state) {
         final items = context
@@ -44,7 +46,7 @@ class _ItemsField extends StatelessWidget {
         return SizedBox(
           height: 100,
           child: items.isEmpty
-              ? const Center(child: Text('no items to display'))
+              ? Center(child: Text(l10n.noItemsInOutfitReel))
               : ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: items.length,

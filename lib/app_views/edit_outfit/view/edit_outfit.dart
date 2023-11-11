@@ -5,6 +5,7 @@ import 'package:esnap/app_views/edit_outfit/widgets/edit_outfit_controller.dart'
 import 'package:esnap/app_views/edit_outfit/widgets/edit_outfit_overview.dart';
 import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/app_views/items_overview/bloc/items_overview_bloc.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,7 @@ class _EditOutfitView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocListener<EditOutfitBloc, EditOutfitState>(
       listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) {
@@ -68,7 +70,7 @@ class _EditOutfitView extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Failed to edit outfit')),
+              const SnackBar(content: Text('error')),
             );
           return;
         }
@@ -90,7 +92,9 @@ class _EditOutfitView extends StatelessWidget {
                 previous.isNewOutfit != current.isNewOutfit,
             builder: (context, state) {
               return Text(
-                state.isNewOutfit ? 'New outfit' : 'Editing outfit',
+                state.isNewOutfit
+                    ? l10n.newOutfitTitle
+                    : l10n.editingOutfitTitle,
               );
             },
           ),
@@ -107,7 +111,7 @@ class _EditOutfitView extends StatelessWidget {
                       : () => context
                           .read<EditOutfitBloc>()
                           .add(const EditOutfitSubmitted()),
-                  child: const Text('Save'),
+                  child: Text(l10n.save),
                 );
               },
             ),

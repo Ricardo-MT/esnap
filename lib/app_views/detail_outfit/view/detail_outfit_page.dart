@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:esnap/app_views/detail_outfit/bloc/detail_outfit_bloc.dart';
 import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,7 @@ class DetailOutfitView extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = context.select((DetailOutfitBloc bloc) => bloc.state.status);
     final state = context.watch<DetailOutfitBloc>().state;
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -63,7 +65,7 @@ class DetailOutfitView extends StatelessWidget {
                 : () => Navigator.of(context).pushReplacement(
                       EditOutfitPage.route(initialOutfit: state.item),
                     ),
-            child: const Text('Edit'),
+            child: Text(l10n.edit),
           ),
         ],
       ),
@@ -75,9 +77,8 @@ class DetailOutfitView extends StatelessWidget {
               context: context,
               builder: (dialogContext) => AlertDialog(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                title: const Text('Delete outfit'),
-                content:
-                    const Text('Are you sure you want to delete this outfit?'),
+                title: Text(l10n.deleteOutfit),
+                content: Text(l10n.deleteOutfitConfirmation),
                 actions: [
                   ElevatedButton(
                     onPressed: () {
@@ -86,20 +87,20 @@ class DetailOutfitView extends StatelessWidget {
                             const DetailOutfitDeleteSubmitted(),
                           );
                     },
-                    child: const Text('Delete'),
+                    child: Text(l10n.delete),
                   ),
                   TextButton(
                     style: removeSplashEffect(context),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Cancel'),
+                    child: Text(l10n.cancel),
                   ),
                 ],
               ),
             );
           },
-          child: const Text('Delete'),
+          child: Text(l10n.delete),
         ),
       ],
       body: BlocBuilder<DetailOutfitBloc, DetailOutfitState>(
@@ -117,6 +118,7 @@ class _OutfitOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Center(
       child: Column(
         children: [
@@ -124,7 +126,7 @@ class _OutfitOverview extends StatelessWidget {
           Expanded(
             flex: 4,
             child: _ItemDisplay(
-              label: 'Top',
+              label: l10n.top,
               type: 'Top',
               item: outfit.top,
             ),
@@ -133,7 +135,7 @@ class _OutfitOverview extends StatelessWidget {
           Expanded(
             flex: 4,
             child: _ItemDisplay(
-              label: 'Bottom',
+              label: l10n.bottom,
               type: 'Bottom',
               item: outfit.bottom,
             ),
@@ -142,7 +144,7 @@ class _OutfitOverview extends StatelessWidget {
           Expanded(
             flex: 3,
             child: _ItemDisplay(
-              label: 'Shoes',
+              label: l10n.shoes,
               type: 'Shoes',
               item: outfit.shoes,
             ),

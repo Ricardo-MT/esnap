@@ -7,6 +7,7 @@ import 'package:esnap/app_views/items_overview/models/classification_filter.dart
 import 'package:esnap/app_views/items_overview/widgets/item_list_tile.dart';
 import 'package:esnap/app_views/items_overview/widgets/items_overview_filter_button.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,9 +68,10 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All items'),
+        title: Text(l10n.itemsPageTitle),
         actions: const [
           ItemsOverviewFilterButton(),
         ],
@@ -126,7 +128,7 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
                   child: state.filteredItems.isEmpty
                       ? Center(
                           child: Text(
-                            'No items',
+                            l10n.noItemsFound,
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         )

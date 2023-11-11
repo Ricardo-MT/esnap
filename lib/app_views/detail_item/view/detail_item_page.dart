@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:esnap/app_views/detail_item/bloc/detail_item_bloc.dart';
 import 'package:esnap/app_views/edit_item/view/edit_item_page.dart';
+import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
@@ -52,10 +53,11 @@ class DetailItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = context.select((DetailItemBloc bloc) => bloc.state.status);
     final state = context.watch<DetailItemBloc>().state;
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          state.item.classification?.name ?? '(no classification)',
+          state.item.classification?.name ?? l10n.noClassification,
         ),
         actions: [
           TextButton(
@@ -65,7 +67,7 @@ class DetailItemView extends StatelessWidget {
                 : () => Navigator.of(context).pushReplacement(
                       EditItemPage.route(initialItem: state.item),
                     ),
-            child: const Text('Edit'),
+            child: Text(l10n.edit),
           ),
         ],
       ),
@@ -77,9 +79,8 @@ class DetailItemView extends StatelessWidget {
               context: context,
               builder: (dialogContext) => AlertDialog(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                title: const Text('Delete item'),
-                content:
-                    const Text('Are you sure you want to delete this item?'),
+                title: Text(l10n.deleteItem),
+                content: Text(l10n.deleteItemConfirmation),
                 actions: [
                   ElevatedButton(
                     onPressed: () {
@@ -88,20 +89,20 @@ class DetailItemView extends StatelessWidget {
                             const DetailItemDeleteSubmitted(),
                           );
                     },
-                    child: const Text('Delete'),
+                    child: Text(l10n.delete),
                   ),
                   TextButton(
                     style: removeSplashEffect(context),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Cancel'),
+                    child: Text(l10n.cancel),
                   ),
                 ],
               ),
             );
           },
-          child: const Text('Delete'),
+          child: Text(l10n.delete),
         ),
       ],
       body: CupertinoScrollbar(
@@ -222,9 +223,10 @@ class _ColorField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = context.watch<DetailItemBloc>().state.item.color;
+    final l10n = context.l10n;
     return Row(
       children: [
-        WidText.headlineLarge(text: color?.name ?? 'no color'),
+        WidText.headlineLarge(text: color?.name ?? l10n.noColor),
         spacerS,
         Visibility(
           visible: color != null,
@@ -241,10 +243,10 @@ class _OccasionField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final occasions = context.watch<DetailItemBloc>().state.item.occasions;
-
+    final l10n = context.l10n;
     return WidText.headlineSmall(
       text: occasions.isEmpty
-          ? 'no occasions'
+          ? l10n.noOcassions
           : occasions.map((e) => e.name).join(', '),
     );
   }

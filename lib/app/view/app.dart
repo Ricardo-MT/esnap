@@ -84,8 +84,10 @@ class _AppViewState extends State<AppView> {
       themeMode: context.select((PreferencesBloc bloc) => bloc.state.themeMode),
       theme: WidAppTheme.light,
       darkTheme: WidAppTheme.dark,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      locale:
+          context.select((PreferencesBloc bloc) => Locale(bloc.state.language)),
       supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
       builder: (context, child) =>
           BlocListener<PreferencesBloc, PreferencesState>(
         listenWhen: (previous, current) =>
