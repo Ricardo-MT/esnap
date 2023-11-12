@@ -152,7 +152,17 @@ class _AppViewState extends State<AppView> {
             if (child is Scaffold || child is Navigator) {
               error = Scaffold(body: Center(child: error));
             }
-            ErrorWidget.builder = (errorDetails) => error;
+            ErrorWidget.builder = (errorDetails) {
+              return Column(
+                children: [
+                  'Error: ${errorDetails.exceptionAsString()}',
+                  errorDetails.stack.toString(),
+                  errorDetails.stackFilter.toString(),
+                  errorDetails.library.toString(),
+                  errorDetails.exception.toString(),
+                ].map(Text.new).toList(),
+              );
+            };
             if (child != null) return child;
             throw 'child is null';
           },
