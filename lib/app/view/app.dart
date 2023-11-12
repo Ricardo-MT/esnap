@@ -153,14 +153,17 @@ class _AppViewState extends State<AppView> {
               error = Scaffold(body: Center(child: error));
             }
             ErrorWidget.builder = (errorDetails) {
-              return Column(
-                children: [
-                  'Error: ${errorDetails.exceptionAsString()}',
-                  errorDetails.stack.toString(),
-                  errorDetails.stackFilter.toString(),
-                  errorDetails.library.toString(),
-                  errorDetails.exception.toString(),
-                ].map(Text.new).toList(),
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    'Error: ${errorDetails.exceptionAsString()}',
+                    errorDetails.stack.toString(),
+                    errorDetails.stackFilter.toString(),
+                    errorDetails.library.toString(),
+                    errorDetails.exception.toString(),
+                  ].map(Text.new).toList(),
+                ),
               );
             };
             if (child != null) return child;

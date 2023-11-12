@@ -1,13 +1,10 @@
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
-import 'package:esnap/app_views/edit_item/edit_todo.dart';
-import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
 import 'package:esnap/app_views/home/cubit/home_cubit.dart';
 import 'package:esnap/app_views/items_overview/view/items_overview.dart';
 import 'package:esnap/app_views/preferences/view/view.dart';
 import 'package:esnap/app_views/set_overview/view/sets_overview.dart';
 import 'package:esnap/app_views/translations/translations_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
-import 'package:esnap/utils/classification_asset_pairer.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +120,7 @@ class _HomeViewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final navigator = Navigator.of(context);
-    final translationBloc = context.read<TranslationsBloc>();
+    final translationBloc = context.watch<TranslationsBloc>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Esnap'),
@@ -138,36 +135,61 @@ class _HomeViewWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(
           vertical: WidAppDimensions.pageInsetGap / 2,
         ),
+        // child: Column(
+        //   children: [
+        //     _HomeQuickFilter(
+        //       callback: () => navigator.push(EditItemPage.route()),
+        //       label: l10n.addItemCTA,
+        //       iconPlus: true,
+        //     ),
+        //     _HomeQuickFilter(
+        //       callback: () => navigator.push(EditOutfitPage.route()),
+        //       label: l10n.addOutfitCTA,
+        //       iconPlus: true,
+        //     ),
+        //     spacerM,
+        //     ...topFiveClassifications.map(
+        //       (classification) => Padding(
+        //         padding: const EdgeInsets.only(bottom: 1),
+        //         child: _HomeQuickFilter(
+        //           callback: () => callback(classification),
+        //           label: translationBloc.getTranslationForClassification(
+        //             classification,
+        //           )!,
+        //           imagePath: getAssetByClassification(
+        //             classification.name,
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ],
+        // ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            _HomeQuickFilter(
-              callback: () => navigator.push(EditItemPage.route()),
-              label: l10n.addItemCTA,
-              iconPlus: true,
+            Text('Count: ${translationBloc.state.classifications.length}'),
+            ...topFiveClassifications.map(
+              (e) => Text(
+                translationBloc.getTranslationForClassification(e) ??
+                    '_______ NULL _______',
+              ),
             ),
-            _HomeQuickFilter(
-              callback: () => navigator.push(EditOutfitPage.route()),
-              label: l10n.addOutfitCTA,
-              iconPlus: true,
-            ),
-            spacerM,
-            ...List.generate(
-              topFiveClassifications.length,
-              (index) {
-                final classification = topFiveClassifications[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 1),
-                  child: _HomeQuickFilter(
-                    callback: () => callback(classification),
-                    label: translationBloc.getTranslationForClassification(
-                      classification,
-                    )!,
-                    imagePath: getAssetByClassification(
-                      classification.name,
+            ...translationBloc.state.classifications.values.map(
+              (e) => DecoratedBox(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.red,
                     ),
                   ),
-                );
-              },
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    '${e.languageCode} - ${e.name} - ${e.classificationId} - ${e.id}',
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -220,72 +242,70 @@ class _HomeTabButton extends StatelessWidget {
   }
 }
 
-class _HomeQuickFilter extends StatelessWidget {
-  const _HomeQuickFilter({
-    required this.callback,
-    required this.label,
-    this.imagePath,
-    this.iconPlus = false,
-  });
-  final void Function() callback;
-  final String label;
-  final String? imagePath;
-  final bool iconPlus;
+// class _HomeQuickFilter extends StatelessWidget {
+//   const _HomeQuickFilter({
+//     required this.callback,
+//     required this.label,
+//   });
+//   final void Function() callback;
+//   final String label;
+//   final String? imagePath;
+//   final bool iconPlus;
 
-  @override
-  Widget build(BuildContext context) {
-    final mainColor = imagePath == null
-        ? Theme.of(context).textTheme.bodyLarge?.color
-        : WidAppColors.white;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        image: imagePath == null
-            ? null
-            : DecorationImage(
-                image: AssetImage(imagePath!),
-                colorFilter: ColorFilter.mode(
-                  WidAppColors.primary.withOpacity(0.9),
-                  BlendMode.colorBurn,
-                ),
-              ),
-      ),
-      child: TextButton(
-        onPressed: callback,
-        style: (imagePath == null
-                ? const ButtonStyle()
-                : removeSplashEffect(context))
-            .copyWith(
-          padding: MaterialStateProperty.all(
-            const EdgeInsets.all(1),
-          ),
-        ),
-        child: AspectRatio(
-          aspectRatio: 250 / 39,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                WidText.headlineLarge(
-                  text: label,
-                  style: TextStyle(
-                    color: mainColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                spacerExpanded,
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    iconPlus ? Icons.add_circle : Icons.arrow_forward_ios,
-                    size: 18,
-                    color: mainColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final mainColor = imagePath == null
+//         ? Theme.of(context).textTheme.bodyLarge?.color
+//         : WidAppColors.white;
+//     return DecoratedBox(
+//       decoration: BoxDecoration(
+//         image: imagePath == null
+//             ? null
+//             : DecorationImage(
+//                 image: AssetImage(imagePath!),
+//                 colorFilter: ColorFilter.mode(
+//                   WidAppColors.primary.withOpacity(0.9),
+//                   BlendMode.colorBurn,
+//                 ),
+//               ),
+//       ),
+//       child: TextButton(
+//         onPressed: callback,
+//         style: (imagePath == null
+//                 ? const ButtonStyle()
+//                 : removeSplashEffect(context))
+//             .copyWith(
+//           padding: MaterialStateProperty.all(
+//             const EdgeInsets.all(1),
+//           ),
+//         ),
+//         child: AspectRatio(
+//           aspectRatio: 250 / 39,
+//           child: Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 20),
+//             child: Row(
+//               children: [
+//                 WidText.headlineLarge(
+//                   text: label,
+//                   style: TextStyle(
+//                     color: mainColor,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//                 spacerExpanded,
+//                 Padding(
+//                   padding: const EdgeInsets.all(8),
+//                   child: Icon(
+//                     iconPlus ? Icons.add_circle : Icons.arrow_forward_ios,
+//                     size: 18,
+//                     color: mainColor,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
