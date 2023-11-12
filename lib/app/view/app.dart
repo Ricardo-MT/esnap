@@ -94,8 +94,18 @@ class _AppViewState extends State<AppView> {
       navigatorKey: _navigatorKey,
       debugShowCheckedModeBanner: false,
       themeMode: context.select((PreferencesBloc bloc) => bloc.state.themeMode),
-      theme: WidAppTheme.light,
-      darkTheme: WidAppTheme.dark,
+
+      /// TODO: Make this fix in the wid_design_system package
+      theme: WidAppTheme.light.copyWith(
+        appBarTheme: WidAppTheme.light.appBarTheme.copyWith(
+          backgroundColor: WidAppTheme.light.scaffoldBackgroundColor,
+        ),
+      ),
+      darkTheme: WidAppTheme.dark.copyWith(
+        appBarTheme: WidAppTheme.dark.appBarTheme.copyWith(
+          backgroundColor: WidAppTheme.dark.scaffoldBackgroundColor,
+        ),
+      ),
       locale:
           context.select((PreferencesBloc bloc) => Locale(bloc.state.language)),
       supportedLocales: AppLocalizations.supportedLocales,
