@@ -10,6 +10,7 @@ import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/dimensions.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap/widgets/color_indicator.dart';
+import 'package:esnap/widgets/page_constrainer.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -127,20 +128,22 @@ class EditItemView extends StatelessWidget {
           ),
         ],
       ),
-      body: const CupertinoScrollbar(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                _ImageField(),
-                spacerM,
-                _ClassificationField(),
-                spacerM,
-                _ColorField(),
-                spacerM,
-                _OccasionField(),
-              ],
+      body: const PageConstrainer(
+        child: CupertinoScrollbar(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  _ImageField(),
+                  spacerM,
+                  _ClassificationField(),
+                  spacerM,
+                  _ColorField(),
+                  spacerM,
+                  _OccasionField(),
+                ],
+              ),
             ),
           ),
         ),

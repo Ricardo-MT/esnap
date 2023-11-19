@@ -2,6 +2,7 @@ import 'package:country_flags/country_flags.dart';
 import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/dimensions.dart';
+import 'package:esnap/widgets/page_constrainer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,17 +25,19 @@ class PreferencesPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(l10n.preferencesPageTitle),
       ),
-      body: const CupertinoScrollbar(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                spacerM,
-                _LanguageController(),
-                spacerM,
-                _ThemeController(),
-              ],
+      body: const PageConstrainer(
+        child: CupertinoScrollbar(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  spacerM,
+                  _LanguageController(),
+                  spacerM,
+                  _ThemeController(),
+                ],
+              ),
             ),
           ),
         ),
