@@ -13,9 +13,10 @@ part 'preferences_state.dart';
 class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
   PreferencesBloc({
     required PreferencesRepository preferencesRepository,
+    PreferencesState? initialPreferencesState,
   })  : _preferencesRepository = preferencesRepository,
         super(
-          const PreferencesState(),
+          initialPreferencesState ?? const PreferencesState(),
         ) {
     on<PreferencesInitialCheck>(_onInitialCheck);
     on<PreferencesFinishOnboarding>(_onFinishOnboarding);
@@ -64,7 +65,7 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
         state.copyWith(
           status: FormzSubmissionStatus.success,
           isFirstLogin: isFirstLogin,
-          themeMode: _getThemeMode(theme),
+          themeMode: getThemeMode(theme),
           language: language ?? 'en',
         ),
       );
@@ -84,7 +85,7 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
   ) {
     emit(
       state.copyWith(
-        themeMode: _getThemeMode(event.themeType),
+        themeMode: getThemeMode(event.themeType),
       ),
     );
   }
@@ -115,7 +116,7 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
   }
 }
 
-ThemeMode _getThemeMode(ThemeType themeType) {
+ThemeMode getThemeMode(ThemeType themeType) {
   return ThemeMode.values.firstWhere(
     (element) => element.name == themeType.name,
     orElse: () => ThemeMode.system,

@@ -12,13 +12,11 @@ class PreferencesApiServices extends PreferencesApi {
   PreferencesApiServices({
     required FlutterSecureStorage storage,
     required ThemeType initialTheme,
-    String? initialLanguage,
+    required String initialLanguage,
   }) {
     _storage = storage;
     _themeStreamController.add(initialTheme);
-    if (initialLanguage != null) {
-      _languageStreamController.add(initialLanguage);
-    }
+    _languageStreamController.add(initialLanguage);
   }
   late final FlutterSecureStorage _storage;
 
