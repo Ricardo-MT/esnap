@@ -17,7 +17,6 @@ class OnboardPage extends StatelessWidget {
       child: const OnboardPage(),
       childCurrent: const SpinnerPage(),
       type: PageTransitionType.rightToLeftJoined,
-      duration: const Duration(milliseconds: 500),
     );
   }
 
