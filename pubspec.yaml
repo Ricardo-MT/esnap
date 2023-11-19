@@ -1,6 +1,6 @@
 name: esnap
 description: A mobile app for managing your clothes and accesories
-version: 1.0.3+1
+version: 1.0.0+10
 publish_to: none
 
 environment:
