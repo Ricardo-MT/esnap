@@ -9,14 +9,25 @@ import 'package:esnap/app_views/translations/translations_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/classification_asset_pairer.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
+import 'package:esnap/widgets/spinner.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:wid_design_system/wid_design_system.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key, this.index = 0});
   final int index;
+
+  static PageRoute<HomePage> route() {
+    return PageTransition(
+      child: const HomePage(),
+      childCurrent: const SpinnerPage(),
+      type: PageTransitionType.rightToLeftJoined,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,8 @@ import 'package:esnap/app_views/onboard/view/onboard.dart';
 import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
 import 'package:esnap/app_views/translations/translations_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
+import 'package:esnap/utils/classification_asset_pairer.dart';
+import 'package:esnap/widgets/spinner.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +20,7 @@ class App extends StatelessWidget {
     required this.classificationRepository,
     required this.classificationTypeRepository,
     required this.occasionRepository,
+    required this.initialPreferencesState,
     super.key,
   });
 
@@ -28,6 +31,7 @@ class App extends StatelessWidget {
   final ClassificationRepository classificationRepository;
   final ClassificationTypeRepository classificationTypeRepository;
   final OccasionRepository occasionRepository;
+  final PreferencesState initialPreferencesState;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +62,10 @@ class App extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) =>
-                PreferencesBloc(preferencesRepository: preferencesRepository)
-                  ..add(const PreferencesInitialCheck()),
+            create: (context) => PreferencesBloc(
+              preferencesRepository: preferencesRepository,
+              initialPreferencesState: initialPreferencesState,
+            )..add(const PreferencesInitialCheck()),
           ),
           BlocProvider(
             create: (context) => TranslationsBloc(
@@ -120,28 +125,29 @@ class _AppViewState extends State<AppView> {
                 /// Cache images using the build context
                 await Future.wait([
                   precacheImage(
-                    const AssetImage('assets/img/section_1.png'),
+                    const AssetImage('assets/img/section_1.webp'),
                     context,
                   ),
                   precacheImage(
-                    const AssetImage('assets/img/section_2.png'),
+                    const AssetImage('assets/img/section_2.webp'),
                     context,
                   ),
                   precacheImage(
-                    const AssetImage('assets/img/section_3.png'),
+                    const AssetImage('assets/img/section_3.webp'),
                     context,
                   ),
                 ]);
                 await _navigator.pushReplacement(
-                  MaterialPageRoute<void>(
-                    builder: (context) => const OnboardPage(),
-                  ),
+                  OnboardPage.route(),
                 );
               } else {
+                await Future.wait(
+                  getAllClassificationItemsAssets()
+                      .map((e) => precacheImage(AssetImage(e), context))
+                      .toList(),
+                );
                 await _navigator.pushReplacement(
-                  MaterialPageRoute<void>(
-                    builder: (context) => const HomePage(),
-                  ),
+                  HomePage.route(),
                 );
               }
             },
@@ -183,11 +189,7 @@ class _AppViewState extends State<AppView> {
       ),
       onGenerateRoute: (settings) => MaterialPageRoute(
         settings: settings,
-        builder: (context) => const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator.adaptive(),
-          ),
-        ),
+        builder: (_) => const SpinnerPage(),
       ),
     );
   }

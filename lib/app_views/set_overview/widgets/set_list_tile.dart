@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:esnap/utils/get_translated_name.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:wid_design_system/wid_design_system.dart';
@@ -68,7 +69,7 @@ class SetListTile extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                item.toString(),
+                getTranslatedNameFromOutfit(context, item),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(

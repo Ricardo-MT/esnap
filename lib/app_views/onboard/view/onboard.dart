@@ -3,12 +3,23 @@ import 'dart:math';
 import 'package:esnap/app_views/onboard/model/onboarding_section.dart';
 import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
+import 'package:esnap/widgets/spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:wid_design_system/wid_design_system.dart';
 
 class OnboardPage extends StatelessWidget {
   const OnboardPage({super.key});
+
+  static PageRoute<OnboardPage> route() {
+    return PageTransition(
+      child: const OnboardPage(),
+      childCurrent: const SpinnerPage(),
+      type: PageTransitionType.rightToLeftJoined,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -323,21 +334,21 @@ List<OnboardSection> getSections(BuildContext context) {
       title1: l10n.onboardOneTitle1,
       title2: l10n.onboardOneTitle2,
       description: l10n.onboardOneDescription,
-      image: 'assets/img/section_1.png',
+      image: 'assets/img/section_1.webp',
       color: const Color(0xFFBC44E7),
     ),
     OnboardSection(
       title1: l10n.onboardTwoTitle1,
       title2: l10n.onboardTwoTitle2,
       description: l10n.onboardTwoDescription,
-      image: 'assets/img/section_2.png',
+      image: 'assets/img/section_2.webp',
       color: const Color(0xFF01f472),
     ),
     OnboardSection(
       title1: l10n.onboardThreeTitle1,
       title2: l10n.onboardThreeTitle2,
       description: l10n.onboardThreeDescription,
-      image: 'assets/img/section_3.png',
+      image: 'assets/img/section_3.webp',
       color: const Color(0xFFFF82B8),
     ),
   ];

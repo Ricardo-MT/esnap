@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>559114535701-nlj6hh2m8c04radj04lojh73gr1ba365.apps.googleusercontent.com</string>
+	<string>559114535701-5ile7g3aafad31mil00sedrb4piphbuv.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.559114535701-nlj6hh2m8c04radj04lojh73gr1ba365</string>
+	<string>com.googleusercontent.apps.559114535701-5ile7g3aafad31mil00sedrb4piphbuv</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBAP2fpSsJda1rftSQpBVucIY5eDzZGMNw</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ricardo.esnap.app.esnap.stg</string>
+	<string>com.ricardo.esnap.app.esnap</string>
 	<key>PROJECT_ID</key>
 	<string>esnap-541ef</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:559114535701:ios:d44a375f8740a8082c9f1c</string>
+	<string>1:559114535701:ios:b4583aaf3c444d942c9f1c</string>
 </dict>
 </plist>

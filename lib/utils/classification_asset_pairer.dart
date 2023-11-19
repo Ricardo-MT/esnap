@@ -1,5 +1,11 @@
 String getAssetByClassification(String classification) {
-  return 'assets/img/${_classificationAssetPairs[classification] ?? "default"}.png';
+  return 'assets/img/${_classificationAssetPairs[classification] ?? "default"}.webp';
+}
+
+List<String> getAllClassificationItemsAssets() {
+  return _classificationAssetPairs.values
+      .map((e) => 'assets/img/$e.webp')
+      .toList();
 }
 
 const _classificationAssetPairs = {
