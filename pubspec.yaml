@@ -1,6 +1,6 @@
 name: esnap
 description: A mobile app for managing your clothes and accesories
-version: 1.0.0+11
+version: 1.0.4+12
 publish_to: none
 
 environment:
@@ -31,6 +31,7 @@ dependencies:
     path: packages/local_storage_esnap_api
   multi_select_flutter: ^4.1.3
   page_transition: ^2.1.0
+  permission_handler: ^11.0.1
   preferences_api:
     path: packages/preferences_api
   preferences_api_services:

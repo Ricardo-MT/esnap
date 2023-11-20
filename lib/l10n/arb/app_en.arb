@@ -1,5 +1,7 @@
 {
     "@@locale": "en",
+    "callToActionCamerausageTitle": "Provide camera access",
+    "callToActionCamerausage": "Open settings",
     "cameraUsageDescription": "Esnap requires camera access to capture your clothing items, enabling you to create stylish outfits",
     "onboardOneTitle1": "Build",
     "onboardOneTitle2": "Your Wardrobe",

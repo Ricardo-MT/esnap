@@ -30,9 +30,9 @@
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Allow Esnap to access your photo library</string>
+		<string>Esnap requires access to your photo library create clothing items, enabling you to create stylish outfits</string>
 		<key>NSCameraUsageDescription</key>
-		<string>${getCameraUsageDescription()}</string>
+		<string>Esnap requires camera access to capture your clothing items, enabling you to create stylish outfits</string>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
