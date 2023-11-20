@@ -1,5 +1,6 @@
 {
     "@@locale": "en",
+    "cameraUsageDescription": "Esnap requires camera access to capture your clothing items, enabling you to create stylish outfits",
     "onboardOneTitle1": "Build",
     "onboardOneTitle2": "Your Wardrobe",
     "onboardOneDescription": "Easily add your clothes for a stylish, organized closet.",
