@@ -1,7 +1,6 @@
 import 'package:esnap_api/esnap_api.dart';
 import 'package:hive/hive.dart';
 import 'package:local_storage_esnap_api/src/adapters/item.dart';
-
 import 'package:local_storage_esnap_api/src/esnap_boxes.dart';
 
 part 'outfit.g.dart';

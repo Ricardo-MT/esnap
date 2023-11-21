@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:esnap_api/esnap_api.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:local_storage_esnap_api/src/adapters/outfit.dart';
 import 'package:local_storage_esnap_api/src/esnap_boxes.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/subjects.dart';
 
 /// {@template local_storage_esnap_api}
@@ -9,9 +12,27 @@ import 'package:rxdart/subjects.dart';
 /// {@endtemplate}
 class LocalStorageOutfitApi extends OutfitApi {
   /// {@macro local_storage_esnap_api}
-  LocalStorageOutfitApi(this.box) {
+  LocalStorageOutfitApi(this.box, String applicationDocumentsDirectory) {
     final outfitsRes = box.values;
-    _outfitStreamController.add(outfitsRes.map((e) => e.toOutfit()).toList());
+    _outfitStreamController.add(
+      outfitsRes.map((e) {
+        final outfit = e.toOutfit();
+        return outfit.copyWith(
+          top: outfit.top?.copyWith(
+            imagePath:
+                '$applicationDocumentsDirectory/${outfit.top!.imagePath}',
+          ),
+          bottom: outfit.bottom?.copyWith(
+            imagePath:
+                '$applicationDocumentsDirectory/${outfit.bottom!.imagePath}',
+          ),
+          shoes: outfit.shoes?.copyWith(
+            imagePath:
+                '$applicationDocumentsDirectory/${outfit.shoes!.imagePath}',
+          ),
+        );
+      }).toList(),
+    );
   }
 
   final _outfitStreamController =
@@ -25,7 +46,9 @@ class LocalStorageOutfitApi extends OutfitApi {
   static Future<LocalStorageOutfitApi> initializer() async {
     Hive.registerAdapter(OutfitSchemaAdapter());
     final box = await Hive.openBox<OutfitSchema>(EsnapBoxes.outfit);
-    return LocalStorageOutfitApi(box);
+    final directory = await getApplicationDocumentsDirectory();
+    final itemImages = Directory('${directory.path}/item_images');
+    return LocalStorageOutfitApi(box, itemImages.path);
   }
 
   @override

@@ -14,12 +14,14 @@ import 'package:rxdart/subjects.dart';
 /// {@endtemplate}
 class LocalStorageEsnapApi extends EsnapApi {
   /// {@macro local_storage_esnap_api}
-  LocalStorageEsnapApi(this.box) {
+  LocalStorageEsnapApi(this.box, String applicationDocumentsDirectory) {
     final itemsRes = box.values;
     _itemStreamController.add(
       itemsRes
           .map(
-            (e) => e.toItem(),
+            (e) => e.toItem().copyWith(
+                  imagePath: '$applicationDocumentsDirectory/${e.imagePath}',
+                ),
           )
           .toList(),
     );
@@ -36,11 +38,11 @@ class LocalStorageEsnapApi extends EsnapApi {
     Hive.registerAdapter(ItemSchemaAdapter());
     final box = await Hive.openBox<ItemSchema>(EsnapBoxes.item);
     final directory = await getApplicationDocumentsDirectory();
-    final este = Directory('${directory.path}/item_images');
-    if (!este.existsSync()) {
-      este.createSync();
+    final itemImages = Directory('${directory.path}/item_images');
+    if (!itemImages.existsSync()) {
+      itemImages.createSync();
     }
-    return LocalStorageEsnapApi(box);
+    return LocalStorageEsnapApi(box, itemImages.path);
   }
 
   @override

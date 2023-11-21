@@ -94,7 +94,7 @@ class ItemSchema extends HiveObject {
       color: colorList,
       classification: classificationList,
       occasions: occasionList,
-      imagePath: localFile.path,
+      imagePath: item.id,
       favorite: item.favorite,
     );
   }

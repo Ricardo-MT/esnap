@@ -34,7 +34,7 @@ class PreferencesPage extends StatelessWidget {
                 children: [
                   spacerM,
                   _LanguageController(),
-                  spacerM,
+                  spacerXL,
                   _ThemeController(),
                 ],
               ),
