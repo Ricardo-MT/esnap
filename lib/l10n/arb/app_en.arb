@@ -59,5 +59,7 @@
     "system": "Same as device",
     "languageControllerLabel": "Language",
     "spanish": "Spanish",
-    "english": "English"
+    "english": "English",
+    "rateThisAppCTA": "Rate this app",
+    "privacyPolicyCTA": "Privacy policy and terms"
 }

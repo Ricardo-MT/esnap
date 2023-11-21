@@ -1,4 +1,5 @@
 import 'package:esnap/app_views/home/view/home_view.dart';
+import 'package:esnap/app_views/launcher/launcher_cubit.dart';
 import 'package:esnap/app_views/onboard/view/onboard.dart';
 import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
 import 'package:esnap/app_views/translations/translations_bloc.dart';
@@ -58,6 +59,7 @@ class App extends StatelessWidget {
         RepositoryProvider<OccasionRepository>(
           create: (context) => occasionRepository,
         ),
+        RepositoryProvider(create: (context) => LauncherCubit()),
       ],
       child: MultiBlocProvider(
         providers: [
