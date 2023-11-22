@@ -78,34 +78,32 @@ class DetailItemView extends StatelessWidget {
       persistentFooterButtons: [
         TextButton(
           style: removeSplashEffect(context),
-          onPressed: () async {
-            await showAdaptiveDialog<AlertDialog>(
-              context: context,
-              builder: (dialogContext) => AlertDialog(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                title: Text(l10n.deleteItem),
-                content: Text(l10n.deleteItemConfirmation),
-                actions: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(dialogContext).pop();
-                      context.read<DetailItemBloc>().add(
-                            const DetailItemDeleteSubmitted(),
-                          );
-                    },
-                    child: Text(l10n.delete),
-                  ),
-                  TextButton(
-                    style: removeSplashEffect(context),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(l10n.cancel),
-                  ),
-                ],
-              ),
-            );
-          },
+          onPressed: () => showAdaptiveDialog<void>(
+            context: context,
+            builder: (dialogContext) => AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: Text(l10n.deleteItem),
+              content: Text(l10n.deleteItemConfirmation),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                    context.read<DetailItemBloc>().add(
+                          const DetailItemDeleteSubmitted(),
+                        );
+                  },
+                  child: Text(l10n.delete),
+                ),
+                TextButton(
+                  style: removeSplashEffect(context),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(l10n.cancel),
+                ),
+              ],
+            ),
+          ),
           child: Text(l10n.delete),
         ),
       ],

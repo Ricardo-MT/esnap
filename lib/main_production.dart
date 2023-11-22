@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esnap/app/app.dart';
 import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
 import 'package:esnap/bootstrap.dart';
@@ -11,6 +12,7 @@ import 'package:formz/formz.dart';
 import 'package:local_storage_esnap_api/local_storage_esnap_api.dart';
 import 'package:preferences_api_services/preferences_api_services.dart';
 import 'package:preferences_repository/preferences_repository.dart';
+import 'package:report_repository/report_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +20,10 @@ void main() async {
   // Firebase configuration for prod flavor
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  final reportRepository = ReportRepository(
+    firestore: FirebaseFirestore.instance,
   );
 
   final connectionManager = await LocalStorageConnectionManager.initialize();
@@ -60,6 +66,7 @@ void main() async {
       classificationRepository: classificationRepository,
       occasionRepository: occasionRepository,
       classificationTypeRepository: classificationTypeRepository,
+      reportRepository: reportRepository,
     ),
   );
 }

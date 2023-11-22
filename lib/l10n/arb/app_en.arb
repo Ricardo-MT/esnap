@@ -59,5 +59,11 @@
     "system": "Same as device",
     "languageControllerLabel": "Language",
     "spanish": "Spanish",
-    "english": "English"
+    "english": "English",
+    "rateThisAppCTA": "Rate this app",
+    "privacyPolicyCTA": "Privacy policy and terms",
+    "sendFeedbackCTA": "Send some feedback",
+    "sendFeedbackDescription": "Let us know about any errors, new features you would like to see implemented, what you like or what you don't. Help us improve the app!",
+    "feedbackSentThanks": "Thanks for the feedback!",
+    "send": "Send"
 }

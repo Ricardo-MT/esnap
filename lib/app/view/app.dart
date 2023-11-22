@@ -1,4 +1,5 @@
 import 'package:esnap/app_views/home/view/home_view.dart';
+import 'package:esnap/app_views/launcher/launcher_cubit.dart';
 import 'package:esnap/app_views/onboard/view/onboard.dart';
 import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
 import 'package:esnap/app_views/translations/translations_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:preferences_repository/preferences_repository.dart';
+import 'package:report_repository/report_repository.dart';
 import 'package:wid_design_system/wid_design_system.dart';
 
 class App extends StatelessWidget {
@@ -21,6 +23,7 @@ class App extends StatelessWidget {
     required this.classificationTypeRepository,
     required this.occasionRepository,
     required this.initialPreferencesState,
+    required this.reportRepository,
     super.key,
   });
 
@@ -32,11 +35,15 @@ class App extends StatelessWidget {
   final ClassificationTypeRepository classificationTypeRepository;
   final OccasionRepository occasionRepository;
   final PreferencesState initialPreferencesState;
+  final ReportRepository reportRepository;
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<ReportRepository>(
+          create: (context) => reportRepository,
+        ),
         RepositoryProvider<PreferencesRepository>(
           create: (context) => preferencesRepository,
         ),
@@ -58,6 +65,7 @@ class App extends StatelessWidget {
         RepositoryProvider<OccasionRepository>(
           create: (context) => occasionRepository,
         ),
+        RepositoryProvider<LauncherCubit>(create: (context) => LauncherCubit()),
       ],
       child: MultiBlocProvider(
         providers: [
