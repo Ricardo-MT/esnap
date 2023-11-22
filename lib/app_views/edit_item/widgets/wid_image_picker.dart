@@ -23,7 +23,7 @@ class WidImagePicker extends StatelessWidget {
     if (status.isPermanentlyDenied) {
       final res = await showAdaptiveDialog<bool?>(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (context) => AlertDialog.adaptive(
           title: Text(l10n.callToActionCamerausageTitle),
           content: Text(context.l10n.cameraUsageDescription),
           actions: [

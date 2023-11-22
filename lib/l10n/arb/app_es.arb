@@ -61,5 +61,9 @@
     "spanish": "Español",
     "english": "Inglés",
     "rateThisAppCTA": "Deja una reseña",
-    "privacyPolicyCTA": "Privacidad y términos"
+    "privacyPolicyCTA": "Privacidad y términos",
+    "sendFeedbackCTA": "Envíanos un comentario",
+    "sendFeedbackDescription": "Dinos acerca de algún error, alguna funcionalidad o característica nueva que te gustaría tener, qué te gusta o qué no te gusta. ¡Ayúdanos a mejorar la app!",
+    "feedbackSentThanks": "¡Gracias por el feedback!",
+    "send": "Enviar"
 }
