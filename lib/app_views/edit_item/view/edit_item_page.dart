@@ -1,7 +1,7 @@
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/colors_overview/bloc/colors_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
-import 'package:esnap/app_views/edit_item/widgets/wid_image_picker.dart';
+import 'package:esnap/app_views/edit_item/widgets/image_picker/wid_image_picker.dart';
 import 'package:esnap/app_views/edit_item/widgets/wid_select.dart';
 import 'package:esnap/app_views/home/view/home_view.dart';
 import 'package:esnap/app_views/occasions_overview/bloc/occasions_overview_bloc.dart';
