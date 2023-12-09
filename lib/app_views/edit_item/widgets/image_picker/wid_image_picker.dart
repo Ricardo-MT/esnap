@@ -55,11 +55,11 @@ class _WidImagePicker extends StatelessWidget {
     if (Platform.isAndroid) {
       return;
     }
-    var status = await Permission.camera.status;
-    if (!status.isGranted) {
-      status = await Permission.camera.request();
-    }
-    if (!status.isGranted) {
+    final status = await Permission.camera.status;
+    // if (!status.isGranted) {
+    //   status = await Permission.camera.request();
+    // }
+    if (status.isPermanentlyDenied) {
       final res = await showAdaptiveDialog<bool?>(
         context: context,
         builder: (context) => AlertDialog.adaptive(
@@ -90,11 +90,11 @@ class _WidImagePicker extends StatelessWidget {
     if (Platform.isAndroid) {
       return;
     }
-    var status = await Permission.photos.status;
-    if (!status.isGranted) {
-      status = await Permission.photos.request();
-    }
-    if (!status.isGranted) {
+    final status = await Permission.photos.status;
+    // if (!status.isGranted) {
+    //   status = await Permission.photos.request();
+    // }
+    if (status.isPermanentlyDenied) {
       final res = await showAdaptiveDialog<bool?>(
         context: context,
         builder: (context) => AlertDialog.adaptive(
