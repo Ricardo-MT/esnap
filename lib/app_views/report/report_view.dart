@@ -1,5 +1,6 @@
 import 'package:esnap/app_views/report/report_bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
+import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -130,6 +131,7 @@ class _CancelButton extends StatelessWidget {
     return TextButton(
       key: const Key('reportForm_cancelButton_textButton'),
       onPressed: () => Navigator.of(context).pop(),
+      style: cancelButtonStyle(context),
       child: Text(l10n.cancel),
     );
   }
@@ -144,7 +146,8 @@ class _SendButton extends StatelessWidget {
     return BlocBuilder<ReportBloc, ReportState>(
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
-        return ElevatedButton(
+        return TextButton(
+          style: confirmButtonStyle(context),
           key: const Key('reportForm_continue_raisedButton'),
           onPressed: state.message.isNotEmpty
               ? () =>

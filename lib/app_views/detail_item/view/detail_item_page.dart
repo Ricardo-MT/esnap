@@ -85,20 +85,21 @@ class DetailItemView extends StatelessWidget {
               title: Text(l10n.deleteItem),
               content: Text(l10n.deleteItemConfirmation),
               actions: [
-                ElevatedButton(
+                TextButton(
+                  style: cancelButtonStyle(context),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(l10n.cancel),
+                ),
+                TextButton(
+                  style: confirmButtonStyle(context),
                   onPressed: () {
                     context.read<DetailItemBloc>().add(
                           const DetailItemDeleteSubmitted(),
                         );
                   },
                   child: Text(l10n.delete),
-                ),
-                TextButton(
-                  style: removeSplashEffect(context),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(l10n.cancel),
                 ),
               ],
             ),

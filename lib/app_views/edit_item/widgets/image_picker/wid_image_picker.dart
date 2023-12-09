@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:esnap/app_views/edit_item/widgets/image_picker/bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
+import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,10 +68,12 @@ class _WidImagePicker extends StatelessWidget {
           content: Text(context.l10n.cameraUsageDescription),
           actions: [
             TextButton(
+              style: cancelButtonStyle(context),
               onPressed: () => Navigator.of(context).pop(),
               child: Text(l10n.cancel),
             ),
-            ElevatedButton(
+            TextButton(
+              style: confirmButtonStyle(context),
               onPressed: () => Navigator.of(context).pop(true),
               child: Text(l10n.callToActionOpenSettings),
             ),
@@ -102,10 +105,12 @@ class _WidImagePicker extends StatelessWidget {
           content: Text(context.l10n.galleryUsageDescription),
           actions: [
             TextButton(
+              style: cancelButtonStyle(context),
               onPressed: () => Navigator.of(context).pop(),
               child: Text(l10n.cancel),
             ),
-            ElevatedButton(
+            TextButton(
+              style: confirmButtonStyle(context),
               onPressed: () => Navigator.of(context).pop(true),
               child: Text(l10n.callToActionOpenSettings),
             ),
@@ -156,27 +161,33 @@ class _WidImagePicker extends StatelessWidget {
                   title: Text(l10n.selectImageSourceTitle),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      ListTile(
-                        trailing: const Icon(Icons.camera_alt_outlined),
-                        title: Text(
-                          l10n.imageSourceCamera,
-                        ),
-                        onTap: () =>
+                      TextButton(
+                        onPressed: () =>
                             Navigator.of(context).pop(ImageSource.camera),
-                      ),
-                      ListTile(
-                        trailing: const Icon(Icons.photo_library_outlined),
-                        title: Text(
-                          l10n.imageSourceGallery,
+                        child: Row(
+                          children: [
+                            Expanded(child: Text(l10n.imageSourceCamera)),
+                            const Icon(Icons.camera_alt_outlined),
+                          ],
                         ),
-                        onTap: () =>
+                      ),
+                      TextButton(
+                        onPressed: () =>
                             Navigator.of(context).pop(ImageSource.gallery),
+                        child: Row(
+                          children: [
+                            Expanded(child: Text(l10n.imageSourceGallery)),
+                            const Icon(Icons.photo_library_outlined),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                   actions: [
                     TextButton(
+                      style: cancelButtonStyle(context),
                       onPressed: Navigator.of(context).pop,
                       child: Text(l10n.cancel),
                     ),

@@ -84,7 +84,15 @@ class DetailOutfitView extends StatelessWidget {
               title: Text(l10n.deleteOutfit),
               content: Text(l10n.deleteOutfitConfirmation),
               actions: [
-                ElevatedButton(
+                TextButton(
+                  style: removeSplashEffect(context),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(l10n.cancel),
+                ),
+                TextButton(
+                  style: confirmButtonStyle(context),
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
                     context.read<DetailOutfitBloc>().add(
@@ -92,13 +100,6 @@ class DetailOutfitView extends StatelessWidget {
                         );
                   },
                   child: Text(l10n.delete),
-                ),
-                TextButton(
-                  style: removeSplashEffect(context),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(l10n.cancel),
                 ),
               ],
             ),
