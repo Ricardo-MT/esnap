@@ -70,5 +70,8 @@
     "send": "Send",
     "selectImageSourceTitle": "Select image",
     "imageSourceCamera": "Take photo",
-    "imageSourceGallery": "From gallery"
+    "imageSourceGallery": "From gallery",
+    "tryAgain": "Try again",
+    "removeBackground": "Remove background",
+    "useOriginalImage": "Use original"
 }

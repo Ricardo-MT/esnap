@@ -341,6 +341,7 @@ class _ImageVersionToggler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final mainColor = theme.buttonTheme.colorScheme!.primary;
     final textButtonPadding =
@@ -350,10 +351,10 @@ class _ImageVersionToggler extends StatelessWidget {
         final isLoading =
             state.removingBackgroundStatus == EditItemStatus.loading;
         final text = state.removingBackgroundStatus == EditItemStatus.failure
-            ? 'Try again'
+            ? l10n.tryAgain
             : state.isUsingOriginalImage
-                ? 'Remove background'
-                : 'Use original';
+                ? l10n.removeBackground
+                : l10n.useOriginalImage;
         return Visibility.maintain(
           visible: state.canRemoveBackground,
           child: AnimatedSwitcher(
