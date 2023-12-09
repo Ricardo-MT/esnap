@@ -66,16 +66,19 @@ class SetListTile extends StatelessWidget {
           ),
           SizedBox(
             height: 44,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                getTranslatedNameFromOutfit(context, item),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 18,
-                  height: 1,
-                  fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  getTranslatedNameFromOutfit(context, item),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    height: 1,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

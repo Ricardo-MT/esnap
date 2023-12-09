@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:esnap/app_views/detail_outfit/bloc/detail_outfit_bloc.dart';
 import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
 import 'package:esnap/l10n/l10n.dart';
+import 'package:esnap/utils/get_translated_name.dart';
 import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,11 @@ class DetailOutfitView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          state.item.toString(),
+          getTranslatedNameFromOutfit(context, state.item),
+          maxLines: 2,
+          style: const TextStyle(
+            fontSize: 18,
+          ),
         ),
         actions: [
           TextButton(

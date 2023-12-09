@@ -124,7 +124,8 @@ class ItemsOverviewViewState extends State<ItemsOverviewView> {
                         )
                       : GridView.count(
                           crossAxisCount: 3,
-                          padding: const EdgeInsets.all(15),
+                          padding:
+                              const EdgeInsets.all(15).copyWith(bottom: 80),
                           mainAxisSpacing: 15,
                           crossAxisSpacing: 15,
                           children: [

@@ -83,10 +83,15 @@ class App extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => TranslationsBloc(
+              languageCode: initialPreferencesState.language,
               classificationRepository: classificationRepository,
               colorRepository: colorRepository,
               occasionRepository: occasionRepository,
-            )..add(const TranslationsLanguageChanged(languageCode: 'en')),
+            )..add(
+                TranslationsLanguageChanged(
+                  languageCode: initialPreferencesState.language,
+                ),
+              ),
           ),
         ],
         child: const AppView(),
