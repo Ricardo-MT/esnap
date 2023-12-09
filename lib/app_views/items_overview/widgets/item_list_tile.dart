@@ -1,11 +1,8 @@
 import 'dart:io';
 
-import 'package:esnap/app_views/translations/translations_bloc.dart';
-import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/widgets/color_indicator.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wid_design_system/wid_design_system.dart';
 
 class ItemListTile extends StatelessWidget {
@@ -21,19 +18,21 @@ class ItemListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    const captionColor = WidAppColors.light;
-    final l10n = context.l10n;
-    final translationBloc = context.watch<TranslationsBloc>();
-
     return ClipRRect(
       borderRadius:
           BorderRadius.circular(WidAppDimensions.borderRadiusControllers),
       child: Hero(
         tag: item.imagePath!,
         child: DecoratedBox(
+          key: ValueKey(
+            (item.imagePath ?? '') + item.wasBackgroundRemoved.toString(),
+          ),
           decoration: BoxDecoration(
+            color: theme.colorScheme.onSurfaceVariant.withOpacity(0.1),
             image: DecorationImage(
-              image: FileImage(File(item.imagePath!)),
+              image: Image.file(
+                File(item.imagePath!),
+              ).image,
               fit: BoxFit.cover,
             ),
           ),
@@ -41,21 +40,6 @@ class ItemListTile extends StatelessWidget {
             onPress: onTap,
             child: Stack(
               children: [
-                Positioned.fill(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.transparent,
-                          WidAppColors.black.withOpacity(0.6),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: const [0.55, 0.95],
-                      ),
-                    ),
-                  ),
-                ),
                 Positioned.fill(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -83,23 +67,6 @@ class ItemListTile extends StatelessWidget {
                               size: 20,
                             ),
                           ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 4,
-                        ),
-                        child: Text(
-                          translationBloc.getTranslationForClassification(
-                                item.classification,
-                              ) ??
-                              l10n.none,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.headlineSmall?.copyWith(
-                            color: captionColor,
-                          ),
                         ),
                       ),
                     ],

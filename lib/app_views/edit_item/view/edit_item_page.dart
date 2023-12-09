@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/colors_overview/bloc/colors_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
@@ -15,6 +17,7 @@ import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_tools_repository/image_tools_repository.dart';
 import 'package:wid_design_system/wid_design_system.dart';
 
 class EditItemPage extends StatelessWidget {
@@ -28,6 +31,7 @@ class EditItemPage extends StatelessWidget {
           BlocProvider(
             create: (context) => EditItemBloc(
               esnapRepository: context.read<EsnapRepository>(),
+              imageToolsRepository: context.read<ImageToolsRepository>(),
               initialItem: initialItem,
             ),
           ),
@@ -99,7 +103,6 @@ class EditItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final status = context.select((EditItemBloc bloc) => bloc.state.status);
     final isNewItem = context.select(
       (EditItemBloc bloc) => bloc.state.isNewItem,
     );
@@ -109,23 +112,8 @@ class EditItemView extends StatelessWidget {
         title: Text(
           isNewItem ? l10n.newItemTitle : l10n.editingItemTitle,
         ),
-        actions: [
-          BlocBuilder<EditItemBloc, EditItemState>(
-            buildWhen: (previous, current) =>
-                previous.isValid != current.isValid,
-            builder: (context, state) {
-              return TextButton(
-                key: const Key('editItemView_save_iconButton'),
-                style: removeSplashEffect(context),
-                onPressed: (status.isLoadingOrSuccess || !state.isValid)
-                    ? null
-                    : () => context
-                        .read<EditItemBloc>()
-                        .add(const EditItemSubmitted()),
-                child: Text(l10n.save),
-              );
-            },
-          ),
+        actions: const [
+          _SaveActionButton(),
         ],
       ),
       body: const PageConstrainer(
@@ -136,7 +124,12 @@ class EditItemView extends StatelessWidget {
               child: Column(
                 children: [
                   _ImageField(),
-                  spacerM,
+                  spacerXs,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: _ImageVersionToggler(),
+                  ),
+                  spacerXs,
                   _ClassificationField(),
                   spacerM,
                   _ColorField(),
@@ -157,36 +150,54 @@ class _ImageField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<EditItemBloc>().state;
-    return Stack(
-      children: [
-        Hero(
-          tag: state.imagePath ?? 'edit_image_unset_image_path',
-          child: WidImagePicker(
-            imagePath: state.imagePath,
-            onPicked: (p0) {
-              context
-                  .read<EditItemBloc>()
-                  .add(EditItemImagePathChanged(p0.path));
-            },
-          ),
-        ),
-        Positioned(
-          top: 5,
-          right: 5,
-          child: IconButton(
-            icon: Icon(state.favorite ? Icons.favorite : Icons.favorite_border),
-            iconSize: 30,
-            padding: EdgeInsets.zero,
-            color: WidAppColors.light,
-            visualDensity: VisualDensity.compact,
-            splashRadius: 5,
-            onPressed: () => context
-                .read<EditItemBloc>()
-                .add(EditItemFavoriteChanged(favorite: !state.favorite)),
-          ),
-        ),
-      ],
+    return BlocBuilder<EditItemBloc, EditItemState>(
+      buildWhen: (previous, current) =>
+          previous.isUsingOriginalImage != current.isUsingOriginalImage ||
+          previous.imagePath != current.imagePath ||
+          previous.backgroundRemovedImage != current.backgroundRemovedImage ||
+          previous.favorite != current.favorite,
+      builder: (context, state) {
+        File? imageFile;
+        if (state.isUsingOriginalImage) {
+          if (state.imagePath != null && state.imagePath!.isNotEmpty) {
+            imageFile = File(state.imagePath!);
+          }
+        }
+        return Stack(
+          children: [
+            Hero(
+              tag: state.imagePath ?? 'edit_image_unset_image_path',
+              child: WidImagePicker(
+                imageFile: imageFile,
+                imageBytes: state.backgroundRemovedImage,
+                isFromFile: state.isUsingOriginalImage,
+                onPicked: (p0) {
+                  context
+                      .read<EditItemBloc>()
+                      .add(EditItemImagePathChanged(p0.path));
+                },
+              ),
+            ),
+            Positioned(
+              top: 5,
+              right: 5,
+              child: IconButton(
+                icon: Icon(
+                  state.favorite ? Icons.favorite : Icons.favorite_border,
+                ),
+                iconSize: 30,
+                padding: EdgeInsets.zero,
+                color: WidAppColors.light,
+                visualDensity: VisualDensity.compact,
+                splashRadius: 5,
+                onPressed: () => context
+                    .read<EditItemBloc>()
+                    .add(EditItemFavoriteChanged(favorite: !state.favorite)),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -297,6 +308,82 @@ class _OccasionField extends StatelessWidget {
             (occasion) => translationBloc.getTranslationForOccasion(occasion)!,
           )
           .toList(),
+    );
+  }
+}
+
+class _SaveActionButton extends StatelessWidget {
+  const _SaveActionButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final status = context.select((EditItemBloc bloc) => bloc.state.status);
+    return BlocBuilder<EditItemBloc, EditItemState>(
+      buildWhen: (previous, current) => previous.isValid != current.isValid,
+      builder: (context, state) {
+        return TextButton(
+          key: const Key('editItemView_save_iconButton'),
+          style: removeSplashEffect(context),
+          onPressed: (status.isLoadingOrSuccess || !state.isValid)
+              ? null
+              : () =>
+                  context.read<EditItemBloc>().add(const EditItemSubmitted()),
+          child: Text(l10n.save),
+        );
+      },
+    );
+  }
+}
+
+class _ImageVersionToggler extends StatelessWidget {
+  const _ImageVersionToggler();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final mainColor = theme.buttonTheme.colorScheme!.primary;
+    final textButtonPadding =
+        theme.textButtonTheme.style!.padding?.resolve({}) ?? EdgeInsets.zero;
+    return BlocBuilder<EditItemBloc, EditItemState>(
+      builder: (context, state) {
+        final isLoading =
+            state.removingBackgroundStatus == EditItemStatus.loading;
+        final text = state.removingBackgroundStatus == EditItemStatus.failure
+            ? 'Try again'
+            : state.isUsingOriginalImage
+                ? 'Remove background'
+                : 'Use original';
+        return Visibility.maintain(
+          visible: state.canRemoveBackground,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 175),
+            child: isLoading
+                ? Padding(
+                    padding: textButtonPadding,
+                    child: SizedBox(
+                      width: 28,
+                      height: 28,
+                      child: CircularProgressIndicator.adaptive(
+                        valueColor: AlwaysStoppedAnimation<Color>(mainColor),
+                        strokeWidth: 2,
+                      ),
+                    ),
+                  )
+                : TextButton(
+                    style: removeSplashEffect(context),
+                    onPressed: () => context
+                        .read<EditItemBloc>()
+                        .add(const EditItemRequestToggleImage()),
+                    child: Text(
+                      text,
+                      style:
+                          TextStyle(fontSize: 14, height: 1, color: mainColor),
+                    ),
+                  ),
+          ),
+        );
+      },
     );
   }
 }

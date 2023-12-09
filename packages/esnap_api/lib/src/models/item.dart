@@ -27,6 +27,7 @@ class Item extends Equatable {
     String? id,
     this.occasions = const [],
     this.favorite = false,
+    this.wasBackgroundRemoved = false,
   })  : assert(
           id == null || id.isNotEmpty,
           'id can not be null and should be empty',
@@ -57,6 +58,10 @@ class Item extends Equatable {
   /// Is this item marked as favorite?
   final bool favorite;
 
+  /// Was this item's image's background removed?
+  /// Defaults to false.
+  final bool wasBackgroundRemoved;
+
   /// Returns a copy of this `item` with the given values updated.
   ///
   /// {@macro item}
@@ -67,6 +72,7 @@ class Item extends Equatable {
     List<EsnapOccasion>? occasions,
     String? imagePath,
     bool? favorite,
+    bool? wasBackgroundRemoved,
   }) {
     return Item(
       id: id ?? this.id,
@@ -76,10 +82,18 @@ class Item extends Equatable {
           (occasions ?? this.occasions).map((o) => o.copyWith()).toList(),
       imagePath: imagePath ?? this.imagePath,
       favorite: favorite ?? this.favorite,
+      wasBackgroundRemoved: wasBackgroundRemoved ?? this.wasBackgroundRemoved,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [id, color, classification, occasions, imagePath, favorite];
+  List<Object?> get props => [
+        id,
+        color,
+        classification,
+        occasions,
+        imagePath,
+        favorite,
+        wasBackgroundRemoved,
+      ];
 }

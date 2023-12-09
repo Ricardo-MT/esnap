@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:esnap/app_views/edit_item/widgets/image_picker/bloc.dart';
 import 'package:esnap/l10n/l10n.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,11 +11,15 @@ import 'package:wid_design_system/wid_design_system.dart';
 
 class WidImagePicker extends StatelessWidget {
   const WidImagePicker({
-    required this.imagePath,
+    required this.imageFile,
+    required this.imageBytes,
+    required this.isFromFile,
     required this.onPicked,
     super.key,
   });
-  final String? imagePath;
+  final File? imageFile;
+  final Uint8List? imageBytes;
+  final bool isFromFile;
   final void Function(XFile) onPicked;
 
   @override
@@ -23,7 +28,9 @@ class WidImagePicker extends StatelessWidget {
       create: (context) => ImagePickerBloc(),
       child: _WidImagePicker(
         onPicked: onPicked,
-        imagePath: imagePath,
+        imageFile: imageFile,
+        imageBytes: imageBytes,
+        isFromFile: isFromFile,
       ),
     );
   }
@@ -32,9 +39,13 @@ class WidImagePicker extends StatelessWidget {
 class _WidImagePicker extends StatelessWidget {
   const _WidImagePicker({
     required this.onPicked,
-    required this.imagePath,
+    required this.imageFile,
+    required this.imageBytes,
+    required this.isFromFile,
   });
-  final String? imagePath;
+  final File? imageFile;
+  final Uint8List? imageBytes;
+  final bool isFromFile;
   final void Function(XFile) onPicked;
 
   Future<void> _handleCameraPermissions(
@@ -126,8 +137,6 @@ class _WidImagePicker extends StatelessWidget {
               }
               final pickedFile = await ImagePicker().pickImage(
                 source: state.source!,
-                maxHeight: 300,
-                maxWidth: 300,
               );
               if (pickedFile != null) {
                 onPicked(pickedFile);
@@ -138,9 +147,9 @@ class _WidImagePicker extends StatelessWidget {
         ),
         BlocListener<ImagePickerBloc, ImagePickerState>(
           listenWhen: (previous, current) => previous.status != current.status,
-          listener: (context, state) async {
+          listener: (imagePickerContext, state) async {
             if (state.status == ImagePickerStatus.askingSource) {
-              final bloc = context.read<ImagePickerBloc>();
+              final bloc = imagePickerContext.read<ImagePickerBloc>();
               final res = await showAdaptiveDialog<ImageSource?>(
                 context: context,
                 builder: (context) => AlertDialog.adaptive(
@@ -168,9 +177,7 @@ class _WidImagePicker extends StatelessWidget {
                   ),
                   actions: [
                     TextButton(
-                      onPressed: () => context
-                          .read<ImagePickerBloc>()
-                          .add(const ImagePickerReset()),
+                      onPressed: Navigator.of(context).pop,
                       child: Text(l10n.cancel),
                     ),
                   ],
@@ -197,7 +204,7 @@ class _WidImagePicker extends StatelessWidget {
             borderRadius: _borderRadius,
           ),
           child: WidTouchable(
-            onPress: imagePath == null
+            onPress: imageFile == null
                 ? () => context.read<ImagePickerBloc>().add(
                       const ImagePickerSourceAsked(),
                     )
@@ -206,16 +213,19 @@ class _WidImagePicker extends StatelessWidget {
               constraints: const BoxConstraints(maxHeight: 300),
               child: AspectRatio(
                 aspectRatio: 1,
-                child: (imagePath ?? '').isNotEmpty
+                child: (imageFile != null || imageBytes != null)
                     ? Stack(
                         children: [
                           Positioned.fill(
-                            child: Image.file(
-                              File(
-                                imagePath!,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
+                            child: isFromFile
+                                ? Image.file(
+                                    imageFile!,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.memory(
+                                    imageBytes!,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                           Positioned(
                             top: 5,

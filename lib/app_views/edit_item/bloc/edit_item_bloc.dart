@@ -1,8 +1,13 @@
+import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:esnap_repository/esnap_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:image_tools_repository/image_tools_repository.dart';
 
 part 'edit_item_event.dart';
 part 'edit_item_state.dart';
@@ -10,8 +15,10 @@ part 'edit_item_state.dart';
 class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
   EditItemBloc({
     required EsnapRepository esnapRepository,
+    required ImageToolsRepository imageToolsRepository,
     required Item? initialItem,
   })  : _esnapRepository = esnapRepository,
+        _imageToolsRepository = imageToolsRepository,
         super(
           EditItemState(
             initialItem: initialItem,
@@ -23,6 +30,7 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
           ),
         ) {
     on<EditItemImagePathChanged>(_onImageChanged);
+    on<EditItemRequestToggleImage>(_onToggleImageRequested);
     on<EditItemColorChanged>(_onColorChanged);
     on<EditItemClassificationChanged>(_onClassificationChanged);
     on<EditItemOccasionsChanged>(_onOccasionsChanged);
@@ -31,6 +39,7 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
   }
 
   final EsnapRepository _esnapRepository;
+  final ImageToolsRepository _imageToolsRepository;
 
   void _onImageChanged(
     EditItemImagePathChanged event,
@@ -78,13 +87,58 @@ class EditItemBloc extends Bloc<EditItemEvent, EditItemState> {
       occasions: state.occasions,
       imagePath: state.imagePath,
       favorite: state.favorite,
+      wasBackgroundRemoved: !state.isUsingOriginalImage,
     );
     try {
-      await _esnapRepository.saveItem(item);
+      // We need to evict the image from the cache if the background was removed
+      // and the original image was not removed originally.
+      if (!(state.initialItem?.wasBackgroundRemoved ?? true) &&
+          !state.isUsingOriginalImage &&
+          state.imagePath != null) {
+        imageCache.evict(FileImage(File(state.imagePath!)));
+      }
+      await _esnapRepository.saveItem(
+        item,
+        !item.wasBackgroundRemoved
+            ? File(state.imagePath!).readAsBytesSync()
+            : state.backgroundRemovedImage!,
+      );
       emit(state.copyWith(status: EditItemStatus.success));
     } catch (e) {
       log(e.toString());
       emit(state.copyWith(status: EditItemStatus.failure));
+    }
+  }
+
+  FutureOr<void> _onToggleImageRequested(
+    EditItemRequestToggleImage event,
+    Emitter<EditItemState> emit,
+  ) async {
+    if (state.imagePath == null) {
+      return;
+    }
+    if (!state.isUsingOriginalImage) {
+      emit(state.copyWith(isUsingOriginalImage: true));
+      return;
+    }
+    if (state.backgroundRemovedImage != null) {
+      emit(state.copyWith(isUsingOriginalImage: false));
+      return;
+    }
+    emit(state.copyWith(removingBackgroundStatus: EditItemStatus.loading));
+    try {
+      final image = await _imageToolsRepository.removeBackground(
+        File(state.imagePath!).readAsBytesSync(),
+      );
+      emit(
+        state.copyWith(
+          removingBackgroundStatus: EditItemStatus.success,
+          backgroundRemovedImage: image,
+          isUsingOriginalImage: false,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(removingBackgroundStatus: EditItemStatus.failure));
     }
   }
 }

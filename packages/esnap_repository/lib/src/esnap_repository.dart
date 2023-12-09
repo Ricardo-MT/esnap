@@ -15,7 +15,8 @@ class EsnapRepository {
   /// Saves an [item].
   ///
   /// If an [item] with the same id already exists, it will be replaced.
-  Future<void> saveItem(Item item) => _esnapApi.saveItem(item);
+  Future<void> saveItem(Item item, List<int> image) =>
+      _esnapApi.saveItem(item, image);
 
   /// Deletes the `item` with the given id.
   ///

@@ -22,6 +22,7 @@ class ItemSchema extends HiveObject {
     required this.color,
     required this.imagePath,
     required this.favorite,
+    required this.wasBackgroundRemoved,
   });
 
   /// The unique id for the item
@@ -40,17 +41,22 @@ class ItemSchema extends HiveObject {
   @HiveField(3)
   HiveList<OccasionSchema> occasions;
 
-  /// A list of the item's occasions.
+  /// The item's image path.
   @HiveField(4)
   String imagePath;
 
-  /// A list of the item's occasions.
+  /// Whether the item is marked as favorite.
   @HiveField(5)
   bool favorite;
+
+  /// Whether the item's background was removed.
+  @HiveField(6, defaultValue: false)
+  bool wasBackgroundRemoved;
 
   /// Convenient constructor from EsnapColor
   static Future<ItemSchema> fromItem(
     Item item,
+    List<int> image,
   ) async {
     /// Field color
     final colorBox = Hive.box<ColorSchema>(EsnapBoxes.color);
@@ -88,7 +94,7 @@ class ItemSchema extends HiveObject {
     /// Handle the image
     final directory = await getApplicationDocumentsDirectory();
     final localFile = File(path.join(directory.path, 'item_images', item.id));
-    await localFile.writeAsBytes(File(item.imagePath!).readAsBytesSync());
+    await localFile.writeAsBytes(image);
     return ItemSchema(
       id: item.id,
       color: colorList,
@@ -96,6 +102,7 @@ class ItemSchema extends HiveObject {
       occasions: occasionList,
       imagePath: item.id,
       favorite: item.favorite,
+      wasBackgroundRemoved: item.wasBackgroundRemoved,
     );
   }
 
@@ -107,6 +114,7 @@ class ItemSchema extends HiveObject {
         occasions: occasions.map((e) => e.toEsnapOccasion()).toList(),
         imagePath: imagePath,
         favorite: favorite,
+        wasBackgroundRemoved: wasBackgroundRemoved,
       );
 }
 
