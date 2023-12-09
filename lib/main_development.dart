@@ -9,6 +9,8 @@ import 'package:esnap_repository/esnap_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:formz/formz.dart';
+import 'package:image_tools_repository/image_tools_repository.dart';
+import 'package:image_tools_v1/image_tools_v1.dart';
 import 'package:local_storage_esnap_api/local_storage_esnap_api.dart';
 import 'package:preferences_api_services/preferences_api_services.dart';
 import 'package:preferences_repository/preferences_repository.dart';
@@ -56,6 +58,18 @@ void main() async {
   final outfitRepository =
       OutfitRepository(outfitApi: connectionManager.outfitApi);
 
+  final imageToolsData =
+      (await FirebaseFirestore.instance.collection('remove_bg_api').get())
+          .docs
+          .first
+          .data();
+  final imageToolsRepository = ImageToolsRepository(
+    imageTools: ImageToolsV1(
+      removeBackgroundServiceUrl: imageToolsData['api_url'] as String,
+      removeBackgroundServiceApiKey: imageToolsData['api_key'] as String,
+    ),
+  );
+
   bootstrap(
     () => App(
       initialPreferencesState: initialPreferencesState,
@@ -67,6 +81,7 @@ void main() async {
       occasionRepository: occasionRepository,
       classificationTypeRepository: classificationTypeRepository,
       reportRepository: reportRepository,
+      imageToolsRepository: imageToolsRepository,
     ),
   );
 }

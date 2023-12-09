@@ -16,6 +16,10 @@ final class EditItemImagePathChanged extends EditItemEvent {
   List<Object?> get props => [imagePath];
 }
 
+final class EditItemRequestToggleImage extends EditItemEvent {
+  const EditItemRequestToggleImage();
+}
+
 final class EditItemColorChanged extends EditItemEvent {
   const EditItemColorChanged(this.color);
 

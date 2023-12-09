@@ -10,13 +10,18 @@ part 'translations_state.dart';
 
 class TranslationsBloc extends Bloc<TranslationsEvent, TranslationsState> {
   TranslationsBloc({
+    required String languageCode,
     required ClassificationRepository classificationRepository,
     required ColorRepository colorRepository,
     required OccasionRepository occasionRepository,
   })  : _classificationRepository = classificationRepository,
         _colorRepository = colorRepository,
         _occasionRepository = occasionRepository,
-        super(const TranslationsState()) {
+        super(
+          TranslationsState(
+            languageCode: languageCode,
+          ),
+        ) {
     on<TranslationsLanguageChanged>(_onLanguageChanged);
   }
 

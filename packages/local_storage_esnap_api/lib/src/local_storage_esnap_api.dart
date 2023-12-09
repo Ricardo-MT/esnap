@@ -16,6 +16,7 @@ class LocalStorageEsnapApi extends EsnapApi {
   /// {@macro local_storage_esnap_api}
   LocalStorageEsnapApi(this.box, String applicationDocumentsDirectory) {
     final itemsRes = box.values;
+    imageDirectory = applicationDocumentsDirectory;
     _itemStreamController.add(
       itemsRes
           .map(
@@ -31,6 +32,9 @@ class LocalStorageEsnapApi extends EsnapApi {
 
   /// The box for handling colors
   final Box<ItemSchema> box;
+
+  /// The directory for storing images
+  late final String imageDirectory;
 
   /// This method opens the box, runs the initial migrations and
   /// returns an instance of the LocalStorageColorApi class.
@@ -49,17 +53,23 @@ class LocalStorageEsnapApi extends EsnapApi {
   Stream<List<Item>> getItems() => _itemStreamController.asBroadcastStream();
 
   @override
-  Future<void> saveItem(Item item) async {
+  Future<void> saveItem(Item item, List<int> image) async {
+    final item0 = await ItemSchema.fromItem(item, image);
+    await Hive.box<ItemSchema>(EsnapBoxes.item).put(item.id, item0);
     final items = [..._itemStreamController.value];
-    final itemIndex = items.indexWhere((t) => t.id == item.id);
+    final itemIndex = items.indexWhere((t) => t.id == item0.id);
     if (itemIndex >= 0) {
-      items[itemIndex] = item;
+      items[itemIndex] = item0.toItem().copyWith(
+            imagePath: '$imageDirectory/${item0.imagePath}',
+          );
     } else {
-      items.add(item);
+      items.add(
+        item0.toItem().copyWith(
+              imagePath: '$imageDirectory/${item0.imagePath}',
+            ),
+      );
     }
     _itemStreamController.add(items);
-    final item0 = await ItemSchema.fromItem(item);
-    return Hive.box<ItemSchema>(EsnapBoxes.item).put(item.id, item0);
   }
 
   @override

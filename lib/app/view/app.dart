@@ -9,6 +9,7 @@ import 'package:esnap/widgets/spinner.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_tools_repository/image_tools_repository.dart';
 import 'package:preferences_repository/preferences_repository.dart';
 import 'package:report_repository/report_repository.dart';
 import 'package:wid_design_system/wid_design_system.dart';
@@ -24,6 +25,7 @@ class App extends StatelessWidget {
     required this.occasionRepository,
     required this.initialPreferencesState,
     required this.reportRepository,
+    required this.imageToolsRepository,
     super.key,
   });
 
@@ -36,6 +38,7 @@ class App extends StatelessWidget {
   final OccasionRepository occasionRepository;
   final PreferencesState initialPreferencesState;
   final ReportRepository reportRepository;
+  final ImageToolsRepository imageToolsRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +46,9 @@ class App extends StatelessWidget {
       providers: [
         RepositoryProvider<ReportRepository>(
           create: (context) => reportRepository,
+        ),
+        RepositoryProvider<ImageToolsRepository>(
+          create: (context) => imageToolsRepository,
         ),
         RepositoryProvider<PreferencesRepository>(
           create: (context) => preferencesRepository,
@@ -77,10 +83,15 @@ class App extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => TranslationsBloc(
+              languageCode: initialPreferencesState.language,
               classificationRepository: classificationRepository,
               colorRepository: colorRepository,
               occasionRepository: occasionRepository,
-            )..add(const TranslationsLanguageChanged(languageCode: 'en')),
+            )..add(
+                TranslationsLanguageChanged(
+                  languageCode: initialPreferencesState.language,
+                ),
+              ),
           ),
         ],
         child: const AppView(),

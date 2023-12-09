@@ -18,14 +18,24 @@ String getTranslatedNameFromOutfit(BuildContext context, Outfit outfit) {
 String getTranslatedNameFromItem(BuildContext context, Item? item) {
   final translateBloc = context.read<TranslationsBloc>();
   var name = '';
-  if (item?.color != null) {
-    name = translateBloc.getTranslationForColor(item?.color) ?? '';
-  }
-  if (item?.classification != null) {
-    name +=
-        '${name.isEmpty ? '' : ' '}${translateBloc.getTranslationForClassification(item?.classification) ?? ''}';
+  if (translateBloc.state.languageCode == 'es') {
+    name =
+        translateBloc.getTranslationForClassification(item?.classification) ??
+            '';
+    if (item?.color != null) {
+      name +=
+          '${name.isEmpty ? '' : ' '}${translateBloc.getTranslationForColor(item?.color) ?? ''}';
+    }
   } else {
-    name = '';
+    if (item?.color != null) {
+      name = translateBloc.getTranslationForColor(item?.color) ?? '';
+    }
+    if (item?.classification != null) {
+      name +=
+          '${name.isEmpty ? '' : ' '}${translateBloc.getTranslationForClassification(item?.classification) ?? ''}';
+    } else {
+      name = '';
+    }
   }
   return name;
 }
