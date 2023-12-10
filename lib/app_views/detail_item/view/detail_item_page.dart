@@ -78,53 +78,59 @@ class DetailItemView extends StatelessWidget {
       persistentFooterButtons: [
         TextButton(
           style: removeSplashEffect(context),
-          onPressed: () async {
-            await showAdaptiveDialog<AlertDialog>(
-              context: context,
-              builder: (dialogContext) => AlertDialog(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                title: Text(l10n.deleteItem),
-                content: Text(l10n.deleteItemConfirmation),
-                actions: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(dialogContext).pop();
-                      context.read<DetailItemBloc>().add(
-                            const DetailItemDeleteSubmitted(),
-                          );
-                    },
-                    child: Text(l10n.delete),
-                  ),
-                  TextButton(
-                    style: removeSplashEffect(context),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(l10n.cancel),
-                  ),
-                ],
-              ),
-            );
-          },
+          onPressed: () => showAdaptiveDialog<void>(
+            context: context,
+            builder: (dialogContext) => AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: Text(l10n.deleteItem),
+              content: Text(l10n.deleteItemConfirmation),
+              actions: [
+                TextButton(
+                  style: cancelButtonStyle(context),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(l10n.cancel),
+                ),
+                TextButton(
+                  style: confirmButtonStyle(context),
+                  onPressed: () {
+                    context.read<DetailItemBloc>().add(
+                          const DetailItemDeleteSubmitted(),
+                        );
+                  },
+                  child: Text(l10n.delete),
+                ),
+              ],
+            ),
+          ),
           child: Text(l10n.delete),
         ),
       ],
-      body: CupertinoScrollbar(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: const Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _ImageField(),
-                    spacerM,
-                    _ColorField(),
-                    spacerXs,
-                    _OccasionField(),
-                  ],
+      body: BlocListener<DetailItemBloc, DetailItemState>(
+        listenWhen: (previous, current) => previous.status != current.status,
+        listener: (context, state) {
+          if (state.status == DetailItemStatus.success) {
+            Navigator.of(context).pop();
+          }
+        },
+        child: CupertinoScrollbar(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: const Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _ImageField(),
+                      spacerM,
+                      _ColorField(),
+                      spacerXs,
+                      _OccasionField(),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -158,13 +164,7 @@ class _ImageField extends StatelessWidget {
                           MaterialPageRoute<Scaffold>(
                             fullscreenDialog: true,
                             builder: (context) => Scaffold(
-                              backgroundColor: WidAppColors.black,
-                              appBar: AppBar(
-                                backgroundColor: WidAppColors.black,
-                                foregroundColor: Colors.white,
-                                iconTheme:
-                                    const IconThemeData(color: Colors.white),
-                              ),
+                              appBar: AppBar(),
                               body: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
@@ -212,7 +212,6 @@ class _ImageField extends StatelessWidget {
                   },
             icon: Icon(
               state.item.favorite ? Icons.favorite : Icons.favorite_border,
-              color: Colors.white,
             ),
           ),
         ),

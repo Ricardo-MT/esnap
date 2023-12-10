@@ -13,7 +13,7 @@ abstract class EsnapApi {
   /// Saves an [item].
   ///
   /// If an [item] with the same id already exists, it will be replaced.
-  Future<void> saveItem(Item item);
+  Future<void> saveItem(Item item, List<int> image);
 
   /// Deletes the `item` with the given id.
   ///

@@ -29,6 +29,7 @@ class _SetsOverviewView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final screenDimensions = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.outfitsPageTitle),
@@ -60,17 +61,21 @@ class _SetsOverviewView extends StatelessWidget {
             }
             return LayoutBuilder(
               builder: (context, constraints) {
-                final width = ((constraints.maxWidth).toInt() - 15 * 3) / 2;
-                final height = width + 45;
+                const spacing = 10.0;
+                final childAspectRatio =
+                    screenDimensions.width / screenDimensions.height;
+                final width = (screenDimensions.width - spacing * 4) / 3;
+                final height = width / childAspectRatio;
                 return GridView.count(
-                  childAspectRatio: width / height,
-                  crossAxisCount: 2,
-                  padding: const EdgeInsets.all(15).copyWith(bottom: 80),
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15,
+                  childAspectRatio: childAspectRatio,
+                  crossAxisCount: 3,
+                  padding: const EdgeInsets.all(spacing).copyWith(bottom: 80),
+                  mainAxisSpacing: spacing,
+                  crossAxisSpacing: spacing,
                   children: [
                     for (final item in state.items)
                       SetListTile(
+                        tileHeight: height,
                         item: item,
                         onTap: () {
                           Navigator.of(context).push(

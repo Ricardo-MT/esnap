@@ -1,8 +1,10 @@
 {
     "@@locale": "en",
     "callToActionCamerausageTitle": "Provide camera access",
-    "callToActionCamerausage": "Open settings",
     "cameraUsageDescription": "Esnap requires camera access to capture your clothing items, enabling you to create stylish outfits",
+    "callToActionGalleryusageTitle": "Provide gallery access",
+    "galleryUsageDescription": "Esnap requires gallery access to capture your clothing items, enabling you to create stylish outfits",
+    "callToActionOpenSettings": "Open settings",
     "onboardOneTitle1": "Build",
     "onboardOneTitle2": "Your Wardrobe",
     "onboardOneDescription": "Easily add your clothes for a stylish, organized closet.",
@@ -59,5 +61,17 @@
     "system": "Same as device",
     "languageControllerLabel": "Language",
     "spanish": "Spanish",
-    "english": "English"
+    "english": "English",
+    "rateThisAppCTA": "Rate this app",
+    "privacyPolicyCTA": "Privacy policy and terms",
+    "sendFeedbackCTA": "Send some feedback",
+    "sendFeedbackDescription": "Let us know about any errors, new features you would like to see implemented, what you like or what you don't. Help us improve the app!",
+    "feedbackSentThanks": "Thanks for the feedback!",
+    "send": "Send",
+    "selectImageSourceTitle": "Select image",
+    "imageSourceCamera": "Take photo",
+    "imageSourceGallery": "From gallery",
+    "tryAgain": "Try again",
+    "removeBackground": "Remove background",
+    "useOriginalImage": "Use original"
 }

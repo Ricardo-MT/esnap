@@ -1,9 +1,11 @@
 import 'package:country_flags/country_flags.dart';
+import 'package:esnap/app_views/launcher/launcher_cubit.dart';
 import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
+import 'package:esnap/app_views/report/report_view.dart';
 import 'package:esnap/l10n/l10n.dart';
 import 'package:esnap/utils/dimensions.dart';
+import 'package:esnap/widgets/list_navigator.dart';
 import 'package:esnap/widgets/page_constrainer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:preferences_api/preferences_api.dart';
@@ -22,23 +24,26 @@ class PreferencesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(l10n.preferencesPageTitle),
       ),
       body: const PageConstrainer(
-        child: CupertinoScrollbar(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  spacerM,
-                  _LanguageController(),
-                  spacerXL,
-                  _ThemeController(),
-                ],
-              ),
-            ),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              spacerM,
+              _LanguageController(),
+              spacerXL,
+              _ThemeController(),
+              spacerXL,
+              _RateThisAppLauncher(),
+              spacerL,
+              _SendFeedback(),
+              spacerExpanded,
+              _PrivacyLauncher(),
+            ],
           ),
         ),
       ),
@@ -131,6 +136,51 @@ class _LanguageController extends StatelessWidget {
           value: state.language,
         );
       },
+    );
+  }
+}
+
+class _RateThisAppLauncher extends StatelessWidget {
+  const _RateThisAppLauncher();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return ListNavigator(
+      text: l10n.rateThisAppCTA,
+      onPressed: context.read<LauncherCubit>().launchAppStore,
+    );
+  }
+}
+
+class _SendFeedback extends StatelessWidget {
+  const _SendFeedback();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return TextButton(
+      onPressed: () => showAdaptiveDialog<void>(
+        context: context,
+        builder: (_) => const ReportView(),
+      ),
+      child: Text(
+        l10n.sendFeedbackCTA,
+      ),
+    );
+  }
+}
+
+class _PrivacyLauncher extends StatelessWidget {
+  const _PrivacyLauncher();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: context.read<LauncherCubit>().launchPrivacyPolicy,
+      child: Text(
+        context.l10n.privacyPolicyCTA,
+      ),
     );
   }
 }

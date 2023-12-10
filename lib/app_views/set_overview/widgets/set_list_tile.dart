@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:esnap/utils/get_translated_name.dart';
 import 'package:esnap_repository/esnap_repository.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +8,13 @@ import 'package:wid_design_system/wid_design_system.dart';
 
 class SetListTile extends StatelessWidget {
   const SetListTile({
+    required this.tileHeight,
     required this.item,
     required this.onTap,
     super.key,
   });
 
+  final double tileHeight;
   final Outfit item;
   final VoidCallback onTap;
 
@@ -19,63 +22,43 @@ class SetListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final items =
         [item.top, item.bottom, item.shoes].where((element) => element != null);
-    final first = items.elementAtOrNull(0);
-    final second = items.elementAtOrNull(1);
-    final third = items.elementAtOrNull(2);
+    final middleIndex = (items.length / 2).ceil() - 1;
     return WidTouchable(
       onPress: onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: _OutfitImage(item: first),
-                ),
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: FractionallySizedBox(
-                        heightFactor: 0.5,
-                        widthFactor: 0.5,
-                        child: _OutfitImage(item: second),
+          SizedBox(
+            height: tileHeight - 32,
+            child: Column(
+              children: items
+                  .mapIndexed(
+                    (index, element) => Expanded(
+                      flex: index <= middleIndex ? 4 : 3,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: _OutfitImage(item: element),
                       ),
                     ),
-                  ),
-                ),
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: FractionallySizedBox(
-                        heightFactor: 0.35,
-                        widthFactor: 0.35,
-                        child: _OutfitImage(item: third),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                  )
+                  .toList(),
             ),
           ),
           SizedBox(
-            height: 44,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                getTranslatedNameFromOutfit(context, item),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 18,
-                  height: 1,
-                  fontWeight: FontWeight.bold,
+            height: 32,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  getTranslatedNameFromOutfit(context, item),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    height: 1,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -88,23 +71,27 @@ class SetListTile extends StatelessWidget {
 
 class _OutfitImage extends StatelessWidget {
   const _OutfitImage({
+    // ignore: unused_element
     this.item,
   });
   final Item? item;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: _borderRadius,
-        image: item?.imagePath == null
-            ? null
-            : DecorationImage(
-                image: FileImage(
-                  File(item!.imagePath!),
+    return AspectRatio(
+      aspectRatio: 1,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: _borderRadius,
+          image: item?.imagePath == null
+              ? null
+              : DecorationImage(
+                  image: FileImage(
+                    File(item!.imagePath!),
+                  ),
+                  fit: BoxFit.cover,
                 ),
-                fit: BoxFit.cover,
-              ),
+        ),
       ),
     );
   }

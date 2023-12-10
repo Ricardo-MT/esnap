@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -30,7 +31,10 @@ class DetailItemBloc extends Bloc<DetailItemEvent, DetailItemState> {
     emit(state.copyWith(status: DetailItemStatus.loading));
     final item = state.item.copyWith(favorite: event.favorite);
     try {
-      await _esnapRepository.saveItem(item);
+      await _esnapRepository.saveItem(
+        item,
+        File(item.imagePath!).readAsBytesSync(),
+      );
       emit(state.copyWith(status: DetailItemStatus.initial, item: item));
     } catch (e) {
       log(e.toString());
