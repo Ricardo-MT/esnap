@@ -30,4 +30,13 @@ abstract class PreferencesApi {
 
   /// Sets the user's preferred language
   Future<void> setLanguage(String language);
+
+  /// Gets App Version from Firebase release collection
+  Future<String?> getAppVersionInFireBase();
+
+  /// Gets current App Version
+  Future<String?> getCurrentAppVersion();
+
+  /// Returns whether the app is up to date
+  Future<bool> isAppUpToDate();
 }

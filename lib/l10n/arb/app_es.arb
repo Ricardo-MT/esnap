@@ -73,5 +73,6 @@
     "imageSourceGallery": "De la galería",
     "tryAgain": "Reintentar",
     "removeBackground": "Eliminar fondo",
-    "useOriginalImage": "Usar original"
+    "useOriginalImage": "Usar original",
+	"updateAvailable": "Nueva versión disponible"
 }

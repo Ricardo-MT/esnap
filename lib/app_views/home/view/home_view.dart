@@ -1,8 +1,10 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
 import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
 import 'package:esnap/app_views/home/cubit/home_cubit.dart';
 import 'package:esnap/app_views/items_overview/view/items_overview.dart';
+import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
 import 'package:esnap/app_views/preferences/view/view.dart';
 import 'package:esnap/app_views/set_overview/view/sets_overview.dart';
 import 'package:esnap/app_views/translations/translations_bloc.dart';
@@ -137,51 +139,59 @@ class _HomeViewWidget extends StatelessWidget {
     final l10n = context.l10n;
     final navigator = Navigator.of(context);
     final translationBloc = context.watch<TranslationsBloc>();
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Esnap'),
-        actions: [
-          IconButton(
-            onPressed: () => navigator.push(PreferencesPage.route()),
-            icon: const Icon(Icons.settings),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          vertical: WidAppDimensions.pageInsetGap / 2,
-        ),
-        child: Column(
-          children: [
-            _HomeQuickFilter(
-              callback: () => navigator.push(EditItemPage.route()),
-              label: l10n.addItemCTA,
-              iconPlus: true,
-            ),
-            _HomeQuickFilter(
-              callback: () => navigator.push(EditOutfitPage.route()),
-              label: l10n.addOutfitCTA,
-              iconPlus: true,
-            ),
-            spacerS,
-            ...topFiveClassifications.map(
-              (classification) => Padding(
-                padding: const EdgeInsets.only(bottom: 1),
-                child: _HomeQuickFilter(
-                  callback: () => callback(classification),
-                  label: translationBloc.getTranslationForClassification(
-                        classification,
-                      ) ??
-                      classification.name,
-                  imagePath: getAssetByClassification(
-                    classification.name,
-                  ),
+    return BlocBuilder<PreferencesBloc, PreferencesState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Esnap'),
+            actions: [
+              badges.Badge(
+                showBadge: !state.isUpToDate,
+                position: badges.BadgePosition.topEnd(top: 10, end: 8),
+                child: IconButton(
+                  onPressed: () => navigator.push(PreferencesPage.route()),
+                  icon: const Icon(Icons.settings),
                 ),
               ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              vertical: WidAppDimensions.pageInsetGap / 2,
             ),
-          ],
-        ),
-      ),
+            child: Column(
+              children: [
+                _HomeQuickFilter(
+                  callback: () => navigator.push(EditItemPage.route()),
+                  label: l10n.addItemCTA,
+                  iconPlus: true,
+                ),
+                _HomeQuickFilter(
+                  callback: () => navigator.push(EditOutfitPage.route()),
+                  label: l10n.addOutfitCTA,
+                  iconPlus: true,
+                ),
+                spacerS,
+                ...topFiveClassifications.map(
+                  (classification) => Padding(
+                    padding: const EdgeInsets.only(bottom: 1),
+                    child: _HomeQuickFilter(
+                      callback: () => callback(classification),
+                      label: translationBloc.getTranslationForClassification(
+                            classification,
+                          ) ??
+                          classification.name,
+                      imagePath: getAssetByClassification(
+                        classification.name,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -2,6 +2,7 @@ part of 'preferences_bloc.dart';
 
 final class PreferencesState extends Equatable {
   const PreferencesState({
+    required this.isUpToDate,
     this.status = FormzSubmissionStatus.inProgress,
     this.isFirstLogin,
     this.themeMode = ThemeMode.system,
@@ -12,18 +13,21 @@ final class PreferencesState extends Equatable {
   final bool? isFirstLogin;
   final ThemeMode themeMode;
   final String language;
+  final bool isUpToDate;
 
   PreferencesState copyWith({
     FormzSubmissionStatus? status,
     bool? isFirstLogin,
     ThemeMode? themeMode,
     String? language,
+    bool? isUpToDate,
   }) {
     return PreferencesState(
       status: status ?? this.status,
       isFirstLogin: isFirstLogin ?? this.isFirstLogin,
       themeMode: themeMode ?? this.themeMode,
       language: language ?? this.language,
+      isUpToDate: isUpToDate ?? this.isUpToDate,
     );
   }
 
@@ -33,5 +37,6 @@ final class PreferencesState extends Equatable {
         isFirstLogin ?? 'null',
         themeMode,
         language,
+        isUpToDate,
       ];
 }

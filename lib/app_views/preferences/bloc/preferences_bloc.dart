@@ -16,7 +16,7 @@ class PreferencesBloc extends Bloc<PreferencesEvent, PreferencesState> {
     PreferencesState? initialPreferencesState,
   })  : _preferencesRepository = preferencesRepository,
         super(
-          initialPreferencesState ?? const PreferencesState(),
+          initialPreferencesState ?? const PreferencesState(isUpToDate: false),
         ) {
     on<PreferencesInitialCheck>(_onInitialCheck);
     on<PreferencesFinishOnboarding>(_onFinishOnboarding);

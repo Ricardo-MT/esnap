@@ -41,6 +41,8 @@ class PreferencesPage extends StatelessWidget {
               _RateThisAppLauncher(),
               spacerL,
               _SendFeedback(),
+              spacerXL,
+              _UpdateApp(),
               spacerExpanded,
               _PrivacyLauncher(),
             ],
@@ -167,6 +169,28 @@ class _SendFeedback extends StatelessWidget {
       child: Text(
         l10n.sendFeedbackCTA,
       ),
+    );
+  }
+}
+
+class _UpdateApp extends StatelessWidget {
+  const _UpdateApp();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return BlocBuilder<PreferencesBloc, PreferencesState>(
+      buildWhen: (previous, current) =>
+          previous.isUpToDate != current.isUpToDate,
+      builder: (context, state) {
+        return Visibility(
+          visible: !state.isUpToDate,
+          child: ElevatedButton(
+            onPressed: context.read<LauncherCubit>().launchAppStore,
+            child: Text(l10n.updateAvailable),
+          ),
+        );
+      },
     );
   }
 }
