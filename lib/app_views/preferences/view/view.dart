@@ -41,7 +41,7 @@ class PreferencesPage extends StatelessWidget {
               _RateThisAppLauncher(),
               spacerL,
               _SendFeedback(),
-              spacerXL,
+              spacerL,
               _UpdateApp(),
               spacerExpanded,
               _PrivacyLauncher(),

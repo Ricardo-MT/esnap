@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart' as badges;
+import 'package:badges/badges.dart';
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
 import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
@@ -14,7 +14,7 @@ import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap/widgets/page_constrainer.dart';
 import 'package:esnap/widgets/spinner.dart';
 import 'package:esnap_repository/esnap_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:wid_design_system/wid_design_system.dart';
@@ -139,59 +139,61 @@ class _HomeViewWidget extends StatelessWidget {
     final l10n = context.l10n;
     final navigator = Navigator.of(context);
     final translationBloc = context.watch<TranslationsBloc>();
-    return BlocBuilder<PreferencesBloc, PreferencesState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Esnap'),
-            actions: [
-              badges.Badge(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Esnap'),
+        actions: [
+          BlocBuilder<PreferencesBloc, PreferencesState>(
+            buildWhen: (previous, current) =>
+                previous.isUpToDate != current.isUpToDate,
+            builder: (context, state) {
+              return Badge(
                 showBadge: !state.isUpToDate,
-                position: badges.BadgePosition.topEnd(top: 10, end: 8),
+                position: BadgePosition.topEnd(top: 10, end: 8),
                 child: IconButton(
                   onPressed: () => navigator.push(PreferencesPage.route()),
                   icon: const Icon(Icons.settings),
                 ),
-              ),
-            ],
+              );
+            },
           ),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              vertical: WidAppDimensions.pageInsetGap / 2,
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          vertical: WidAppDimensions.pageInsetGap / 2,
+        ),
+        child: Column(
+          children: [
+            _HomeQuickFilter(
+              callback: () => navigator.push(EditItemPage.route()),
+              label: l10n.addItemCTA,
+              iconPlus: true,
             ),
-            child: Column(
-              children: [
-                _HomeQuickFilter(
-                  callback: () => navigator.push(EditItemPage.route()),
-                  label: l10n.addItemCTA,
-                  iconPlus: true,
-                ),
-                _HomeQuickFilter(
-                  callback: () => navigator.push(EditOutfitPage.route()),
-                  label: l10n.addOutfitCTA,
-                  iconPlus: true,
-                ),
-                spacerS,
-                ...topFiveClassifications.map(
-                  (classification) => Padding(
-                    padding: const EdgeInsets.only(bottom: 1),
-                    child: _HomeQuickFilter(
-                      callback: () => callback(classification),
-                      label: translationBloc.getTranslationForClassification(
-                            classification,
-                          ) ??
-                          classification.name,
-                      imagePath: getAssetByClassification(
-                        classification.name,
-                      ),
-                    ),
+            _HomeQuickFilter(
+              callback: () => navigator.push(EditOutfitPage.route()),
+              label: l10n.addOutfitCTA,
+              iconPlus: true,
+            ),
+            spacerS,
+            ...topFiveClassifications.map(
+              (classification) => Padding(
+                padding: const EdgeInsets.only(bottom: 1),
+                child: _HomeQuickFilter(
+                  callback: () => callback(classification),
+                  label: translationBloc.getTranslationForClassification(
+                        classification,
+                      ) ??
+                      classification.name,
+                  imagePath: getAssetByClassification(
+                    classification.name,
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }
