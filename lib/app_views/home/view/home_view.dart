@@ -139,59 +139,61 @@ class _HomeViewWidget extends StatelessWidget {
     final l10n = context.l10n;
     final navigator = Navigator.of(context);
     final translationBloc = context.watch<TranslationsBloc>();
-    return BlocBuilder<PreferencesBloc, PreferencesState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Esnap'),
-            actions: [
-              badges.Badge(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Esnap'),
+        actions: [
+          BlocBuilder<PreferencesBloc, PreferencesState>(
+            buildWhen: (previous, current) =>
+                previous.isUpToDate != current.isUpToDate,
+            builder: (context, state) {
+              return badges.Badge(
                 showBadge: !state.isUpToDate,
                 position: badges.BadgePosition.topEnd(top: 10, end: 8),
                 child: IconButton(
                   onPressed: () => navigator.push(PreferencesPage.route()),
                   icon: const Icon(Icons.settings),
                 ),
-              ),
-            ],
+              );
+            },
           ),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              vertical: WidAppDimensions.pageInsetGap / 2,
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          vertical: WidAppDimensions.pageInsetGap / 2,
+        ),
+        child: Column(
+          children: [
+            _HomeQuickFilter(
+              callback: () => navigator.push(EditItemPage.route()),
+              label: l10n.addItemCTA,
+              iconPlus: true,
             ),
-            child: Column(
-              children: [
-                _HomeQuickFilter(
-                  callback: () => navigator.push(EditItemPage.route()),
-                  label: l10n.addItemCTA,
-                  iconPlus: true,
-                ),
-                _HomeQuickFilter(
-                  callback: () => navigator.push(EditOutfitPage.route()),
-                  label: l10n.addOutfitCTA,
-                  iconPlus: true,
-                ),
-                spacerS,
-                ...topFiveClassifications.map(
-                  (classification) => Padding(
-                    padding: const EdgeInsets.only(bottom: 1),
-                    child: _HomeQuickFilter(
-                      callback: () => callback(classification),
-                      label: translationBloc.getTranslationForClassification(
-                            classification,
-                          ) ??
-                          classification.name,
-                      imagePath: getAssetByClassification(
-                        classification.name,
-                      ),
-                    ),
+            _HomeQuickFilter(
+              callback: () => navigator.push(EditOutfitPage.route()),
+              label: l10n.addOutfitCTA,
+              iconPlus: true,
+            ),
+            spacerS,
+            ...topFiveClassifications.map(
+              (classification) => Padding(
+                padding: const EdgeInsets.only(bottom: 1),
+                child: _HomeQuickFilter(
+                  callback: () => callback(classification),
+                  label: translationBloc.getTranslationForClassification(
+                        classification,
+                      ) ??
+                      classification.name,
+                  imagePath: getAssetByClassification(
+                    classification.name,
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }

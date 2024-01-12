@@ -106,14 +106,6 @@ class PreferencesApiServices extends PreferencesApi {
 
     return '${packageInfo.version}+${packageInfo.buildNumber}';
   }
-
-  @override
-  Future<bool> isAppUpToDate() async {
-    final firebaseAppVersion = await getAppVersionInFireBase();
-    final packageVersion = await getCurrentAppVersion();
-
-    return (firebaseAppVersion == packageVersion);
-  }
 }
 
 /// Keys used for storing values in the secure storage

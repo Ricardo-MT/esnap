@@ -36,7 +36,4 @@ abstract class PreferencesApi {
 
   /// Gets current App Version
   Future<String?> getCurrentAppVersion();
-
-  /// Returns whether the app is up to date
-  Future<bool> isAppUpToDate();
 }
