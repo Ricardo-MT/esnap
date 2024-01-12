@@ -36,9 +36,11 @@ class PreferencesRepository {
 
   /// Returns whether the app is up to date
   Future<bool> isAppUpToDate() async {
-    final firebaseAppVersion = await _client.getAppVersionInFireBase();
-    final packageVersion = await _client.getCurrentAppVersion();
+    final appVersionsArray = await Future.wait([
+      _client.getAppVersionInFireBase(),
+      _client.getCurrentAppVersion(),
+    ]);
 
-    return (firebaseAppVersion == packageVersion);
+    return (appVersionsArray[0] == appVersionsArray[1]);
   }
 }
