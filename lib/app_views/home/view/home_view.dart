@@ -1,8 +1,10 @@
+import 'package:badges/badges.dart';
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
 import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
 import 'package:esnap/app_views/home/cubit/home_cubit.dart';
 import 'package:esnap/app_views/items_overview/view/items_overview.dart';
+import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
 import 'package:esnap/app_views/preferences/view/view.dart';
 import 'package:esnap/app_views/set_overview/view/sets_overview.dart';
 import 'package:esnap/app_views/translations/translations_bloc.dart';
@@ -12,7 +14,7 @@ import 'package:esnap/utils/text_button_helpers.dart';
 import 'package:esnap/widgets/page_constrainer.dart';
 import 'package:esnap/widgets/spinner.dart';
 import 'package:esnap_repository/esnap_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:wid_design_system/wid_design_system.dart';
@@ -141,9 +143,19 @@ class _HomeViewWidget extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Esnap'),
         actions: [
-          IconButton(
-            onPressed: () => navigator.push(PreferencesPage.route()),
-            icon: const Icon(Icons.settings),
+          BlocBuilder<PreferencesBloc, PreferencesState>(
+            buildWhen: (previous, current) =>
+                previous.isUpToDate != current.isUpToDate,
+            builder: (context, state) {
+              return Badge(
+                showBadge: !state.isUpToDate,
+                position: BadgePosition.topEnd(top: 10, end: 8),
+                child: IconButton(
+                  onPressed: () => navigator.push(PreferencesPage.route()),
+                  icon: const Icon(Icons.settings),
+                ),
+              );
+            },
           ),
         ],
       ),

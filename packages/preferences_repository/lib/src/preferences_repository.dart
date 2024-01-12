@@ -33,4 +33,14 @@ class PreferencesRepository {
 
   /// Sets the user's preferred language
   Future<void> setLanguage(String language) => _client.setLanguage(language);
+
+  /// Returns whether the app is up to date
+  Future<bool> isAppUpToDate() async {
+    final appVersionsArray = await Future.wait([
+      _client.getAppVersionInFireBase(),
+      _client.getCurrentAppVersion(),
+    ]);
+
+    return (appVersionsArray[0] == appVersionsArray[1]);
+  }
 }
