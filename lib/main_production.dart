@@ -36,6 +36,7 @@ void main() async {
     status: FormzSubmissionStatus.success,
     themeMode: getThemeMode(await preferencesRepository.getTheme()),
     language: await preferencesRepository.getLanguage() ?? Platform.localeName,
+    isUpToDate: await preferencesRepository.isAppUpToDate(),
   );
 
   final connectionManager = await LocalStorageConnectionManager.initialize();

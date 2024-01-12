@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:preferences_api/preferences_api.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -85,6 +87,24 @@ class PreferencesApiServices extends PreferencesApi {
   Future<void> setLanguage(String language) {
     _languageStreamController.add(language);
     return _storage.write(key: SecureStorageKeys.language, value: language);
+  }
+
+  @override
+  Future<String?> getAppVersionInFireBase() async {
+    final firestore = FirebaseFirestore.instance;
+
+    final QuerySnapshot querySnapshot =
+        await firestore.collection('release').get();
+    final DocumentSnapshot firstDoc = querySnapshot.docs.first;
+    final version = firstDoc.get('version');
+    return version.toString();
+  }
+
+  @override
+  Future<String?> getCurrentAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+
+    return '${packageInfo.version}+${packageInfo.buildNumber}';
   }
 }
 

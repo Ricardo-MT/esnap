@@ -1,8 +1,10 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:esnap/app_views/classifications_overview/bloc/classifications_overview_bloc.dart';
 import 'package:esnap/app_views/edit_item/edit_todo.dart';
 import 'package:esnap/app_views/edit_outfit/view/edit_outfit.dart';
 import 'package:esnap/app_views/home/cubit/home_cubit.dart';
 import 'package:esnap/app_views/items_overview/view/items_overview.dart';
+import 'package:esnap/app_views/preferences/bloc/preferences_bloc.dart';
 import 'package:esnap/app_views/preferences/view/view.dart';
 import 'package:esnap/app_views/set_overview/view/sets_overview.dart';
 import 'package:esnap/app_views/translations/translations_bloc.dart';
@@ -141,9 +143,19 @@ class _HomeViewWidget extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Esnap'),
         actions: [
-          IconButton(
-            onPressed: () => navigator.push(PreferencesPage.route()),
-            icon: const Icon(Icons.settings),
+          BlocBuilder<PreferencesBloc, PreferencesState>(
+            buildWhen: (previous, current) =>
+                previous.isUpToDate != current.isUpToDate,
+            builder: (context, state) {
+              return badges.Badge(
+                showBadge: !state.isUpToDate,
+                position: badges.BadgePosition.topEnd(top: 10, end: 8),
+                child: IconButton(
+                  onPressed: () => navigator.push(PreferencesPage.route()),
+                  icon: const Icon(Icons.settings),
+                ),
+              );
+            },
           ),
         ],
       ),

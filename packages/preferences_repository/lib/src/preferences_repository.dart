@@ -33,4 +33,12 @@ class PreferencesRepository {
 
   /// Sets the user's preferred language
   Future<void> setLanguage(String language) => _client.setLanguage(language);
+
+  /// Returns whether the app is up to date
+  Future<bool> isAppUpToDate() async {
+    final firebaseAppVersion = await _client.getAppVersionInFireBase();
+    final packageVersion = await _client.getCurrentAppVersion();
+
+    return (firebaseAppVersion == packageVersion);
+  }
 }
